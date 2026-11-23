@@ -9805,7 +9805,7 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
 
       const wantImages = isGuruImageSearchOn();
       const extraImgRule = wantImages
-        ? '\n[Also append on the very last line ONLY a 2-to-5 word clean English visual search keyword inside [[IMG_Q: keyword]] for fetching engineering diagrams/photos. Keep zero repetitive meta-headings in your answer.]'
+        ? '\n[Also append on the very last line ONLY a crisp 2-to-3 word Wikipedia-friendly English visual term inside [[IMG_Q: keyword]] (e.g. [[IMG_Q: Concrete efflorescence]], [[IMG_Q: Vicat apparatus]], [[IMG_Q: Venturi meter]]) for fetching real engineering diagrams/photos. Keep zero repetitive meta-headings in your answer.]'
         : '\n[Keep zero repetitive meta-headings like "Socratic Post-Mortem", "Titan Guru", or "Step 1:" — dive straight into crisp, clear explanation.]';
       parts[parts.length - 1].text += extraImgRule;
 
@@ -9917,11 +9917,10 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
     const qLow = String(query || '').toLowerCase().trim();
     const tLow = String(title || '').toLowerCase().trim();
     if (!qLow || !tLow) return 0;
-    const stop = new Set(['the','and','for','with','from','into','this','that','what','how','why','of','in','on','to','a','an','is','are','by','or','as']);
+    const stop = new Set(['the','and','for','with','from','into','this','that','what','how','why','of','in','on','to','a','an','is','are','by','or','as','test','work','use']);
     const tokens = qLow.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 3 && !stop.has(w));
-    if (!tokens.length) return 0;
-    // Block noisy unrelated geology/random wiki files unless explicitly asked
-    const noise = ['regolith', 'rare earth', 'calthemite', 'flowstone', 'stalactite', 'stalagmite', 'speleothem', 'coat of arms', 'flag of ', 'logo', 'icon', 'portrait of', 'signature of'];
+    if (!tokens.length) return 10;
+    const noise = ['regolith', 'rare earth', 'calthemite', 'flowstone', 'stalactite', 'stalagmite', 'speleothem', 'coat of arms', 'flag of ', 'logo', 'icon', 'portrait of', 'signature of', 'disambiguation'];
     for (const bad of noise) {
       if (tLow.includes(bad) && !qLow.includes(bad)) return 0;
     }
@@ -9930,9 +9929,15 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
     for (const tk of tokens) {
       if (tLow.includes(tk)) hits++;
     }
-    if (tokens.length >= 2 && hits < 2) return 0;
     if (hits === 0) return 0;
-    return Math.round((hits / tokens.length) * 80);
+    return Math.round((hits / tokens.length) * 85);
+  }
+
+  function fetchWithTimeout(url, ms) {
+    return new Promise((resolve, reject) => {
+      const t = setTimeout(() => reject(new Error('timeout')), ms || 4500);
+      fetch(url).then(r => { clearTimeout(t); resolve(r); }).catch(e => { clearTimeout(t); reject(e); });
+    });
   }
 
   async function fetchRelatedVisualImages(query) {
@@ -9940,61 +9945,63 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
     if (!q) return [];
     const candidates = [];
     const seen = new Set();
-    const pushIfGood = (thumb, full, title) => {
+    const pushIfGood = (thumb, full, title, boost) => {
       if (!thumb || seen.has(thumb)) return;
-      const sc = scoreVisualMatch(title, q);
+      const sc = scoreVisualMatch(title, q) + (boost || 0);
       if (sc <= 0) return;
       seen.add(thumb);
       candidates.push({ thumb, full: full || thumb, title: String(title || q).slice(0, 68), score: sc });
     };
 
-    // 1. Openverse API (CORS-free real photos from Flickr/Wikimedia/Educational sources)
-    try {
-      const ovUrl = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&page_size=14&mature=false`;
-      const rOv = await fetch(ovUrl);
-      if (rOv.ok) {
-        const dOv = await rOv.json();
-        const arr = (dOv && Array.isArray(dOv.results)) ? dOv.results : [];
-        for (const it of arr) {
-          const thumb = it.thumbnail || it.url;
-          const full = it.url || it.thumbnail;
-          const label = [it.title || '', Array.isArray(it.tags) ? it.tags.map(t => t.name || '').join(' ') : ''].join(' ').trim();
-          pushIfGood(thumb, full, label);
+    const runWikiPasses = async (searchTerm) => {
+      const [wpRes, wmRes] = await Promise.allSettled([
+        // 1. Wikipedia PageImages (always CORS-safe, top encyclopedia diagrams & photos)
+        fetchWithTimeout(`https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=10&prop=pageimages&piprop=thumbnail|original&pithumbsize=640&format=json&origin=*`, 4500)
+          .then(r => r.ok ? r.json() : null),
+        // 2. Wikimedia Commons File Search (CORS-safe, engineering schematics & field photos)
+        fetchWithTimeout(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(searchTerm)}&gsrlimit=12&prop=imageinfo&iiprop=url|mime&iiurlwidth=640&format=json&origin=*`, 4500)
+          .then(r => r.ok ? r.json() : null)
+      ]);
+
+      if (wpRes.status === 'fulfilled' && wpRes.value && wpRes.value.query && wpRes.value.query.pages) {
+        for (const p of Object.values(wpRes.value.query.pages)) {
+          if (!p.thumbnail || !p.thumbnail.source) continue;
+          pushIfGood(p.thumbnail.source, (p.original && p.original.source) ? p.original.source : p.thumbnail.source, p.title || searchTerm, 15);
         }
       }
-    } catch (e) {}
-
-    // 2. Exact-Phrase Wikimedia Commons (strictly quoted so 'concrete leaching' never returns random cave/mining files)
-    if (candidates.length < 6) {
-      try {
-        const wmUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent('"' + q + '"')}&gsrlimit=12&prop=imageinfo&iiprop=url|mime&iiurlwidth=640&format=json&origin=*`;
-        const r1 = await fetch(wmUrl);
-        if (r1.ok) {
-          const d1 = await r1.json();
-          const pages = (d1 && d1.query && d1.query.pages) ? Object.values(d1.query.pages) : [];
-          for (const p of pages) {
-            const info = p.imageinfo && p.imageinfo[0];
-            if (!info || !info.thumburl) continue;
-            if (!/^image\/(jpeg|png|webp|svg)/i.test(info.mime || '')) continue;
-            if (/\.pdf|\.tif/i.test(info.url || '')) continue;
-            const cleanTitle = String(p.title || '').replace(/^File:/i, '').replace(/\.[^.]+$/, '').replace(/_/g, ' ');
-            pushIfGood(info.thumburl, info.url || info.thumburl, cleanTitle);
-          }
+      if (wmRes.status === 'fulfilled' && wmRes.value && wmRes.value.query && wmRes.value.query.pages) {
+        for (const p of Object.values(wmRes.value.query.pages)) {
+          const info = p.imageinfo && p.imageinfo[0];
+          if (!info || !info.thumburl) continue;
+          if (!/^image\/(jpeg|png|webp|svg)/i.test(info.mime || '')) continue;
+          if (/\.pdf|\.tif/i.test(info.url || '')) continue;
+          const cleanTitle = String(p.title || '').replace(/^File:/i, '').replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+          pushIfGood(info.thumburl, info.url || info.thumburl, cleanTitle, 0);
         }
-      } catch (e) {}
+      }
+    };
+
+    // Pass 1: Full clean query
+    await runWikiPasses(q);
+
+    // Pass 2: If fewer than 3 matches and query has >2 words, retry with top 2 core words
+    const words = q.split(/\s+/).filter(Boolean);
+    if (candidates.length < 3 && words.length > 2) {
+      await runWikiPasses(words.slice(0, 2).join(' '));
     }
 
-    // 3. Wikipedia PageImages (strict relevance scored)
+    // Pass 3: Bonus Openverse real photos (non-blocking, fast 3.5s timeout)
     if (candidates.length < 5) {
       try {
-        const wpUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=10&prop=pageimages&piprop=thumbnail|original&pithumbsize=640&format=json&origin=*`;
-        const r2 = await fetch(wpUrl);
-        if (r2.ok) {
-          const d2 = await r2.json();
-          const pages = (d2 && d2.query && d2.query.pages) ? Object.values(d2.query.pages) : [];
-          for (const p of pages) {
-            if (!p.thumbnail || !p.thumbnail.source) continue;
-            pushIfGood(p.thumbnail.source, (p.original && p.original.source) ? p.original.source : p.thumbnail.source, p.title || '');
+        const rOv = await fetchWithTimeout(`https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&page_size=10&mature=false`, 3500);
+        if (rOv.ok) {
+          const dOv = await rOv.json();
+          const arr = (dOv && Array.isArray(dOv.results)) ? dOv.results : [];
+          for (const it of arr) {
+            const thumb = it.thumbnail || it.url;
+            const full = it.url || it.thumbnail;
+            const label = [it.title || '', Array.isArray(it.tags) ? it.tags.map(t => t.name || '').join(' ') : ''].join(' ').trim();
+            pushIfGood(thumb, full, label, 5);
           }
         }
       } catch (e) {}
@@ -10007,9 +10014,9 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
   function buildVisualStripHtml(images, query, msgIdx) {
     const safeQ = escapeHtmlSafe(query || '');
     const gUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query || 'civil engineering')}`;
-    const cards = images.map((im, i) => `
+    const cards = (images || []).map((im, i) => `
       <button type="button" class="v36-img-card" data-msg-idx="${msgIdx}" data-img-idx="${i}" title="${escapeHtmlSafe(im.title)}">
-        <img src="${escapeHtmlSafe(im.thumb)}" alt="${escapeHtmlSafe(im.title)}" loading="lazy">
+        <img src="${escapeHtmlSafe(im.thumb)}" alt="${escapeHtmlSafe(im.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.v36-img-card')?.remove()">
         <span class="v36-img-cap">${escapeHtmlSafe(im.title)}</span>
       </button>`).join('');
     return `
