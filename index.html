@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
-  <title>Brahmastra Titan OS v3.7 — PYQ-Sniper &amp; Ask Guru</title>
+  <title>Brahmastra Titan OS v3.8 — PYQ-Sniper &amp; Ask Guru</title>
 <style>
 :root {
   --bg: #F4F1EA;
@@ -144,7 +144,7 @@ body.theme-night {
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  padding: 0 12px 104px;
+  padding: 0 12px 152px;
   background: var(--bg);
   color: var(--ink);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Devanagari', sans-serif;
@@ -1014,7 +1014,7 @@ sub { bottom: -0.24em; }
   border-radius: 18px;
   padding: 22px 18px;
   text-align: center;
-  margin: 18px 0;
+  margin: 18px 0 46px;
   box-shadow: var(--shadow);
 }
 .batch-complete-card.gate-mode {
@@ -2357,7 +2357,7 @@ body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; co
           </svg>
         </div>
         <div>
-          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v3.7</span></h1>
+          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v3.8</span></h1>
           <div class="chapter-sub">
             <span id="app-exam-subtitle">SSC JE / RRB JE / All-India Competitive PYQ Engine</span>
             <button type="button" class="creator-sig" id="btn-creator-love" title="Optional appreciation">
@@ -5618,7 +5618,7 @@ function syncGuruToFocusedQuestion(newQid) {
 function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
   return new Promise(async (resolve) => {
     let settled = false;
-    const finish = (ok) => { if (!settled) { settled = true; resolve(ok); } };
+    const finish = (ok) => { if (!settled) { settled = true; if (!ok) stopGuruMicOnly(); resolve(ok); } };
     const timeoutId = setTimeout(() => {
       if (!guruLiveConnected) {
         if (guruLiveWs) { try { guruLiveWs.close(); } catch (e) {} guruLiveWs = null; }
@@ -5869,7 +5869,8 @@ async function callGuruBrain(userParts, cfg) {
 }
 
 async function speakWithStudioVoice(text, cfg, onFinish) {
-  const ttsModels = ['gemini-3.8-flash-lite-tts', 'gemini-3.8-flash-tts', 'gemini-2.5-flash-preview-tts'];
+  stopGuruMicOnly(); // Release Android earpiece/voice-call route so TTS plays loud on Media Speaker!
+  const ttsModels = ['gemini-2.5-flash-preview-tts', 'gemini-3.8-flash-lite-tts', 'gemini-3.8-flash-tts'];
   const styleDesc = 'Speak like a completely real, warm, charismatic human mentor from North India sitting right next to the student—authentic natural Indian Hinglish accent for both Hindi and English words, relaxed human breathing pauses, gentle smile in the voice, zero robotic stiffness.';
   for (const m of ttsModels) {
     try {
@@ -7925,14 +7926,17 @@ function bindEvents() {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
 
-  document.getElementById('btn-unlock-next-batch').addEventListener('click', () => {
+  document.getElementById('btn-unlock-next-batch').addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    updateBatchCompleteCard();
     const act = document.getElementById('btn-unlock-next-batch').dataset.action || 'jump_unatt';
-    if (act === 'retry_batch') startBatchMasteryRetry();
+    const pendingNow = getPendingInCurrentSlice().length;
+    if (act === 'next_batch' && pendingNow === 0) unlockNextBatchWithAnimation();
+    else if (act === 'claim_victory' && pendingNow === 0) triggerGrandVictoryCutscene();
+    else if (act === 'retry_batch') startBatchMasteryRetry();
     else if (act === 'jump_unatt') jumpToNextUnanswered(null);
-    else if (act === 'claim_victory' && getPendingInCurrentSlice().length === 0) triggerGrandVictoryCutscene();
     else if (act === 'grand_special') startSpecialRevisionRound();
     else if (act === 'restart_r1') document.getElementById('btn-restart-r1').click();
-    else if (act === 'next_batch' && getPendingInCurrentSlice().length === 0) unlockNextBatchWithAnimation();
   });
   document.getElementById('btn-jump-unatt-helper').addEventListener('click', () => jumpToNextUnanswered(null));
 
@@ -8699,9 +8703,21 @@ function applyMergedProgressToLocal(mergedMap) {
     }
   });
   if (STORAGE_KEY && mergedMap[STORAGE_KEY]) {
+    const prevBatchIdx = appState.currentBatchIndex;
+    const prevAnsCnt = Object.keys((appState.roundHistory && appState.roundHistory[appState.currentRound]) || {}).length;
+    const prevY = window.scrollY || 0;
     appState = Object.assign(getDefaultState(), mergedMap[STORAGE_KEY]);
     reconcileSrsWithVault(appState);
-    if (!isTransitioningBatch) renderAll(false);
+    const newAnsCnt = Object.keys((appState.roundHistory && appState.roundHistory[appState.currentRound]) || {}).length;
+    if (!isTransitioningBatch) {
+      if (appState.currentBatchIndex !== prevBatchIdx || newAnsCnt !== prevAnsCnt) {
+        renderAll(false);
+        requestAnimationFrame(() => window.scrollTo({ top: prevY, behavior: 'auto' }));
+      } else {
+        updateSafariAndStats(false, null);
+        updateBatchCompleteCard();
+      }
+    }
   }
   renderChapterLibraryPills();
   return count;
