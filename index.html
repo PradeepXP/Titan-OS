@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
-  <title>Brahmastra Titan OS v3.0 — 3-Universe PYQ-Sniper Super-App</title>
+  <title>Brahmastra Titan OS v3.5 — Extreme PYQ-Sniper Super-App</title>
 <style>
 :root {
   --bg: #F4F1EA;
@@ -2016,6 +2016,275 @@ body.theme-night .pg-typing-dots span { background: #60A5FA; }
   .chat-feed { max-height: 50vh; }
 }
 
+
+/* =====================================================================
+   BRAHMASTRA TITAN OS v3.5 — SOCRATIC DRAWER, CHEAT VAULT, TRAP ARENA, SPEED RADAR
+   ===================================================================== */
+.btn-socratic-q {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(37, 99, 235, 0.12)) !important;
+  color: #5B21B6 !important;
+  border-color: rgba(124, 58, 237, 0.35) !important;
+  font-weight: 800 !important;
+}
+.btn-socratic-q:hover {
+  background: linear-gradient(135deg, #7C3AED, #2563EB) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+.btn-socratic-q.is-cached {
+  border-color: rgba(16, 185, 129, 0.55) !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.14);
+}
+.socratic-drawer {
+  margin-top: 12px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(124, 58, 237, 0.28);
+  background: linear-gradient(180deg, rgba(245, 243, 255, 0.85), rgba(255, 255, 255, 0.96));
+  padding: 14px 16px;
+  box-shadow: 0 10px 26px rgba(91, 33, 182, 0.08);
+  animation: socFadeIn 0.22s ease;
+}
+@keyframes socFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.soc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed rgba(124, 58, 237, 0.25);
+}
+.soc-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  font-weight: 900;
+  color: #4C1D95;
+}
+.soc-mode-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.14);
+  color: #5B21B6;
+}
+.soc-head-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.soc-mini-btn {
+  padding: 4px 10px;
+  border-radius: 9px;
+  border: 1px solid rgba(124, 58, 237, 0.26);
+  background: #FFFFFF;
+  color: #4C1D95;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.soc-mini-btn:hover { background: #7C3AED; color: #FFFFFF; }
+.soc-body {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+.soc-followup-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(124, 58, 237, 0.22);
+}
+.soc-followup-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(124, 58, 237, 0.26);
+  background: #FFFFFF;
+  color: var(--text);
+  font-size: 0.85rem;
+}
+.soc-followup-reply {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.06);
+  border-left: 3px solid #2563EB;
+  font-size: 0.88rem;
+}
+
+/* Speed Radar Pills */
+.spd-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.spd-sniper { background: rgba(22, 163, 74, 0.14); color: #15803D; }
+.spd-safe { background: rgba(37, 99, 235, 0.12); color: #1D4ED8; }
+.spd-sink { background: rgba(220, 38, 38, 0.14); color: #B91C1C; }
+.radar-speed-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+
+/* Cheat Vault & Trap Arena Modals */
+.titan-v35-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9995;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+.titan-v35-modal.open { display: flex; }
+.titan-v35-box {
+  width: 100%;
+  max-width: 820px;
+  max-height: 88vh;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.titan-v35-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #1E293B, #0F172A);
+  color: #F8FAFC;
+}
+.titan-v35-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.03);
+}
+.titan-v35-tab {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.titan-v35-tab.active {
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  color: #FFFFFF;
+  border-color: transparent;
+}
+.titan-v35-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+.cheat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+}
+.cheat-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 13px;
+  background: rgba(248, 250, 252, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cheat-card-title { font-size: 0.85rem; font-weight: 900; color: #1E40AF; }
+.cheat-card-val { font-size: 0.84rem; line-height: 1.5; color: var(--text); }
+.cheat-card-foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 4px; }
+
+.twin-card {
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: var(--card);
+}
+.twin-pair-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+@media (max-width: 620px) {
+  .twin-pair-grid { grid-template-columns: 1fr; }
+}
+.twin-side {
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: rgba(37, 99, 235, 0.04);
+}
+.twin-side.side-b { background: rgba(217, 119, 6, 0.05); }
+.twin-ans-blur {
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.06);
+  font-weight: 800;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.twin-ans-blur.hidden-ans { filter: blur(5px); user-select: none; }
+
+/* EYE-COMFORT NIGHT MODE OVERRIDES FOR v3.5 (WCAG AAA) */
+body.theme-night .btn-socratic-q {
+  background: rgba(139, 92, 246, 0.2) !important;
+  color: #DDD6FE !important;
+  border-color: rgba(167, 139, 250, 0.45) !important;
+}
+body.theme-night .socratic-drawer {
+  background: #141B2D !important;
+  border-color: rgba(167, 139, 250, 0.4) !important;
+  color: #E2E8F0 !important;
+}
+body.theme-night .soc-title-badge { color: #DDD6FE !important; }
+body.theme-night .soc-mode-pill { background: rgba(139, 92, 246, 0.28) !important; color: #EDE9FE !important; }
+body.theme-night .soc-mini-btn { background: #1E293B !important; color: #E2E8F0 !important; border-color: #334155 !important; }
+body.theme-night .soc-followup-input { background: #0F172A !important; color: #F1F5F9 !important; border-color: #334155 !important; }
+body.theme-night .soc-followup-reply { background: rgba(56, 189, 248, 0.1) !important; color: #E2E8F0 !important; }
+body.theme-night .spd-sniper { background: rgba(34, 197, 94, 0.2) !important; color: #86EFAC !important; }
+body.theme-night .spd-safe { background: rgba(56, 189, 248, 0.2) !important; color: #7DD3FC !important; }
+body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; color: #FCA5A5 !important; }
+body.theme-night .titan-v35-box { background: #141B2D !important; color: #E2E8F0 !important; border-color: #2A364F !important; }
+body.theme-night .titan-v35-tabs { background: #0F172A !important; border-color: #2A364F !important; }
+body.theme-night .titan-v35-tab { background: #1E293B !important; color: #E2E8F0 !important; border-color: #334155 !important; }
+body.theme-night .cheat-card { background: #1A2338 !important; border-color: #2A364F !important; }
+body.theme-night .cheat-card-title { color: #93C5FD !important; }
+body.theme-night .twin-card { background: #1A2338 !important; border-color: #2A364F !important; }
+body.theme-night .twin-side { background: rgba(56, 189, 248, 0.08) !important; border-color: #2A364F !important; }
+body.theme-night .twin-side.side-b { background: rgba(251, 191, 36, 0.08) !important; }
+body.theme-night .twin-ans-blur { background: rgba(255, 255, 255, 0.08) !important; color: #F8FAFC !important; }
+
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
@@ -2034,7 +2303,7 @@ body.theme-night .pg-typing-dots span { background: #60A5FA; }
           </svg>
         </div>
         <div>
-          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v3.0</span></h1>
+          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v3.5</span></h1>
           <div class="chapter-sub">
             <span id="app-exam-subtitle">SSC JE / RRB JE / All-India Competitive PYQ Engine</span>
             <button type="button" class="creator-sig" id="btn-creator-love" title="Optional appreciation">
@@ -2064,6 +2333,8 @@ body.theme-night .pg-typing-dots span { background: #60A5FA; }
         <button type="button" class="ctrl-btn" id="btn-open-srs" title="Titan SRS Spaced Repetition (1→3→7→15→30 Days · Midnight Auto-Unlock)">🧠 SRS: 0</button>
         <button type="button" class="ctrl-btn" id="btn-open-heatmap" title="Daily Study Streak & 90-Day Activity Heatmap">🔥 0d</button>
         <button type="button" class="ctrl-btn" id="btn-open-voice" title="Titan Guru — Live Interactive Voice Tutor Settings">🎙️ Titan Guru</button>
+        <button type="button" class="ctrl-btn" id="btn-open-cheat-vault" title="Offline Civil & GK Formula / IS-Code Pocket Cheat Vault">📐 Cheat Vault</button>
+        <button type="button" class="ctrl-btn" id="btn-open-trap-arena" title="Confusing-Twin & Unit-Trap Rapid Drill Arena">⚔️ Trap Arena</button>
         <button type="button" class="ctrl-btn" id="btn-start-voice-quiz" title="Hands-Free Voice Quiz Mode — Reads Q &amp; Options, Confirms &amp; Locks by Voice, Auto-Advances Batch">🎯 Voice Quiz</button>
         <button type="button" class="ctrl-btn btn-success" id="btn-export-html" title="Download standalone HTML file with current chapter baked in for sharing">📦 Share HTML</button>
         <button type="button" class="ctrl-btn" id="btn-theme-paper" title="Warm Paper Theme">📜</button>
@@ -2569,6 +2840,47 @@ body.theme-night .pg-typing-dots span { background: #60A5FA; }
 </div>
 
 <div class="toast" id="toast"></div>
+
+
+<!-- ==================== v3.5 OFFLINE POCKET CHEAT VAULT MODAL ==================== -->
+<div class="titan-v35-modal" id="cheat-vault-modal" role="dialog" aria-modal="true" aria-label="Offline Pocket Cheat Vault">
+  <div class="titan-v35-box">
+    <div class="titan-v35-head">
+      <div>
+        <div style="font-weight:900; font-size:1.02rem;">📐 Offline Pocket Cheat Vault — SSC JE &amp; RRB JE 2027</div>
+        <div style="font-size:0.74rem; color:#CBD5E1;">IS Codes, Formulas &amp; GK Articles • Zero-Internet Ready • 1-Tap Socratic Explain</div>
+      </div>
+      <button type="button" class="soc-mini-btn" id="btn-close-cheat-vault" style="background:#334155; color:#FFF; border:none;">✕ Close</button>
+    </div>
+    <div class="titan-v35-tabs" id="cheat-vault-tabs">
+      <button type="button" class="titan-v35-tab active" data-cvtab="rcc">🧱 RCC &amp; Concrete</button>
+      <button type="button" class="titan-v35-tab" data-cvtab="soil">🌱 Soil &amp; Geotech</button>
+      <button type="button" class="titan-v35-tab" data-cvtab="fluid">💧 Fluid &amp; Survey</button>
+      <button type="button" class="titan-v35-tab" data-cvtab="gk">🏛️ GK / Polity / Sci</button>
+      <input type="text" id="cheat-vault-search" class="soc-followup-input" placeholder="🔍 Search IS code, formula, article..." style="max-width:240px; padding:5px 10px;">
+    </div>
+    <div class="titan-v35-body" id="cheat-vault-body"></div>
+  </div>
+</div>
+
+<!-- ==================== v3.5 CONFUSING-TWIN & UNIT-TRAP ARENA MODAL ==================== -->
+<div class="titan-v35-modal" id="trap-arena-modal" role="dialog" aria-modal="true" aria-label="Confusing Twin Trap Arena">
+  <div class="titan-v35-box">
+    <div class="titan-v35-head">
+      <div>
+        <div style="font-weight:900; font-size:1.02rem;">⚔️ Confusing-Twin &amp; Unit-Trap Arena</div>
+        <div style="font-size:0.74rem; color:#CBD5E1;">1 शब्द या Unit बदलने से पलटने वाले High-Frequency SSC/RRB JE Traps</div>
+      </div>
+      <button type="button" class="soc-mini-btn" id="btn-close-trap-arena" style="background:#334155; color:#FFF; border:none;">✕ Close</button>
+    </div>
+    <div class="titan-v35-tabs" id="trap-arena-tabs">
+      <button type="button" class="titan-v35-tab active" data-tatab="curated">🎯 High-Yield Twins (12 Pairs)</button>
+      <button type="button" class="titan-v35-tab" data-tatab="personal">🔥 My Wrong &amp; Starred Traps</button>
+      <button type="button" class="titan-v35-tab" id="btn-trap-blur-toggle">👁️ Hide / Reveal Answers</button>
+    </div>
+    <div class="titan-v35-body" id="trap-arena-body"></div>
+  </div>
+</div>
 
 <!-- ==================== ANKI-STYLE CLOUD SYNC MODAL (iPad <-> Android) ==================== -->
 <div class="modal-backdrop no-print" id="cloud-sync-modal" role="dialog" aria-modal="true" aria-labelledby="cloud-sync-title">
@@ -6158,9 +6470,10 @@ function renderQuestions(animateCards = true) {
             ? '<span class="q-exam-tag is-expected">✨ Expected</span>'
             : `<span class="q-exam-tag">🏛️ ${escapeHtml(ex)}</span>`;
         })()}
-        <span class="q-timer" id="qtimer-${qid}">${res ? `⏱️ ${res.timeSpent || 1}s` : ''}</span>
+        <span class="q-timer" id="qtimer-${qid}">${res ? formatSpeedTimerBadge(res.timeSpent || 1) : ''}</span>
         <div class="card-actions">
           <button type="button" class="mini-act-btn btn-speak-q" id="speak-${qid}" data-qid="${qid}" title="Tap for Titan Guru Live Voice Tutor (Tap again to Stop)">🎙️</button>
+          ${!appState.cbtMode ? `<button type="button" class="mini-act-btn btn-socratic-q ${hasSocraticCache(q) ? 'is-cached' : ''}" id="socratic-${qid}" data-qid="${qid}" title="Step-by-Step Socratic LaTeX Deep-Dive">🧠 Socratic</button>` : ''}
           ${!appState.cbtMode ? `<button type="button" class="mini-act-btn btn-lifeline" id="life-${qid}" data-qid="${qid}" ${res || used5050 ? 'disabled' : ''} title="50-50 Lifeline">🛟 50-50</button>` : ''}
           <button type="button" class="mini-act-btn btn-star ${isStarred ? 'starred-active' : ''}" id="star-${qid}" data-qid="${qid}" title="Star for Next Round">${isStarred ? '⭐' : '☆'}</button>
         </div>
@@ -6170,6 +6483,7 @@ function renderQuestions(animateCards = true) {
       ${showCurtain ? `<div class="recall-curtain" data-qid="${qid}">👁️ दिमाग़ में जवाब सोचें — फिर 4 Options देखने के लिए क्लिक करें (Space)</div>` : ''}
       <div class="options-list" id="opts-${qid}" style="${showCurtain ? 'display:none;' : ''}">${optsHtml}</div>
       ${fbBlock}
+      <div class="socratic-drawer" id="socratic-drawer-${qid}" style="display:none;"></div>
     </article>`;
   });
 
@@ -6214,7 +6528,7 @@ function patchCardInPlace(qid, clickedOrigIdx) {
     card.classList.toggle('card-ok', res.status === 'correct');
     card.classList.toggle('card-bad', res.status === 'wrong');
     const timerEl = document.getElementById('qtimer-' + qid);
-    if (timerEl) timerEl.textContent = `⏱️ ${res.timeSpent || 1}s`;
+    if (timerEl) timerEl.innerHTML = formatSpeedTimerBadge(res.timeSpent || 1);
 
     btns.forEach(b => {
       const oIdx = Number(b.dataset.origIdx);
@@ -6826,6 +7140,12 @@ function submitCBTTest() {
 /* =====================================================================
    WEAK-TOPIC RADAR & EXPORT DOCK
    ===================================================================== */
+function formatSpeedTimerBadge(sec) {
+  const s = Math.max(1, Number(sec) || 1);
+  if (s < 20) return `<span class="spd-pill spd-sniper" title="CBT-1 Sniper (<20s)">⚡ ${s}s</span>`;
+  if (s <= 45) return `<span class="spd-pill spd-safe" title="CBT-1 Safe (20-45s)">✅ ${s}s</span>`;
+  return `<span class="spd-pill spd-sink" title="CBT-1 Time-Sink (>45s)">🐢 ${s}s</span>`;
+}
 function getTopicStats() {
   const hist = appState.roundHistory[appState.currentRound] || {};
   const map = {};
@@ -6833,24 +7153,39 @@ function getTopicStats() {
     const q = QUIZ_DATA.find(x => x.id === qid);
     const r = hist[qid];
     if (!q || !r) return;
-    if (!map[q.topic]) map[q.topic] = { right: 0, total: 0 };
+    if (!map[q.topic]) map[q.topic] = { right: 0, total: 0, secSum: 0, sinks: 0, snipers: 0, safes: 0 };
+    const t = Math.max(1, Number(r.timeSpent) || 1);
     map[q.topic].total++;
+    map[q.topic].secSum += t;
+    if (t < 20) map[q.topic].snipers++;
+    else if (t <= 45) map[q.topic].safes++;
+    else map[q.topic].sinks++;
     if (r.status === 'correct') map[q.topic].right++;
   });
   return Object.entries(map).map(([topic, v]) => ({
-    topic, right: v.right, total: v.total, pct: Math.round((v.right / v.total) * 100)
+    topic, right: v.right, total: v.total, pct: Math.round((v.right / v.total) * 100),
+    avgSec: Math.round(v.secSum / v.total), sinks: v.sinks, snipers: v.snipers, safes: v.safes
   })).sort((a, b) => a.pct - b.pct);
 }
 function renderRadar() {
   const stats = getTopicStats();
   const el = document.getElementById('radar-bars-container');
-  if (stats.length === 0) { el.innerHTML = 'Attempt questions to see live sub-topic accuracy.'; return; }
-  el.innerHTML = stats.map(s => {
+  if (stats.length === 0) { el.innerHTML = 'Attempt questions to see live sub-topic accuracy &amp; CBT-1 speed tiers.'; return; }
+  const totSniper = stats.reduce((a, b) => a + b.snipers, 0);
+  const totSafe = stats.reduce((a, b) => a + b.safes, 0);
+  const totSink = stats.reduce((a, b) => a + b.sinks, 0);
+  const speedSummary = `<div class="radar-speed-bar">
+    <span class="spd-pill spd-sniper">⚡ Sniper (&lt;20s): ${totSniper}</span>
+    <span class="spd-pill spd-safe">✅ Safe (20-45s): ${totSafe}</span>
+    <span class="spd-pill spd-sink">🐢 Time-Sink (&gt;45s): ${totSink}</span>
+  </div>`;
+  el.innerHTML = speedSummary + stats.map(s => {
     const color = s.pct >= 80 ? '#16A34A' : (s.pct >= 50 ? '#D97706' : '#DC2626');
+    const spdIcon = s.avgSec < 20 ? '⚡' : (s.avgSec <= 45 ? '✅' : '🐢');
     return `<div class="radar-row">
-      <span style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escapeHtml(s.topic)}">${escapeHtml(s.topic)}</span>
+      <span style="font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escapeHtml(s.topic)} (${s.avgSec}s avg)">${escapeHtml(s.topic)}</span>
       <div class="radar-track"><div class="radar-fill" style="width:${s.pct}%; background:${color};"></div></div>
-      <span style="text-align:right; font-weight:700; color:${color};">${s.pct}% (${s.right}/${s.total})</span>
+      <span style="text-align:right; font-weight:700; color:${color};">${s.pct}% (${s.right}/${s.total}) · ${spdIcon}${s.avgSec}s</span>
     </div>`;
   }).join('');
 }
@@ -6897,10 +7232,12 @@ function updateExportDockContent() {
       lines.push(`• 📌 ${q.ankiFact} | 💡 ${q.hook}`);
     } else if (exportFormatMode === 'anki_tsv') {
       const front = `${q.en} / ${q.hi}`.replace(/\t|\n/g, ' ');
-      const back = `${q.opts[q.ans]} — 📌 ${q.ankiFact} (💡 ${q.hook})`.replace(/\t|\n/g, ' ');
+      const socExtra = getSocraticAnkiSnippet(q);
+      const back = `${q.opts[q.ans]} — 📌 ${q.ankiFact} (💡 ${q.hook})${socExtra ? ' | 🧠 ' + socExtra : ''}`.replace(/\t|\n/g, ' ');
       lines.push(`${front}\t${back}`);
     } else if (exportFormatMode === 'anki_cloze') {
-      lines.push(`${q.cloze} | 💡 ${q.hook}`);
+      const socExtra = getSocraticAnkiSnippet(q);
+      lines.push(`${q.cloze} | 💡 ${q.hook}${socExtra ? ' | 🧠 ' + socExtra : ''}`);
     }
   });
   document.getElementById('export-box').value = lines.length ? lines.join('\n') : 'इस Filter में अभी कोई सवाल नहीं है।';
@@ -7421,6 +7758,8 @@ function bindEvents() {
     const speakBtn = e.target.closest('.btn-speak-q');
     if (speakBtn) { speakQuestionCard(Number(speakBtn.dataset.qid)); return; }
     if (starBtn) { toggleStar(Number(starBtn.dataset.qid)); return; }
+    const socBtn = e.target.closest('.btn-socratic-q');
+    if (socBtn) { openSocraticDrawer(Number(socBtn.dataset.qid)); return; }
     const lifeBtn = e.target.closest('.btn-lifeline');
     if (lifeBtn && !lifeBtn.disabled) { useLifeline5050(Number(lifeBtn.dataset.qid)); return; }
     const curtain = e.target.closest('.recall-curtain');
@@ -7802,7 +8141,7 @@ function bindEvents() {
   document.getElementById('btn-scroll-top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   document.addEventListener('keydown', e => {
-    if (document.body.getAttribute('data-universe') !== 'mcq' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (document.body.getAttribute('data-universe') !== 'mcq' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || document.getElementById('cheat-vault-modal')?.classList.contains('open') || document.getElementById('trap-arena-modal')?.classList.contains('open')) return;
     const key = e.key.toLowerCase();
     const { slice } = getActiveBatchSlice();
     const hist = getActiveHist();
@@ -9467,9 +9806,428 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
     } catch (err) { showToast('🎤 Mic permission allow करो (HTTPS पर)'); }
   });
 
+  window.renderColorfulGuruCard = renderColorfulGuruCard;
+  window.setActiveUniverse = setActiveUniverse;
   setActiveUniverse(safeGetStorage(PG_UNIVERSE_KEY) || 'mcq');
 })();
 
 </script>
+
+<script>
+/* =====================================================================
+   BRAHMASTRA TITAN OS v3.5 — SOCRATIC ENGINE, CHEAT VAULT, TRAP ARENA
+   ===================================================================== */
+const SOCRATIC_CACHE_KEY = 'brahmastra_socratic_cache_v1';
+
+function getSocraticCacheMap() {
+  try { return JSON.parse(localStorage.getItem(SOCRATIC_CACHE_KEY) || '{}'); }
+  catch (e) { return {}; }
+}
+function getSocraticQHash(q) {
+  if (!q) return '';
+  const raw = String(q.en || '') + '||' + String((q.opts && q.opts[q.ans]) || '');
+  let h = 5381;
+  for (let i = 0; i < raw.length; i++) h = ((h << 5) + h) + raw.charCodeAt(i);
+  return 'soc_' + (h >>> 0).toString(36);
+}
+function hasSocraticCache(q) {
+  const key = getSocraticQHash(q);
+  const map = getSocraticCacheMap();
+  return !!(key && map[key] && map[key].full);
+}
+function saveSocraticCache(q, mode, text) {
+  const key = getSocraticQHash(q);
+  if (!key || !text) return;
+  const map = getSocraticCacheMap();
+  if (!map[key]) map[key] = {};
+  map[key][mode] = text;
+  map[key].ts = Date.now();
+  const keys = Object.keys(map);
+  if (keys.length > 350) {
+    keys.sort((a, b) => (map[a].ts || 0) - (map[b].ts || 0));
+    keys.slice(0, keys.length - 350).forEach(k => delete map[k]);
+  }
+  try { localStorage.setItem(SOCRATIC_CACHE_KEY, JSON.stringify(map)); } catch (e) {}
+}
+function getSocraticAnkiSnippet(q) {
+  const key = getSocraticQHash(q);
+  const entry = getSocraticCacheMap()[key];
+  if (!entry || !entry.full) return '';
+  const cleaned = String(entry.full)
+    .replace(/\$\$?/g, '')
+    .replace(/\|[^\n]+\|/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return cleaned.slice(0, 260) + (cleaned.length > 260 ? '...' : '');
+}
+
+function buildSocraticPromptForQ(q, mode, res) {
+  const ansText = (q.opts && q.opts[q.ans]) ? q.opts[q.ans] : '';
+  const optList = (q.opts || []).map((o, idx) => `${String.fromCharCode(65 + idx)}) ${o}`).join('\n');
+  const isHint = (mode === 'hint');
+  const langRule = [
+    'LANGUAGE RULE (STRICT): Write all explanations in simplest everyday Devanagari Hindi (Patna Khan Sir / Bada Bhai style — zero Sanskritization, zero village story fluff).',
+    'Write ALL English technical terms, IS codes, formulas, units, and option keywords strictly in Latin English script (NEVER transliterate English technical words into Devanagari).',
+    'Use crisp LaTeX ($...$ for inline, $$...$$ for display formulas/calculations) wherever any equation, ratio, or numerical step appears.',
+    'ZERO meta-labels like "Step 1:", "Question:", "Answer:", "Trigger:", "Hook:". Let the 4 emojis speak directly.'
+  ].join(' ');
+
+  if (isHint) {
+    return `${langRule}
+TASK: The SSC JE / RRB JE student has NOT attempted this question yet. Give ONLY a Socratic Hint WITHOUT revealing or naming the final correct option!
+Question (EN): ${q.en}
+Question (HI): ${q.hi || ''}
+Options:
+${optList}
+
+Output strictly these 2 lines (Socratic सवाल? ➔ जवाब! format):
+- 🎯 **Keyword Decode:** सवाल के मुख्य English technical term का सीधा मतलब पूछो ➔ उसका सरल हिंदी मतलब बताओ।
+- 🧠 **Ground-Zero Physics:** ज़मीनी हकीकत / practical engineering का एक छोटा सा सवाल पूछो ➔ उसका common-sense logic जवाब दो ताकि student खुद सही option तक पहुँच सके।`;
+  }
+
+  const userPickText = (res && typeof res.selectedOptId === 'number' && q.opts[res.selectedOptId])
+    ? `Student chose: ${q.opts[res.selectedOptId]} (${res.status === 'correct' ? 'RIGHT' : 'WRONG'})`
+    : 'Student wants full post-mortem.';
+
+  return `${langRule}
+TASK: Give a Full 360° Socratic Post-Mortem for this SSC JE / RRB JE question.
+Question (EN): ${q.en}
+Question (HI): ${q.hi || ''}
+Options:
+${optList}
+Correct Answer: ${ansText}
+${userPickText}
+
+Format cleanly using these exact sections:
+### 🧠 Socratic Thinking Chain
+- 🎯 (Main English keyword का सीधा सवाल? ➔ सरल हिंदी जवाब)
+- 🧠 (Ground-zero physics/reality सवाल? ➔ practical desi logic जवाब)
+- 🔗 (उस logic को exact \`IS Code\` / formula / rule से जोड़ने वाला सवाल? ➔ exact technical lock)
+- ⚔️ (Reverse-case या option-elimination सवाल? ➔ 1-line twin-case hack)
+
+### 🔍 360° Option Autopsy
+| Option | Verdict | Exact Reason |
+| :--- | :--- | :--- |
+(4 crisp rows covering all 4 options A, B, C, D)
+
+### ⚠️ TCS / Eduquity Trap & 1-Sec Lock
+- **Trap Alert:** Examiner इस सवाल में कौन सी exact unit, sign, या wording का trap रखता है।
+- **1-Sec Lock:** 1–2 line का direct visual/number/formula memory lock (NO Major System 0=S, 1=T).
+
+(If this question has ANY numerical value, ratio, or calculation, ALSO add:
+### 🧮 No-Calculator 4-Step Solver
+- **Formula:** $...$
+- **Units:** ...
+- **Substitution & Solve:** $$...$$
+- **Final Lock:** exact number + unit)`;
+}
+
+async function runSocraticGeminiCall(promptText) {
+  const cfg = typeof getVoiceConfig === 'function' ? getVoiceConfig() : { apiKey: '' };
+  const cleanKey = sanitizeTitanApiKey(cfg.apiKey);
+  if (!cleanKey) throw new Error('Titan Guru Settings में अपनी Gemini API Key save करो, फिर 🧠 Socratic दबाओ!');
+  const baseModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-3.5-flash-lite'];
+  const models = __pgCachedWorkingModel
+    ? [__pgCachedWorkingModel, ...baseModels.filter(x => x !== __pgCachedWorkingModel)]
+    : baseModels.slice();
+  let lastErr = null;
+  let triedDisc = false;
+  for (let i = 0; i < models.length; i++) {
+    const m = models[i];
+    try {
+      const resp = await pgFetchGemini(`models/${m}:generateContent`, cleanKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: promptText }] }],
+          generationConfig: { temperature: 0.55, maxOutputTokens: 1100 }
+        })
+      });
+      if (!resp.ok) {
+        lastErr = new Error(await pgParseApiError(resp));
+        if (i === models.length - 1 && !triedDisc) {
+          triedDisc = true;
+          const disc = await pgDiscoverFlashModels(cleanKey);
+          disc.forEach(dm => { if (!models.includes(dm)) models.push(dm); });
+        }
+        continue;
+      }
+      const json = await resp.json();
+      const txt = json && json.candidates && json.candidates[0] && json.candidates[0].content &&
+        json.candidates[0].content.parts && json.candidates[0].content.parts.map(p => p.text || '').join('\n').trim();
+      if (txt) {
+        __pgCachedWorkingModel = m;
+        return txt;
+      }
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error('Socratic Engine unreachable');
+}
+
+async function openSocraticDrawer(qid, forceMode, forceRegen) {
+  const drawer = document.getElementById('socratic-drawer-' + qid);
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  if (!drawer || !q) return;
+
+  if (!forceMode && !forceRegen && drawer.style.display === 'block') {
+    drawer.style.display = 'none';
+    return;
+  }
+
+  const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
+  const res = hist[qid];
+  const mode = forceMode || (res ? 'full' : 'hint');
+  const cacheKey = getSocraticQHash(q);
+  const cached = getSocraticCacheMap()[cacheKey];
+
+  drawer.style.display = 'block';
+  const modeLabel = mode === 'hint' ? '🎯 Socratic Hint (No Spoiler)' : '🧠 360° Socratic Post-Mortem';
+
+  const renderDrawerContent = (rawMd, fromCache) => {
+    const htmlOut = typeof renderColorfulGuruCard === 'function' ? renderColorfulGuruCard(rawMd) : escapeHtml(rawMd);
+    drawer.innerHTML = `
+      <div class="soc-head">
+        <div class="soc-title-badge">
+          <span>${modeLabel}</span>
+          ${fromCache ? '<span class="soc-mode-pill">⚡ Cached</span>' : '<span class="soc-mode-pill">✨ Live</span>'}
+        </div>
+        <div class="soc-head-actions">
+          ${mode === 'hint' ? `<button type="button" class="soc-mini-btn" onclick="openSocraticDrawer(${qid}, 'full', false)">🔓 Full 360° Post-Mortem</button>` : ''}
+          <button type="button" class="soc-mini-btn" onclick="speakSocraticDrawer(${qid})">🔊 Listen</button>
+          <button type="button" class="soc-mini-btn" onclick="openSocraticDrawer(${qid}, '${mode}', true)">🔄 Refresh</button>
+          <button type="button" class="soc-mini-btn" onclick="document.getElementById('socratic-drawer-${qid}').style.display='none'">✕</button>
+        </div>
+      </div>
+      <div class="soc-body" id="soc-body-${qid}">${htmlOut}</div>
+      <div class="soc-followup-bar">
+        <input type="text" class="soc-followup-input" id="soc-ask-${qid}" placeholder="इस सवाल में कोई और doubt पूछो (जैसे: इसमें M25 कब लगेगा?)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); askSocraticFollowup(${qid});}">
+        <button type="button" class="soc-mini-btn" style="background:#7C3AED; color:#FFF; border:none; padding:6px 12px;" onclick="askSocraticFollowup(${qid})">Ask ➔</button>
+      </div>
+      <div id="soc-follow-out-${qid}"></div>`;
+  };
+
+  if (!forceRegen && cached && cached[mode]) {
+    renderDrawerContent(cached[mode], true);
+    return;
+  }
+
+  drawer.innerHTML = `<div class="soc-head"><div class="soc-title-badge"><span>${modeLabel}</span></div></div><div style="font-size:0.86rem; font-weight:700; color:#5B21B6; padding:8px 0;">⏳ Socratic Engine thinking in LaTeX + Desi Logic...</div>`;
+  try {
+    const prompt = buildSocraticPromptForQ(q, mode, res);
+    const reply = await runSocraticGeminiCall(prompt);
+    saveSocraticCache(q, mode, reply);
+    const btn = document.getElementById('socratic-' + qid);
+    if (btn && mode === 'full') btn.classList.add('is-cached');
+    renderDrawerContent(reply, false);
+  } catch (err) {
+    drawer.innerHTML = `<div class="soc-head"><div class="soc-title-badge">⚠️ Socratic Error</div><button type="button" class="soc-mini-btn" onclick="document.getElementById('socratic-drawer-${qid}').style.display='none'">✕</button></div><div style="font-size:0.84rem; color:#DC2626; font-weight:700;">${escapeHtml(err.message || String(err))}</div>`;
+  }
+}
+
+async function askSocraticFollowup(qid) {
+  const inp = document.getElementById('soc-ask-' + qid);
+  const out = document.getElementById('soc-follow-out-' + qid);
+  const q = QUIZ_DATA.find(x => x.id === qid);
+  if (!inp || !out || !q) return;
+  const userQ = inp.value.trim();
+  if (!userQ) return;
+  inp.value = '';
+  out.innerHTML = `<div class="soc-followup-reply">⏳ सोच रहा हूँ...</div>`;
+  try {
+    const prompt = `Write in simplest Devanagari Hindi + Latin English technical terms + $LaTeX$ math where needed. Zero meta-labels.
+Context MCQ: ${q.en}
+Correct Answer: ${q.opts[q.ans]}
+Student's specific doubt: ${userQ}
+Reply concisely in 3-5 crystal-clear lines:`;
+    const ans = await runSocraticGeminiCall(prompt);
+    out.innerHTML = `<div class="soc-followup-reply">${typeof renderColorfulGuruCard === 'function' ? renderColorfulGuruCard(ans) : escapeHtml(ans)}</div>`;
+  } catch (e) {
+    out.innerHTML = `<div class="soc-followup-reply" style="color:#DC2626;">⚠️ ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+function speakSocraticDrawer(qid) {
+  const body = document.getElementById('soc-body-' + qid);
+  if (!body) return;
+  const plain = body.innerText.replace(/\s+/g, ' ').trim().slice(0, 750);
+  if (!plain) return;
+  try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+  if (typeof speakWithStudioVoice === 'function' && typeof getVoiceConfig === 'function' && sanitizeTitanApiKey(getVoiceConfig().apiKey)) {
+    speakWithStudioVoice(plain, getVoiceConfig()).catch(() => {
+      if (window.speechSynthesis) {
+        const u = new SpeechSynthesisUtterance(plain);
+        u.lang = 'hi-IN'; u.rate = 1.05;
+        window.speechSynthesis.speak(u);
+      }
+    });
+  } else if (window.speechSynthesis) {
+    const u = new SpeechSynthesisUtterance(plain);
+    u.lang = 'hi-IN'; u.rate = 1.05;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+/* =====================================================================
+   OFFLINE POCKET CHEAT VAULT DATA + RENDERER
+   ===================================================================== */
+const CHEAT_VAULT_DATA = {
+  rcc: [
+    { t: 'IS 456:2000 Minimum Grades', v: 'PCC: <b>M15</b> | RCC Mild: <b>M20</b> | Moderate: <b>M25</b> | Severe (Sea Water): <b>M30</b> | Very Severe: <b>M35</b> | Extreme: <b>M40</b>' },
+    { t: 'IS 456 Nominal Cover (mm)', v: 'Slab: <b>20 mm</b> | Beam: <b>25 mm</b> | Column: <b>40 mm</b> | Footing / Foundation: <b>50 mm</b>' },
+    { t: 'Basic Span / Effective Depth (L/d)', v: 'Cantilever: <b>7</b> | Simply Supported: <b>20</b> | Continuous: <b>26</b> (for span ≤ 10m)' },
+    { t: 'OPC Setting Time (IS 269)', v: 'Initial Setting Time: <b>≥ 30 min</b> | Final Setting Time: <b>≤ 600 min (10 hrs)</b> | Quick Setting: 5 min' },
+    { t: 'Max Spacing of Main Bars (Slab)', v: 'Main steel: <b>min(3d, 300 mm)</b> | Distribution steel: <b>min(5d, 450 mm)</b>' },
+    { t: 'Shear & Bond Limits (LSM)', v: 'Max shear stress $\\tau_{c,\\max}$ increases with grade ($2.8\\text{ MPa}$ for M20, $3.1$ for M25). Min shear reinforcement: $\\frac{A_{sv}}{b s_v} \\ge \\frac{0.4}{0.87 f_y}$' }
+  ],
+  soil: [
+    { t: 'Void Ratio & Porosity', v: '$e = \\frac{n}{1-n}$ &nbsp;|&nbsp; $n = \\frac{e}{1+e}$ &nbsp;(Note: $0 < n < 1$, whereas $e > 0$ can exceed 1)' },
+    { t: 'Golden Phase Relation', v: '$S_r \\cdot e = w \\cdot G_s$ &nbsp;|&nbsp; Dry Unit Weight: $\\gamma_d = \\frac{G_s \\gamma_w}{1+e} = \\frac{\\gamma}{1+w}$' },
+    { t: 'Atterberg Indices', v: 'Plasticity Index: $I_P = w_L - w_P$ | Liquidity Index: $I_L = \\frac{w - w_P}{I_P}$ | Consistency: $I_C = 1 - I_L$' },
+    { t: 'Darcy Law & Seepage', v: 'Discharge velocity $v = k \\cdot i$ | Seepage velocity $v_s = \\frac{v}{n}$ (always $v_s > v$)' },
+    { t: 'Terzaghi Bearing Capacity', v: 'Strip: $q_u = c N_c + q N_q + 0.5 \\gamma B N_\\gamma$ | Pure clay ($\\phi=0$): $N_c = 5.7, N_q = 1, N_\\gamma = 0$' },
+    { t: 'Critical Hydraulic Gradient', v: '$i_c = \\frac{G_s - 1}{1 + e} \\approx 1.0$ (Quick sand occurs in cohesionless fine sand, NOT clay)' }
+  ],
+  fluid: [
+    { t: 'Dimensionless Numbers', v: 'Reynolds ($Re$): Inertia / Viscous | Froude ($Fr$): Inertia / Gravity | Weber ($We$): Inertia / Surface Tension | Euler ($Eu$): Inertia / Pressure' },
+    { t: 'Viscosity Units Trap', v: 'Dynamic ($\\mu$): $\\text{Pa}\\cdot\\text{s}$ | $1\\text{ Poise} = 0.1\\text{ Pa}\\cdot\\text{s}$<br>Kinematic ($\\nu = \\mu/\\rho$): $\\text{m}^2/\\text{s}$ | $1\\text{ Stokes} = 10^{-4}\\text{ m}^2/\\text{s}$' },
+    { t: 'Laminar Pipe Flow ($Re < 2000$)', v: 'Friction factor $f = \\frac{64}{Re}$ (Darcy) | $v_{\\max} = 2 v_{\\text{avg}}$ | Momentum correction $\\beta = 4/3$, Kinetic $\\alpha = 2$' },
+    { t: 'Metric Chain & Link', v: '20m Chain = <b>100 links</b> | 30m Chain = <b>150 links</b> | Length of 1 Link = Always <b>20 cm (0.2 m)</b>' },
+    { t: 'Levelling Curvature + Refraction', v: 'Curvature: $-0.0785 D^2$ | Refraction: $+0.0112 D^2$ | Combined: <b>$-0.0673 D^2$ metres</b> ($D$ in km, always negative)' },
+    { t: 'Prismatic vs Surveyor Compass', v: 'Prismatic: <b>WCB (0°–360°)</b>, inverted readings | Surveyor: <b>QB (0°–90°)</b>, direct readings' }
+  ],
+  gk: [
+    { t: 'Ordinance & Advisory Articles', v: 'President Ordinance: <b>Art. 123</b> | Governor Ordinance: <b>Art. 213</b> | SC Advisory: <b>Art. 143</b> | Money Bill: <b>Art. 110</b>' },
+    { t: 'Must-Know Amendments', v: '<b>42nd (1976):</b> Mini Constitution | <b>44th (1978):</b> Property → Legal Right (300A) | <b>61st (1988):</b> Voting 21→18 | <b>73rd:</b> Panchayati Raj' },
+    { t: 'Emergency Provisions', v: 'National: <b>Art. 352</b> | President Rule (State): <b>Art. 356</b> | Financial: <b>Art. 360</b> (never imposed)' },
+    { t: 'Vitamins & Deficiencies', v: '<b>Vit A:</b> Night Blindness | <b>Vit B1:</b> Beriberi | <b>Vit C:</b> Scurvy | <b>Vit D:</b> Rickets | <b>Vit K:</b> Blood Clotting' },
+    { t: 'Room-Temp Liquid Elements', v: 'Liquid Metal: <b>Mercury (Hg)</b> | Liquid Non-Metal: <b>Bromine (Br)</b> | Lightest Metal: <b>Lithium (Li)</b>' },
+    { t: 'SI Units Quick Check', v: 'Pressure: <b>Pascal</b> | Power: <b>Watt</b> | Luminous Intensity: <b>Candela</b> | Magnetic Flux: <b>Weber</b> | Density: <b>Tesla</b>' }
+  ]
+};
+
+let activeCheatTab = 'rcc';
+function renderCheatVault() {
+  const body = document.getElementById('cheat-vault-body');
+  const qStr = (document.getElementById('cheat-vault-search').value || '').trim().toLowerCase();
+  let items = qStr
+    ? Object.values(CHEAT_VAULT_DATA).flat().filter(x => (x.t + ' ' + x.v).toLowerCase().includes(qStr))
+    : (CHEAT_VAULT_DATA[activeCheatTab] || []);
+  if (!items.length) {
+    body.innerHTML = '<div style="text-align:center; padding:30px; color:var(--muted); font-weight:700;">कोई matching formula या IS code नहीं मिला।</div>';
+    return;
+  }
+  body.innerHTML = `<div class="cheat-grid">${items.map((item, idx) => {
+    const renderedV = typeof renderRichFlowHtml === 'function' ? renderRichFlowHtml(item.v) : item.v;
+    return `<div class="cheat-card">
+      <div class="cheat-card-title">${escapeHtml(item.t)}</div>
+      <div class="cheat-card-val">${renderedV}</div>
+      <div class="cheat-card-foot">
+        <span style="font-size:0.7rem; color:var(--muted); font-weight:700;">SSC / RRB JE High-Yield</span>
+        <button type="button" class="soc-mini-btn" onclick="askSocraticFromCheat(${idx}, '${activeCheatTab}')">🧠 Ask Guru</button>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+function askSocraticFromCheat(idx, tab) {
+  const qStr = (document.getElementById('cheat-vault-search').value || '').trim().toLowerCase();
+  const list = qStr ? Object.values(CHEAT_VAULT_DATA).flat().filter(x => (x.t + ' ' + x.v).toLowerCase().includes(qStr)) : (CHEAT_VAULT_DATA[tab] || []);
+  const item = list[idx];
+  if (!item) return;
+  document.getElementById('cheat-vault-modal').classList.remove('open');
+  if (typeof window.setActiveUniverse === 'function') window.setActiveUniverse('chat');
+  const inp = document.getElementById('chat-text-input');
+  if (inp) {
+    inp.value = `${item.t} को simplest desi analogy और exam trap के साथ समझाओ: ${item.v.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ')}`;
+    const sendBtn = document.getElementById('btn-chat-send');
+    if (sendBtn) sendBtn.click();
+  }
+}
+
+/* =====================================================================
+   CONFUSING-TWIN & UNIT-TRAP ARENA DATA + RENDERER
+   ===================================================================== */
+const CURATED_TWINS = [
+  { tag: 'Cement', aQ: 'Flash Set & Highest Heat of Hydration in OPC', aA: 'C3A (Tricalcium Aluminate) — Retarded by Gypsum', bQ: 'Early Strength (first 7 days) in OPC', bA: 'C3S (Tricalcium Silicate / Alite)' },
+  { tag: 'Polity', aQ: 'President Ordinance Making Power', aA: 'Article 123', bQ: 'Governor Ordinance Making Power', bA: 'Article 213 (Digits swap: 123 ↔ 213)' },
+  { tag: 'Fluid', aQ: 'CGS Unit of Dynamic Viscosity (μ)', aA: 'Poise (1 Poise = 0.1 Pa·s)', bQ: 'CGS Unit of Kinematic Viscosity (ν = μ/ρ)', bA: 'Stokes (1 Stokes = 10⁻⁴ m²/s)' },
+  { tag: 'IS 456', aQ: 'Minimum Grade for PCC Work', aA: 'M15 (Nominal Mix 1:2:4)', bQ: 'Minimum Grade for RCC (Mild Exposure)', bA: 'M20 (Sea Water / Severe = M30)' },
+  { tag: 'Levelling', aQ: 'Curvature Correction Sign & Formula', aA: 'Negative (-0.0785 D² m)', bQ: 'Refraction Correction Sign & Formula', bA: 'Positive (+0.0112 D² m) | Combined = -0.0673 D²' },
+  { tag: 'RCC L/d', aQ: 'Basic Span/Depth Ratio for Cantilever', aA: '7', bQ: 'Basic Span/Depth Ratio for Simply Supported vs Continuous', bA: '20 (SS) vs 26 (Continuous)' },
+  { tag: 'Cement', aQ: 'Minimum Initial Setting Time of Quick Setting Cement', aA: '5 minutes', bQ: 'Minimum Initial Setting Time of Low Heat Cement', bA: '60 minutes (OPC = 30 minutes)' },
+  { tag: 'Science', aQ: 'Liquid Metal at Room Temperature', aA: 'Mercury (Hg)', bQ: 'Liquid Non-Metal at Room Temperature', bA: 'Bromine (Br)' },
+  { tag: 'Pipe Flow', aQ: 'Friction Factor f in Laminar Flow (Darcy)', aA: '64 / Re', bQ: 'Coefficient of Friction f\' (Fanning)', bA: '16 / Re (Darcy f = 4 × Fanning f\')' },
+  { tag: 'Covers', aQ: 'IS 456 Nominal Cover for Beam vs Slab', aA: 'Beam: 25 mm | Slab: 20 mm', bQ: 'IS 456 Nominal Cover for Column vs Footing', bA: 'Column: 40 mm | Footing: 50 mm' }
+];
+let activeTrapTab = 'curated';
+let trapBlurOn = false;
+
+function renderTrapArena() {
+  const body = document.getElementById('trap-arena-body');
+  if (activeTrapTab === 'curated') {
+    body.innerHTML = CURATED_TWINS.map(tw => `
+      <div class="twin-card">
+        <span class="soc-mode-pill">⚔️ ${escapeHtml(tw.tag)} Twin</span>
+        <div class="twin-pair-grid">
+          <div class="twin-side">
+            <div style="font-size:0.82rem; font-weight:800;">A) ${escapeHtml(tw.aQ)}</div>
+            <div class="twin-ans-blur ${trapBlurOn ? 'hidden-ans' : ''}" onclick="this.classList.toggle('hidden-ans')">👉 ${escapeHtml(tw.aA)}</div>
+          </div>
+          <div class="twin-side side-b">
+            <div style="font-size:0.82rem; font-weight:800;">B) ${escapeHtml(tw.bQ)}</div>
+            <div class="twin-ans-blur ${trapBlurOn ? 'hidden-ans' : ''}" onclick="this.classList.toggle('hidden-ans')">👉 ${escapeHtml(tw.bA)}</div>
+          </div>
+        </div>
+      </div>`).join('');
+  } else {
+    const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
+    const personal = QUIZ_DATA.filter(q => (hist[q.id] && hist[q.id].status === 'wrong') || appState.starredInCurrentRound[q.id]);
+    if (!personal.length) {
+      body.innerHTML = '<div style="text-align:center; padding:28px; color:var(--muted); font-weight:700;">अभी इस chapter में कोई Wrong या Starred सवाल नहीं है — शाबाश!</div>';
+      return;
+    }
+    body.innerHTML = personal.slice(0, 25).map(q => `
+      <div class="twin-card">
+        <span class="soc-mode-pill">${escapeHtml(q.topic)}</span>
+        <div style="font-size:0.86rem; font-weight:800; margin-top:6px;">${typeof renderRichMath === 'function' ? renderRichMath(q.en) : escapeHtml(q.en)}</div>
+        <div class="twin-ans-blur ${trapBlurOn ? 'hidden-ans' : ''}" onclick="this.classList.toggle('hidden-ans')">✅ ${escapeHtml(q.opts[q.ans])} — ${escapeHtml(q.ankiFact || q.hook || '')}</div>
+      </div>`).join('');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cvModal = document.getElementById('cheat-vault-modal');
+  const taModal = document.getElementById('trap-arena-modal');
+  document.getElementById('btn-open-cheat-vault')?.addEventListener('click', () => { cvModal.classList.add('open'); renderCheatVault(); });
+  document.getElementById('btn-close-cheat-vault')?.addEventListener('click', () => cvModal.classList.remove('open'));
+  document.getElementById('cheat-vault-search')?.addEventListener('input', renderCheatVault);
+  document.getElementById('cheat-vault-tabs')?.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cvtab]');
+    if (!b) return;
+    activeCheatTab = b.dataset.cvtab;
+    document.querySelectorAll('#cheat-vault-tabs [data-cvtab]').forEach(x => x.classList.toggle('active', x === b));
+    renderCheatVault();
+  });
+
+  document.getElementById('btn-open-trap-arena')?.addEventListener('click', () => { taModal.classList.add('open'); renderTrapArena(); });
+  document.getElementById('btn-close-trap-arena')?.addEventListener('click', () => taModal.classList.remove('open'));
+  document.getElementById('trap-arena-tabs')?.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-tatab]');
+    if (b) {
+      activeTrapTab = b.dataset.tatab;
+      document.querySelectorAll('#trap-arena-tabs [data-tatab]').forEach(x => x.classList.toggle('active', x === b));
+      renderTrapArena();
+    }
+  });
+  document.getElementById('btn-trap-blur-toggle')?.addEventListener('click', () => {
+    trapBlurOn = !trapBlurOn;
+    renderTrapArena();
+  });
+  [cvModal, taModal].forEach(m => m?.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); }));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { cvModal?.classList.remove('open'); taModal?.classList.remove('open'); }
+  });
+});
+</script>
+
 </body>
 </html>
