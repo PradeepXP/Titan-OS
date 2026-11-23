@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
-  <title>Brahmastra Titan OS — PYQ-Sniper Super-App</title>
+  <title>Brahmastra Titan OS v3.0 — 3-Universe PYQ-Sniper Super-App</title>
 <style>
 :root {
   --bg: #F4F1EA;
@@ -1622,9 +1622,404 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   border-color: #ef4444;
 }
 
+
+/* =====================================================================
+   BRAHMASTRA TITAN OS v3.0 — 3-UNIVERSE UI + PDF POINTER + ASK TITAN GURU
+   ===================================================================== */
+.pg-ver-pill {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563EB, #16A34A);
+  color: #FFFFFF;
+  vertical-align: middle;
+  margin-left: 4px;
+  letter-spacing: 0.04em;
+}
+.pg-universe-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  padding: 5px;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+.pg-uni-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.pg-uni-btn:hover { color: var(--ink); background: rgba(37, 99, 235, 0.08); }
+.pg-uni-btn.active {
+  background: linear-gradient(135deg, #2563EB, #0284C7);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.30);
+}
+.pg-uni-btn:active, .pdf-explain-btn:active, .chat-send-btn:active { transform: scale(0.97); }
+@keyframes pgUniFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.pg-uni-panel { display: none; margin-top: 12px; }
+.pg-uni-panel.active { display: block; animation: pgUniFade 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+body[data-universe="pdf"] .mcq-only-el,
+body[data-universe="chat"] .mcq-only-el { display: none !important; }
+
+/* === UNIVERSE 2: PDF POINTER TUTOR === */
+.pdf-shell {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.pdf-hero-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 7px 12px;
+  margin-bottom: 9px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #1E40AF, #0369A1);
+  color: #FFFFFF;
+}
+.pdf-hero-strip h2 { margin: 0; font-size: 0.9rem; font-weight: 900; }
+.pdf-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.pdf-toolbar-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.pdf-select {
+  padding: 7px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 700;
+  max-width: 210px;
+}
+.pdf-page-nav {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+.pdf-page-input {
+  width: 44px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 4px;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+.pdf-stage-outer {
+  position: relative;
+  margin-top: 12px;
+  background: #E2E8F0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: auto;
+  max-height: 66vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+.pdf-canvas-wrap {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.24);
+  border-radius: 8px;
+  background: #FFFFFF;
+}
+#pdf-render-canvas { display: block; max-width: 100%; height: auto; border-radius: 8px; }
+@keyframes pgRadarPulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45), 0 8px 22px rgba(2, 132, 199, 0.32); }
+  70% { box-shadow: 0 0 0 13px rgba(37, 99, 235, 0), 0 8px 22px rgba(2, 132, 199, 0.32); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0), 0 8px 22px rgba(2, 132, 199, 0.32); }
+}
+#pdf-pointer-ball {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  margin-left: -31px;
+  margin-top: -31px;
+  border-radius: 50%;
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(14,165,233,0.16) 62%, rgba(37,99,235,0.34) 100%);
+  border: 2.5px solid #2563EB;
+  animation: pgRadarPulse 2.2s infinite;
+  cursor: grab;
+  touch-action: none;
+  z-index: 25;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+#pdf-pointer-ball::before, #pdf-pointer-ball::after {
+  content: "";
+  position: absolute;
+  background: rgba(37, 99, 235, 0.55);
+  pointer-events: none;
+}
+#pdf-pointer-ball::before { width: 1px; height: 100%; left: 50%; top: 0; }
+#pdf-pointer-ball::after { height: 1px; width: 100%; top: 50%; left: 0; }
+#pdf-pointer-ball.visible { display: flex; }
+#pdf-pointer-ball.dragging {
+  cursor: grabbing;
+  animation: none;
+  transform: scale(1.14);
+  border-color: #E11D48;
+  box-shadow: 0 0 0 7px rgba(225, 29, 72, 0.22), 0 8px 24px rgba(225, 29, 72, 0.40);
+}
+#pdf-pointer-ball .ball-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(225, 29, 72, 0.90);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.95);
+  pointer-events: none;
+}
+#pdf-pointer-ball .ball-tag {
+  position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+  background: #0F172A; color: #FFFFFF; font-size: 10px; font-weight: 800;
+  padding: 2px 8px; border-radius: 999px; white-space: nowrap; pointer-events: none; opacity: 0.94;
+}
+.pdf-empty-state { text-align: center; padding: 34px 18px; color: var(--muted); max-width: 460px; }
+.pdf-empty-state h3 { margin: 8px 0 6px; color: var(--ink); font-size: 1.08rem; }
+.pdf-action-dock {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+  margin-top: 12px; padding: 11px 13px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(2, 132, 199, 0.08));
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.08);
+}
+.pdf-explain-btn {
+  background: linear-gradient(135deg, #2563EB, #0284C7);
+  color: #FFFFFF; border: none; border-radius: 11px; padding: 10px 16px;
+  font-weight: 800; font-size: 0.88rem; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+}
+.pdf-explain-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.pdf-mic-btn {
+  background: linear-gradient(135deg, #E11D48, #F97316);
+  color: #FFFFFF; border: none; border-radius: 11px; padding: 10px 14px;
+  font-weight: 800; font-size: 0.86rem; cursor: pointer;
+}
+.pdf-mic-btn.recording { animation: pgPulseRec 1s infinite; box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.28); }
+@keyframes pgPulseRec { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+.pdf-status-pill { font-size: 0.8rem; font-weight: 700; color: var(--ink); }
+.pdf-answer-box { margin-top: 12px; display: none; }
+.pdf-answer-box.show { display: block; }
+
+/* === UNIVERSE 3: ASK TITAN GURU MULTIMODAL CHAT === */
+.chat-shell {
+  background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+  overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; min-height: 70vh;
+}
+.chat-header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  padding: 12px 15px; background: linear-gradient(135deg, #1E40AF, #0369A1); color: #FFFFFF;
+}
+.chat-header h2 { margin: 0; font-size: 1rem; font-weight: 900; }
+.chat-header p { margin: 2px 0 0; font-size: 0.75rem; opacity: 0.92; }
+.chat-subject-bar {
+  display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px;
+  background: var(--card); border-bottom: 1px solid var(--border);
+}
+.chat-subj-pill {
+  flex-shrink: 0; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--muted); font-size: 0.74rem; font-weight: 800; cursor: pointer;
+}
+.chat-subj-pill.active { background: #2563EB; color: #FFFFFF; border-color: #2563EB; }
+.chat-feed {
+  flex: 1; padding: 14px; overflow-y: auto; max-height: 55vh;
+  display: flex; flex-direction: column; gap: 12px; background: var(--bg);
+}
+@keyframes pgMsgPop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.chat-msg {
+  max-width: 92%; border-radius: 15px; padding: 11px 14px; font-size: 0.92rem;
+  line-height: 1.56; word-wrap: break-word; animation: pgMsgPop 0.22s ease-out;
+}
+.chat-msg.user {
+  align-self: flex-end; background: linear-gradient(135deg, #2563EB, #0284C7);
+  color: #FFFFFF; border-bottom-right-radius: 4px;
+}
+.chat-msg.user img {
+  display: block; max-width: 220px; max-height: 200px; border-radius: 10px;
+  margin-bottom: 6px; border: 2px solid rgba(255,255,255,0.45);
+}
+.chat-msg.ai {
+  align-self: flex-start; width: 100%; max-width: 98%;
+  background: var(--card); color: var(--ink); border: 1px solid var(--border);
+  border-bottom-left-radius: 4px; box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+}
+.guru-ai-head {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 6px;
+  font-size: 0.76rem; font-weight: 800; color: #1D4ED8;
+}
+.guru-ai-avatar {
+  width: 24px; height: 24px; border-radius: 8px;
+  background: linear-gradient(135deg, #2563EB, #16A34A); color: #FFFFFF;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 0.82rem;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.30);
+}
+.guru-rich-card { font-size: 0.93rem; line-height: 1.64; color: var(--ink); }
+.guru-rich-h2 {
+  display: inline-block; margin: 10px 0 6px; padding: 4px 11px; border-radius: 9px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.13), rgba(2, 132, 199, 0.13));
+  border-left: 4px solid #2563EB; color: #1E40AF; font-size: 0.96rem; font-weight: 900;
+}
+.guru-rich-h3 {
+  margin: 8px 0 4px; color: #0369A1; font-size: 0.9rem; font-weight: 800;
+  border-bottom: 1.5px dashed rgba(3, 105, 161, 0.28); padding-bottom: 2px;
+}
+.guru-rich-ul { margin: 5px 0 8px; padding-left: 18px; }
+.guru-rich-ul li { margin-bottom: 5px; }
+.guru-callout {
+  margin: 8px 0; padding: 9px 12px; border-radius: 10px; font-size: 0.88rem;
+  border-left: 4px solid #F59E0B; background: rgba(245, 158, 11, 0.10);
+}
+.guru-callout.exam { border-left-color: #10B981; background: rgba(16, 185, 129, 0.10); }
+.guru-callout.trap { border-left-color: #E11D48; background: rgba(225, 29, 72, 0.09); }
+.guru-tech-pill {
+  display: inline-block; padding: 0 6px; border-radius: 6px;
+  background: rgba(37, 99, 235, 0.11); color: #1D4ED8; font-weight: 800;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+.guru-table-wrap { overflow-x: auto; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border); }
+.guru-rich-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.guru-rich-table th {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.13), rgba(2, 132, 199, 0.13));
+  color: var(--ink); font-weight: 800; text-align: left; padding: 7px 10px;
+  border-bottom: 1.5px solid var(--border);
+}
+.guru-rich-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.guru-rich-table tr:last-child td { border-bottom: none; }
+.guru-rich-table tbody tr:nth-child(even) { background: rgba(148, 163, 184, 0.06); }
+.guru-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--border); }
+.pg-typing-dots { display: inline-flex; align-items: center; gap: 5px; padding: 4px 2px; }
+.pg-typing-dots span { width: 8px; height: 8px; border-radius: 50%; background: #2563EB; animation: pgDotBounce 1.15s infinite ease-in-out both; }
+.pg-typing-dots span:nth-child(1) { animation-delay: -0.28s; }
+.pg-typing-dots span:nth-child(2) { animation-delay: -0.14s; }
+@keyframes pgDotBounce { 0%, 80%, 100% { transform: scale(0.45); opacity: 0.45; } 40% { transform: scale(1); opacity: 1; } }
+
+.chat-quick-chips { display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px 4px; background: var(--card); border-top: 1px solid var(--border); }
+.chat-chip {
+  flex-shrink: 0; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--ink); font-size: 0.76rem; font-weight: 700; cursor: pointer;
+}
+.chat-chip:hover { border-color: #2563EB; color: #2563EB; }
+.chat-img-preview-bar {
+  display: none; align-items: center; gap: 10px; padding: 8px 12px;
+  background: rgba(37, 99, 235, 0.08); border-top: 1px solid var(--border);
+}
+.chat-img-preview-bar.show { display: flex; }
+.chat-img-preview-bar img { width: 54px; height: 54px; object-fit: cover; border-radius: 8px; border: 2px solid #2563EB; }
+.chat-composer {
+  display: flex; flex-direction: column; gap: 8px; padding: 10px 12px 12px;
+  background: var(--card); border-top: 1px solid var(--border);
+}
+.chat-textarea {
+  width: 100%; box-sizing: border-box; min-height: 54px; max-height: 150px;
+  padding: 11px 14px; border-radius: 13px; border: 1.5px solid var(--border);
+  background: var(--bg); color: var(--ink); font-family: inherit; font-size: 0.96rem;
+  resize: none; line-height: 1.42; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.chat-textarea:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14); }
+.chat-composer-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.chat-composer-tools { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.chat-tool-pill {
+  height: 36px; padding: 0 11px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--ink); font-size: 0.8rem; font-weight: 800;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+}
+.chat-tool-pill.recording { background: #E11D48; color: #FFFFFF; border-color: #E11D48; animation: pgPulseRec 1s infinite; }
+.chat-send-btn {
+  height: 38px; padding: 0 16px; border-radius: 11px; border: none;
+  background: linear-gradient(135deg, #2563EB, #0284C7); color: #FFFFFF;
+  font-weight: 800; font-size: 0.88rem; cursor: pointer; flex-shrink: 0;
+}
+.chat-send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* === EYE-COMFORT NIGHT MODE (body.theme-night) FOR ALL 3 UNIVERSES === */
+body.theme-night .pg-universe-bar { background: #0F172A; border-color: #334155; }
+body.theme-night .pg-uni-btn { color: #CBD5E1; }
+body.theme-night .pg-uni-btn:hover { color: #F8FAFC; background: rgba(96, 165, 250, 0.14); }
+body.theme-night .pg-uni-btn.active { background: linear-gradient(135deg, #2563EB, #0284C7); color: #FFFFFF; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); }
+body.theme-night .pdf-shell, body.theme-night .chat-shell { background: #1E293B; border-color: #334155; }
+body.theme-night .pdf-hero-strip, body.theme-night .chat-header { background: linear-gradient(135deg, #1E3A8A, #0C4A6E); color: #F8FAFC; }
+body.theme-night .pdf-stage-outer { background: #0B1120; border-color: #334155; }
+body.theme-night #pdf-render-canvas { filter: brightness(0.88) sepia(0.08) contrast(1.03); }
+body.theme-night .pdf-action-dock { background: linear-gradient(135deg, rgba(37, 99, 235, 0.16), rgba(2, 132, 199, 0.16)); border-color: rgba(96, 165, 250, 0.32); }
+body.theme-night .pdf-status-pill, body.theme-night .pdf-empty-state h3 { color: #F1F5F9; }
+body.theme-night .pdf-select, body.theme-night .pdf-page-nav, body.theme-night .pdf-page-input,
+body.theme-night .chat-textarea, body.theme-night .chat-tool-pill, body.theme-night .chat-chip, body.theme-night .chat-subj-pill {
+  background: #0F172A; color: #F1F5F9; border-color: #334155;
+}
+body.theme-night .chat-textarea::placeholder { color: #94A3B8; }
+body.theme-night .chat-textarea:focus { border-color: #60A5FA; box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18); }
+body.theme-night .chat-subj-pill.active { background: #2563EB; color: #FFFFFF; border-color: #60A5FA; }
+body.theme-night .chat-chip:hover { border-color: #60A5FA; color: #93C5FD; }
+body.theme-night .chat-feed { background: #0F172A; }
+body.theme-night .chat-msg.ai { background: #1E293B; color: #F1F5F9; border-color: #334155; }
+body.theme-night .chat-msg.user { background: linear-gradient(135deg, #1D4ED8, #0369A1); color: #FFFFFF; }
+body.theme-night .guru-ai-head { color: #93C5FD; }
+body.theme-night .guru-rich-card { color: #E2E8F0; }
+body.theme-night .guru-rich-card strong { color: #FFFFFF; }
+body.theme-night .guru-rich-h2 { background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(45, 212, 191, 0.14)); border-left-color: #60A5FA; color: #93C5FD; }
+body.theme-night .guru-rich-h3 { color: #7DD3FC; border-bottom-color: rgba(125, 211, 252, 0.28); }
+body.theme-night .guru-tech-pill { background: rgba(56, 189, 248, 0.20); color: #BAE6FD; }
+body.theme-night .guru-callout { background: rgba(251, 191, 36, 0.13); border-left-color: #FBBF24; color: #FEF3C7; }
+body.theme-night .guru-callout.exam { background: rgba(52, 211, 153, 0.13); border-left-color: #34D399; color: #D1FAE5; }
+body.theme-night .guru-callout.trap { background: rgba(251, 113, 133, 0.14); border-left-color: #FB7185; color: #FFE4E6; }
+body.theme-night .guru-rich-table th { background: rgba(96, 165, 250, 0.16); color: #F8FAFC; border-bottom-color: #475569; }
+body.theme-night .guru-rich-table td { color: #E2E8F0; border-bottom-color: #334155; }
+body.theme-night .guru-rich-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.04); }
+body.theme-night .pg-typing-dots span { background: #60A5FA; }
+
+@media (max-width: 600px) {
+  .pg-uni-btn { font-size: 0.76rem; padding: 9px 5px; }
+  .pdf-stage-outer { max-height: 55vh; padding: 6px; }
+  .chat-feed { max-height: 50vh; }
+}
+
 </style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
-<body>
+<body data-universe="mcq">
 <div id="top-progress-bar"></div>
 
 <div class="app-wrap">
@@ -1639,7 +2034,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
           </svg>
         </div>
         <div>
-          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS</h1>
+          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v3.0</span></h1>
           <div class="chapter-sub">
             <span id="app-exam-subtitle">SSC JE / RRB JE / All-India Competitive PYQ Engine</span>
             <button type="button" class="creator-sig" id="btn-creator-love" title="Optional appreciation">
@@ -1654,7 +2049,14 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
       </div>
     </div>
 
-    <div class="controls-bar">
+    <!-- 3-Universe Navigation Switcher -->
+    <nav class="pg-universe-bar no-print" id="pg-universe-bar" aria-label="Study Universes">
+      <button type="button" class="pg-uni-btn active" data-uni="mcq" id="btn-uni-mcq">🧪 PYQ Vault</button>
+      <button type="button" class="pg-uni-btn" data-uni="pdf" id="btn-uni-pdf">📄 PDF Pointer</button>
+      <button type="button" class="pg-uni-btn" data-uni="chat" id="btn-uni-chat">💬 Ask Guru</button>
+    </nav>
+
+    <div class="controls-bar mcq-only-el">
       <div class="ctrl-group">
         <button type="button" class="ctrl-btn btn-primary" id="btn-open-loader">📥 Load JSON</button>
         <button type="button" class="ctrl-btn" id="btn-open-vault" title="Organize, Reorder, Hide/Show, Rename or Delete saved Packs">🗂️ Vault</button>
@@ -1677,11 +2079,11 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
       </div>
     </div>
 
-    <div class="pack-switcher-bar" id="pack-switcher-bar"></div>
-    <div class="round-breadcrumb" id="round-breadcrumb"></div>
+    <div class="mcq-only-el pack-switcher-bar" id="pack-switcher-bar"></div>
+    <div class="mcq-only-el round-breadcrumb" id="round-breadcrumb"></div>
 
     <!-- Collapsible Tools Drawer -->
-    <details class="tools-drawer" id="tools-drawer">
+    <details class="mcq-only-el tools-drawer" id="tools-drawer">
       <summary>
         <span>🛠️ Filters, Chapter Library, Weak-Topic Radar, Font &amp; Export</span>
         <span style="font-size:0.74rem; color:var(--muted);">Click to expand ▾</span>
@@ -1727,7 +2129,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   </header>
 
   <!-- Leitner Spaced Repetition Due Banner -->
-  <div class="due-banner no-print" id="due-banner">
+  <div class="mcq-only-el due-banner no-print" id="due-banner">
     <span id="due-banner-text">⏰ 0 सवाल आज Revision के लिए Due हैं!</span>
     <div style="display:flex; gap:6px;">
       <button type="button" class="ctrl-btn btn-warn" id="btn-start-due">🔥 Start Due Revision</button>
@@ -1736,7 +2138,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   </div>
 
   <!-- CBT Mock Exam Bar -->
-  <div class="cbt-bar no-print" id="cbt-bar">
+  <div class="mcq-only-el cbt-bar no-print" id="cbt-bar">
     <div>
       <div style="font-weight:800; font-size:0.92rem;">🔥 Real CBT Mock Mode Active</div>
       <div style="font-size:0.78rem; color:var(--muted);">No instant answers until Submit (+1.0 / -0.25)</div>
@@ -1748,7 +2150,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   </div>
 
   <!-- Studio-Grade Living Creature Journey Dashboard -->
-  <section class="safari-dash no-print" id="safari-dashboard">
+  <section class="mcq-only-el safari-dash no-print" id="safari-dashboard">
     <div class="safari-top">
       <div class="companion-pill">
         <span id="safari-batch-label">📦 Batch 1/2 (Q1–Q10)</span>
@@ -1805,7 +2207,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   </section>
 
   <!-- Grand Victory & Special Revision Hub -->
-  <section class="mastery-hub no-print" id="mastery-hub">
+  <section class="mcq-only-el mastery-hub no-print" id="mastery-hub">
     <div style="font-size:0.78rem; font-weight:800; color:var(--ok-ink); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px;">MISSION ACCOMPLISHED • 100% CONQUERED</div>
     <h2 style="margin:0 0 6px; font-size:1.28rem;" id="mastery-title">🏆 GRAND VICTORY ACHIEVED!</h2>
     <p id="mastery-msg" style="margin:0 0 14px; font-size:0.92rem;">Congratulations! All batches in this Pack have been 100% mastered.</p>
@@ -1816,7 +2218,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   </section>
 
   <!-- Previous Batch Review / Retest Mode Banner -->
-  <section class="prev-batch-banner no-print" id="prev-batch-banner">
+  <section class="mcq-only-el prev-batch-banner no-print" id="prev-batch-banner">
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
       <div>
         <div style="font-weight:800; font-size:0.94rem;" id="prev-banner-title">📜 Previous Batch Review</div>
@@ -1830,7 +2232,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
       <span id="prev-retest-stats" style="font-size:0.78rem; font-weight:700; margin-left:auto;"></span>
     </div>
   </section>
-  <section class="prev-batch-banner retest-active no-print" id="srs-active-banner" style="display:none;">
+  <section class="mcq-only-el prev-batch-banner retest-active no-print" id="srs-active-banner" style="display:none;">
     <div style="display:flex; flex-direction:column; gap:3px;">
       <div style="font-weight:900; font-size:0.94rem;" id="srs-banner-title">🔥 Titan SRS Daily Review Active</div>
       <div style="font-size:0.78rem; color:var(--muted);" id="srs-banner-sub">Shuffled Options · सही करते ही अगली तारीख (+3d/+7d/+15d/+30d) पर promote होगा · Main Batch 100% सुरक्षित है</div>
@@ -1842,10 +2244,10 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   </section>
 
   <!-- Active Question Cards Container -->
-  <main id="questions-container"></main>
+  <main id="questions-container" class="mcq-only-el"></main>
 
   <!-- 10-Question Batch Complete Celebration Card -->
-  <section class="batch-complete-card no-print" id="batch-complete-card">
+  <section class="mcq-only-el batch-complete-card no-print" id="batch-complete-card">
     <div class="confetti-layer" id="confetti-layer"></div>
     <h2 style="margin:0 0 6px; font-size:1.15rem;" id="batch-done-title">🎉 Batch 1 Complete!</h2>
     <p style="margin:0 0 12px; font-size:0.9rem; font-weight:600;" id="batch-done-stats"></p>
@@ -1853,7 +2255,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
     <button type="button" class="skip-gate-btn" id="btn-jump-unatt-helper" style="display:none;">⏳ पहले छूटे हुए (Unattempted) सवाल पर जाएँ ↑</button>
   </section>
   <!-- UNIFIED MASTERY RETRY & CONTINUE CARD (FOR TITAN SRS + PREVIOUS BATCH RETEST) -->
-  <section class="batch-complete-card no-print" id="special-retry-card" style="display:none;">
+  <section class="mcq-only-el batch-complete-card no-print" id="special-retry-card" style="display:none;">
     <div id="special-retry-title" style="font-size:1.12rem; font-weight:900; margin-bottom:6px;">🔥 Mastery Check</div>
     <div id="special-retry-sub" style="font-size:0.86rem; color:var(--muted); margin-bottom:14px;"></div>
     <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
@@ -1863,7 +2265,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   </section>
 
   <!-- Dual Power Export & Next-Round Control Dock (Hidden mid-round!) -->
-  <section class="dock-card no-print" id="export-dock">
+  <section class="mcq-only-el dock-card no-print" id="export-dock">
     <div id="next-round-controls-wrap" style="margin-bottom:16px; border-bottom:1px dashed var(--border); padding-bottom:14px;">
       <h3 class="dock-title" style="margin-bottom:8px;">🔥 Next Elimination Round Controls</h3>
       <label class="chk-line">
@@ -1895,6 +2297,130 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <button type="button" class="ctrl-btn btn-primary" id="btn-copy-export">📋 1-Click Copy Selected Output</button>
         <button type="button" class="ctrl-btn" id="btn-download-export">💾 Download (.txt / .tsv)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       UNIVERSE 2: PDF POINTER TUTOR (SSC JE / RRB JE ROYAL PDFs + BALL)
+       ================================================================= -->
+  <section class="pg-uni-panel no-print" id="universe-pdf-view">
+    <div class="pdf-shell">
+      <div class="pdf-hero-strip">
+        <h2>📄 PDF Magic Pointer Tutor</h2>
+        <button type="button" class="ctrl-btn" id="btn-pdf-voice-mode" style="padding:4px 10px; font-size:0.76rem; background:rgba(255,255,255,0.18); color:#FFF; border-color:rgba(255,255,255,0.35);">🔊 Voice: ON</button>
+      </div>
+
+      <div class="pdf-toolbar">
+        <div class="pdf-toolbar-group">
+          <button type="button" class="ctrl-btn btn-primary" id="btn-pdf-upload">📂 Load PDF</button>
+          <input type="file" id="pdf-file-input" accept="application/pdf" style="display:none;">
+          <button type="button" class="ctrl-btn" id="btn-pdf-demo-page" title="Try Pointer Ball on a built-in Civil IS 456 sheet">🧪 Demo Sheet</button>
+          <select class="pdf-select" id="pdf-library-select" title="Saved PDFs in Vault">
+            <option value="">-- Saved PDFs (0) --</option>
+          </select>
+          <button type="button" class="ctrl-btn btn-warn" id="btn-pdf-delete" title="Remove selected PDF" style="display:none;">🗑️</button>
+        </div>
+
+        <div class="pdf-toolbar-group">
+          <div class="pdf-page-nav">
+            <button type="button" class="ctrl-btn" id="btn-pdf-prev" style="padding:4px 8px;">◀</button>
+            <span>Pg</span>
+            <input type="number" class="pdf-page-input" id="pdf-page-input" min="1" value="1">
+            <span id="pdf-page-total">/ 0</span>
+            <button type="button" class="ctrl-btn" id="btn-pdf-next" style="padding:4px 8px;">▶</button>
+          </div>
+          <button type="button" class="ctrl-btn" id="btn-pdf-zoom-out" title="Zoom Out">➖</button>
+          <button type="button" class="ctrl-btn" id="btn-pdf-zoom-in" title="Zoom In">➕</button>
+          <button type="button" class="ctrl-btn active" id="btn-pdf-pointer-toggle" title="Toggle Transparent Pointer Ball">🎯 Pointer: ON</button>
+        </div>
+      </div>
+
+      <div class="pdf-stage-outer" id="pdf-stage-outer">
+        <div class="pdf-empty-state" id="pdf-empty-state">
+          <div style="font-size:2.4rem;">📄🎯</div>
+          <h3>अपना Royal Smart PDF या Notes यहाँ Load करो</h3>
+          <p style="font-size:0.86rem; line-height:1.55;">PDF load होते ही page पर एक <strong>Transparent Magic Pointer Ball</strong> आ जाएगी। उसे उंगली से किसी भी Formula, IS Code, Diagram या Line पर रखो और <strong>Explain Here</strong> या <strong>Mic</strong> दबाओ!</p>
+          <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+            <button type="button" class="pdf-explain-btn" id="btn-pdf-empty-upload">📂 Choose PDF from Device</button>
+            <button type="button" class="ctrl-btn" id="btn-pdf-empty-demo" style="padding:10px 14px; font-weight:800;">🧪 Try Civil Demo Sheet</button>
+          </div>
+        </div>
+
+        <div class="pdf-canvas-wrap" id="pdf-canvas-wrap" style="display:none;">
+          <canvas id="pdf-render-canvas"></canvas>
+          <div id="pdf-pointer-ball" class="visible" style="left:50%; top:42%;" title="Drag anywhere on page">
+            <span class="ball-tag">🎯 Titan Lens</span>
+            <span class="ball-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-action-dock" id="pdf-action-dock">
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <button type="button" class="pdf-explain-btn" id="btn-pdf-explain-here">🎙️ Explain Here</button>
+          <button type="button" class="pdf-mic-btn" id="btn-pdf-voice-ask">🎤 Ask by Voice</button>
+          <button type="button" class="ctrl-btn" id="btn-pdf-next-explain" title="Explain next point or turn page">⏭️ आगे समझाओ</button>
+          <button type="button" class="ctrl-btn" id="btn-pdf-stop-audio" style="display:none;">⏹️ Stop Voice</button>
+        </div>
+        <div class="pdf-status-pill" id="pdf-tutor-status">🎯 Ball को कहीं भी रखो और Explain दबाओ</div>
+      </div>
+
+      <div class="pdf-answer-box" id="pdf-answer-box">
+        <div class="chat-msg ai" id="pdf-answer-content"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       UNIVERSE 3: ASK TITAN GURU MULTIMODAL CHAT (CAMERA + PHOTO + MIC)
+       ================================================================= -->
+  <section class="pg-uni-panel no-print" id="universe-chat-view">
+    <div class="chat-shell">
+      <div class="chat-header">
+        <div>
+          <h2>💬 Ask Titan Guru — Camera, Photo &amp; Doubt Tutor</h2>
+          <p>Camera से Photo खींचो, Gallery से डालो, बोलकर पूछो या लिखो — आसान Hindi + English Technical Terms में समझो</p>
+        </div>
+        <button type="button" class="ctrl-btn" id="btn-chat-clear" style="background:rgba(255,255,255,0.16); color:#FFF; border-color:rgba(255,255,255,0.3);">🗑️ Clear</button>
+      </div>
+
+      <div class="chat-subject-bar" id="chat-subject-bar">
+        <button type="button" class="chat-subj-pill active" data-subj="SSC JE & RRB JE Civil + GK/GS">✨ All SSC/RRB</button>
+        <button type="button" class="chat-subj-pill" data-subj="RCC, Concrete Tech & Building Materials (IS 456)">🏗️ RCC &amp; BMC</button>
+        <button type="button" class="chat-subj-pill" data-subj="Soil Mechanics, Fluid Mechanics & Irrigation">🌍 Soil &amp; Fluid</button>
+        <button type="button" class="chat-subj-pill" data-subj="Surveying, SOM, Steel & Highway Engg">📐 Survey &amp; SOM</button>
+        <button type="button" class="chat-subj-pill" data-subj="Indian Polity, History, Geography & Economy">🏛️ GK / GS</button>
+        <button type="button" class="chat-subj-pill" data-subj="General Science (Physics, Chemistry, Biology)">🔬 Science</button>
+      </div>
+
+      <div class="chat-feed" id="chat-feed"></div>
+
+      <div class="chat-quick-chips" id="chat-quick-chips">
+        <button type="button" class="chat-chip" data-prompt="इसे एकदम आसान भाषा और देसी example से समझा दो">💡 आसान भाषा में समझाओ</button>
+        <button type="button" class="chat-chip" data-prompt="इसका Formula, Unit Trap और Exam Numerical step-by-step समझाओ">📐 Formula &amp; Trap</button>
+        <button type="button" class="chat-chip" data-prompt="इसमें Confusing Twins को एक साफ Comparison Table में समझा दो">📊 Comparison Table</button>
+        <button type="button" class="chat-chip" data-prompt="इसे याद रखने की सबसे मस्त Short Trick दे दो">⚡ Short Trick दो</button>
+      </div>
+
+      <div class="chat-img-preview-bar" id="chat-img-preview-bar">
+        <img id="chat-img-preview" src="" alt="Selected photo">
+        <div style="flex:1; font-size:0.8rem; font-weight:700; color:var(--ink);" id="chat-img-label">📷 Photo attached (Text लिखना optional है)</div>
+        <button type="button" class="ctrl-btn btn-warn" id="btn-chat-remove-img">✕ Remove</button>
+      </div>
+
+      <div class="chat-composer">
+        <textarea class="chat-textarea" id="chat-text-input" rows="2" placeholder="यहाँ अपना कोई भी Civil, GK या PYQ doubt आराम से लिखो (या नीचे से Photo/Camera/Mic भेजो)..."></textarea>
+        <div class="chat-composer-bar">
+          <div class="chat-composer-tools">
+            <button type="button" class="chat-tool-pill" id="btn-chat-camera" title="Take Photo with Camera">📷 Camera</button>
+            <input type="file" id="chat-camera-input" accept="image/*" capture="environment" style="display:none;">
+            <button type="button" class="chat-tool-pill" id="btn-chat-gallery" title="Upload from Gallery">🖼️ Photo</button>
+            <input type="file" id="chat-gallery-input" accept="image/*" style="display:none;">
+            <button type="button" class="chat-tool-pill" id="btn-chat-mic" title="Ask by Voice">🎤 Mic</button>
+          </div>
+          <button type="button" class="chat-send-btn" id="btn-chat-send">Send ➤</button>
+        </div>
       </div>
     </div>
   </section>
@@ -2278,9 +2804,11 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
       </div>
 
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
-        <button type="button" class="ctrl-btn btn-primary" id="btn-save-voice-cfg" style="flex:1; padding:10px; font-weight:800;">💾 Save Titan Guru Settings</button>
-        <button type="button" class="ctrl-btn btn-success" id="btn-test-voice" style="padding:10px 14px; font-weight:800;">🎙️ Test Live</button>
+        <button type="button" class="ctrl-btn btn-primary" id="btn-save-voice-cfg" style="flex:1; padding:10px; font-weight:800;">💾 Save Settings</button>
+        <button type="button" class="ctrl-btn" id="btn-verify-api-key" style="padding:10px 13px; font-weight:800; background:linear-gradient(135deg,#2563EB,#0284C7); color:#FFF; border:none;">🔍 Verify Key</button>
+        <button type="button" class="ctrl-btn btn-success" id="btn-test-voice" style="padding:10px 13px; font-weight:800;">🎙️ Test Voice</button>
       </div>
+      <div id="voice-key-diag" style="display:none; font-size:0.78rem; font-weight:700; padding:8px 11px; border-radius:9px; line-height:1.45;"></div>
 
       <div id="voice-status-note" style="font-size:0.74rem; color:var(--muted); line-height:1.5; background:rgba(128,128,128,0.06); padding:9px 11px; border-radius:8px;">
         ✨ <strong>कैसे काम करता है:</strong> किसी भी सवाल के बगल वाला <strong>🎙️</strong> बटन दबाओ — Titan Guru तुरंत उस सवाल को समझकर आसान देसी हिंदी में explain करेगा और खुद पूछेगा कि तुम्हें कहाँ दिक्कत आ रही है। जैसे ही तुम धीरे से भी बोलोगे, वह <strong>तुरंत चुप होकर तुम्हारी बात सुनेगा</strong> (Live Barge-In + Echo/Noise Cancellation)! दोबारा 🎙️ दबाते ही बंद हो जाएगा।
@@ -4367,7 +4895,7 @@ function getVoiceConfig() {
     const p = raw ? JSON.parse(raw) : {};
     const validModes = ['auto_hybrid', 'https_turbo'];
     return {
-      apiKey: String(p.apiKey || '').trim(),
+      apiKey: String(p.apiKey || '').replace(/[^\x21-\x7E]/g, ''),
       model: validModes.includes(p.model) ? p.model : 'auto_hybrid',
       voiceName: p.voiceName || 'Kore',
       style: p.style || 'patna_guru',
@@ -4867,29 +5395,88 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
 }
 
 // ENGINE B: TURBO HTTPS MULTIMODAL FALLBACK (2X FASTER WITH gemini-3.5-flash-lite FIRST!)
+let __pgCachedWorkingModel = '';
+function sanitizeTitanApiKey(raw) {
+  return String(raw || '').replace(/[^\x21-\x7E]/g, '');
+}
+async function pgFetchGemini(path, apiKey, fetchOpts) {
+  const cleanKey = sanitizeTitanApiKey(apiKey);
+  if (!cleanKey) throw new Error('API Key खाली है — Titan Guru Settings में paste करो');
+  const baseUrl = `https://generativelanguage.googleapis.com/v1beta/${path}`;
+  const hdrs = Object.assign({}, (fetchOpts && fetchOpts.headers) || {}, { 'x-goog-api-key': cleanKey });
+  let resp = await fetch(baseUrl, Object.assign({}, fetchOpts || {}, { headers: hdrs }));
+  if ((resp.status === 401 || resp.status === 403) && cleanKey.startsWith('AIza')) {
+    const qUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}key=${encodeURIComponent(cleanKey)}`;
+    const hdrsNoKey = Object.assign({}, (fetchOpts && fetchOpts.headers) || {});
+    resp = await fetch(qUrl, Object.assign({}, fetchOpts || {}, { headers: hdrsNoKey }));
+  }
+  return resp;
+}
+async function pgDiscoverFlashModels(apiKey) {
+  try {
+    const resp = await pgFetchGemini('models?pageSize=60', apiKey, { method: 'GET' });
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    const list = (data && Array.isArray(data.models)) ? data.models : [];
+    const usable = list
+      .filter(m => m && m.name && Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+      .map(m => String(m.name).replace(/^models\//, ''))
+      .filter(n => /gemini/i.test(n) && !/embedding|tts|imagen|veo|aqa|robotics/i.test(n));
+    usable.sort((a, b) => {
+      const rank = (x) => (/2\.5-flash(?!-image)/i.test(x) ? 0 : /flash/i.test(x) ? 1 : 2);
+      return rank(a) - rank(b);
+    });
+    return usable.slice(0, 6);
+  } catch (e) { return []; }
+}
+async function pgParseApiError(resp) {
+  try {
+    const j = await resp.json();
+    const msg = j && j.error && j.error.message ? String(j.error.message) : '';
+    if (msg) return `HTTP ${resp.status}: ${msg.slice(0, 110)}`;
+  } catch (e) {}
+  return `HTTP ${resp.status}`;
+}
+
 async function callGuruBrain(userParts, cfg) {
-  const models = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.5-flash'];
+  const cleanKey = sanitizeTitanApiKey(cfg.apiKey);
+  const baseModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.0-flash'];
+  const models = __pgCachedWorkingModel
+    ? [__pgCachedWorkingModel, ...baseModels.filter(x => x !== __pgCachedWorkingModel)]
+    : baseModels.slice();
   const sysText = buildTitanGuruSystemPrompt(guruActiveQ, cfg);
   guruChatHistory.push({ role: 'user', parts: userParts });
   let lastErr = null;
-  for (const m of models) {
+  let triedDiscovery = false;
+  for (let i = 0; i < models.length; i++) {
+    const m = models[i];
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
-      const resp = await fetch(url, {
+      const resp = await pgFetchGemini(`models/${m}:generateContent`, cleanKey, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': cfg.apiKey },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: sysText }] },
           contents: guruChatHistory,
-          generationConfig: { temperature: 0.82, maxOutputTokens: 180 }
+          generationConfig: { temperature: 0.82, maxOutputTokens: 220 }
         }),
         signal: guruAbortCtrl ? guruAbortCtrl.signal : undefined
       });
-      if (!resp.ok) { lastErr = new Error(`HTTP ${resp.status}`); continue; }
+      if (!resp.ok) {
+        const errMsg = await pgParseApiError(resp);
+        lastErr = new Error(errMsg);
+        if (resp.status === 400 && /API_KEY_INVALID|API key not valid/i.test(errMsg)) break;
+        if (i === models.length - 1 && !triedDiscovery) {
+          triedDiscovery = true;
+          const disc = await pgDiscoverFlashModels(cleanKey);
+          disc.forEach(dm => { if (!models.includes(dm)) models.push(dm); });
+        }
+        continue;
+      }
       const json = await resp.json();
       const reply = json && json.candidates && json.candidates[0] && json.candidates[0].content &&
         json.candidates[0].content.parts && json.candidates[0].content.parts.map(p => p.text || '').join(' ').trim();
       if (reply) {
+        __pgCachedWorkingModel = m;
         const lastUser = guruChatHistory[guruChatHistory.length - 1];
         if (lastUser && Array.isArray(lastUser.parts) && lastUser.parts.some(p => p.inlineData)) {
           lastUser.parts = [{ text: '[Student spoke an audio doubt]' }];
@@ -4911,12 +5498,11 @@ async function speakWithStudioVoice(text, cfg, onFinish) {
   const styleDesc = 'Speak like a completely real, warm, charismatic human mentor from North India sitting right next to the student—authentic natural Indian Hinglish accent for both Hindi and English words, relaxed human breathing pauses, gentle smile in the voice, zero robotic stiffness.';
   for (const m of ttsModels) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
       const is38 = m.startsWith('gemini-3.8');
       const partObj = is38 ? { text: text, speech_metadata: { style: styleDesc } } : { text: `${styleDesc}\n${text}` };
-      const resp = await fetch(url, {
+      const resp = await pgFetchGemini(`models/${m}:generateContent`, cfg.apiKey, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': cfg.apiKey },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [partObj] }],
           generationConfig: {
@@ -7216,7 +7802,7 @@ function bindEvents() {
   document.getElementById('btn-scroll-top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (document.body.getAttribute('data-universe') !== 'mcq' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     const key = e.key.toLowerCase();
     const { slice } = getActiveBatchSlice();
     const hist = getActiveHist();
@@ -7922,6 +8508,968 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
+
+/* =====================================================================
+   BRAHMASTRA TITAN OS v3.0 — 3-UNIVERSE ENGINE + VERIFY KEY + PDF + CHAT
+   ===================================================================== */
+(function initTitanUniverses() {
+  const PG_UNIVERSE_KEY = 'brahmastra_titan_active_universe_v3';
+  const PG_CHAT_KEY = 'brahmastra_titan_ask_chat_history_v3';
+  const PG_PDF_DB_NAME = 'BrahmastraPdfVaultDB';
+  const PG_PDF_STORE = 'pdfs';
+
+  // --- 1-Tap Live API Key Verification inside Settings Modal ---
+  const btnVerifyKey = document.getElementById('btn-verify-api-key');
+  const diagEl = document.getElementById('voice-key-diag');
+  if (btnVerifyKey && diagEl) {
+    btnVerifyKey.addEventListener('click', async () => {
+      const keyInput = document.getElementById('voice-api-key');
+      const cleanKey = sanitizeTitanApiKey(keyInput ? keyInput.value : '');
+      if (keyInput) keyInput.value = cleanKey;
+      diagEl.style.display = 'block';
+      if (!cleanKey) {
+        diagEl.style.background = 'rgba(225,29,72,0.10)';
+        diagEl.style.color = '#BE123C';
+        diagEl.textContent = '❌ पहले ऊपर box में अपनी API Key paste करो!';
+        return;
+      }
+      saveVoiceConfig({
+        apiKey: cleanKey,
+        model: document.getElementById('voice-model-sel').value,
+        voiceName: document.getElementById('voice-name-sel').value,
+        style: document.getElementById('voice-style-sel').value,
+        scope: document.getElementById('voice-scope-sel').value
+      });
+      diagEl.style.background = 'rgba(37,99,235,0.10)';
+      diagEl.style.color = '#1D4ED8';
+      diagEl.textContent = '⏳ API Key verify हो रही है और सबसे तेज़ model चुना जा रहा है...';
+      btnVerifyKey.disabled = true;
+      try {
+        const discovered = await pgDiscoverFlashModels(cleanKey);
+        const testModels = [...new Set([...discovered, 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-3.5-flash-lite', 'gemini-2.0-flash'])];
+        let okModel = '';
+        let lastErr = '';
+        for (const m of testModels) {
+          const resp = await pgFetchGemini(`models/${m}:generateContent`, cleanKey, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ role: 'user', parts: [{ text: 'Reply OK' }] }],
+              generationConfig: { maxOutputTokens: 8 }
+            })
+          });
+          if (resp.ok) { okModel = m; break; }
+          lastErr = await pgParseApiError(resp);
+          if (resp.status === 400 && /API_KEY_INVALID|API key not valid/i.test(lastErr)) break;
+        }
+        if (okModel) {
+          __pgCachedWorkingModel = okModel;
+          diagEl.style.background = 'rgba(16,185,129,0.12)';
+          diagEl.style.color = '#047857';
+          diagEl.textContent = `✅ API Key 100% Active है! Auto-connected to ${okModel} — अब तीनों Universes मक्खन चलेंगे।`;
+        } else {
+          diagEl.style.background = 'rgba(225,29,72,0.10)';
+          diagEl.style.color = '#BE123C';
+          diagEl.textContent = `❌ Key Error: ${lastErr || 'Invalid key या internet बंद है'}`;
+        }
+      } catch (e) {
+        diagEl.style.background = 'rgba(225,29,72,0.10)';
+        diagEl.style.color = '#BE123C';
+        diagEl.textContent = '❌ Network Error: ' + (e && e.message ? e.message : 'Internet check करो');
+      } finally {
+        btnVerifyKey.disabled = false;
+      }
+    });
+  }
+
+  // --- Shared Multimodal Vision/Audio/Text Helper ---
+  async function callTitanMultimodal(parts, systemInstruction, historyTurns) {
+    const cfg = getVoiceConfig();
+    const cleanKey = sanitizeTitanApiKey(cfg.apiKey);
+    if (!cleanKey) {
+      openVoiceModal();
+      throw new Error('NO_API_KEY');
+    }
+    const baseModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.0-flash'];
+    const models = __pgCachedWorkingModel
+      ? [__pgCachedWorkingModel, ...baseModels.filter(x => x !== __pgCachedWorkingModel)]
+      : baseModels.slice();
+
+    const contents = [];
+    if (Array.isArray(historyTurns)) {
+      for (const t of historyTurns.slice(-8)) {
+        if (t && t.role && t.text) contents.push({ role: t.role, parts: [{ text: t.text }] });
+      }
+    }
+    contents.push({ role: 'user', parts: parts });
+
+    let lastErr = 'Network or API key error';
+    let triedDiscovery = false;
+    for (let i = 0; i < models.length; i++) {
+      const m = models[i];
+      try {
+        const resp = await pgFetchGemini(`models/${m}:generateContent`, cleanKey, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemInstruction }] },
+            contents: contents,
+            generationConfig: { temperature: 0.45, maxOutputTokens: 1600 }
+          })
+        });
+        if (!resp.ok) {
+          lastErr = await pgParseApiError(resp);
+          if (resp.status === 400 && /API_KEY_INVALID|API key not valid/i.test(lastErr)) break;
+          if (i === models.length - 1 && !triedDiscovery) {
+            triedDiscovery = true;
+            const disc = await pgDiscoverFlashModels(cleanKey);
+            disc.forEach(dm => { if (!models.includes(dm)) models.push(dm); });
+          }
+          continue;
+        }
+        const data = await resp.json();
+        const text = data && data.candidates && data.candidates[0] &&
+          data.candidates[0].content && data.candidates[0].content.parts
+          ? data.candidates[0].content.parts.map(p => p.text || '').join('\n').trim()
+          : '';
+        if (text) {
+          __pgCachedWorkingModel = m;
+          return text;
+        }
+      } catch (e) {
+        lastErr = e && e.message ? e.message : 'Request failed';
+      }
+    }
+    throw new Error(lastErr);
+  }
+
+  // --- Colorful Structured Tutor Card Formatter ---
+  function escapeHtmlSafe(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function formatInlineRich(str) {
+    let out = (typeof renderRichMath === 'function')
+      ? renderRichMath(String(str || ''))
+      : escapeHtmlSafe(str);
+    out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    out = out.replace(/`([^`]+)`/g, '<span class="guru-tech-pill">$1</span>');
+    return out;
+  }
+  function renderColorfulGuruCard(rawText) {
+    const lines = String(rawText || '').replace(/\r/g, '').split('\n');
+    const htmlParts = ['<div class="guru-rich-card"><div class="guru-ai-head"><span class="guru-ai-avatar">🧠</span><span>Titan Guru</span></div>'];
+    let inList = false;
+    const closeList = () => { if (inList) { htmlParts.push('</ul>'); inList = false; } };
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) { closeList(); continue; }
+      if (/^\|.+\|$/.test(line)) {
+        closeList();
+        const tblLines = [];
+        while (i < lines.length && /^\|.+\|$/.test(lines[i].trim())) { tblLines.push(lines[i].trim()); i++; }
+        i--;
+        const rows = tblLines.filter(r => !/^\|[\s:\-|]+\|$/.test(r)).map(r => r.slice(1, -1).split('|').map(c => c.trim()));
+        if (rows.length >= 1) {
+          let thtml = '<div class="guru-table-wrap"><table class="guru-rich-table"><thead><tr>';
+          rows[0].forEach(c => { thtml += `<th>${formatInlineRich(c)}</th>`; });
+          thtml += '</tr></thead><tbody>';
+          for (let r = 1; r < rows.length; r++) {
+            thtml += '<tr>';
+            rows[r].forEach(c => { thtml += `<td>${formatInlineRich(c)}</td>`; });
+            thtml += '</tr>';
+          }
+          thtml += '</tbody></table></div>';
+          htmlParts.push(thtml);
+        }
+        continue;
+      }
+      if (/^##\s+/.test(line)) { closeList(); htmlParts.push(`<div class="guru-rich-h2">${formatInlineRich(line.replace(/^##\s+/, ''))}</div>`); }
+      else if (/^###\s+/.test(line)) { closeList(); htmlParts.push(`<div class="guru-rich-h3">${formatInlineRich(line.replace(/^###\s+/, ''))}</div>`); }
+      else if (/^>\s*/.test(line)) {
+        closeList();
+        const body = line.replace(/^>\s*/, '');
+        let cls = 'guru-callout';
+        if (/exam|pyq|ssc|rrb|याद/i.test(body)) cls = 'guru-callout exam';
+        else if (/trap|ध्यान|गलती|warning/i.test(body)) cls = 'guru-callout trap';
+        htmlParts.push(`<div class="${cls}">${formatInlineRich(body)}</div>`);
+      } else if (/^[-*•]\s+/.test(line) || /^\d+\.\s+/.test(line)) {
+        if (!inList) { htmlParts.push('<ul class="guru-rich-ul">'); inList = true; }
+        htmlParts.push(`<li>${formatInlineRich(line.replace(/^([-*•]|\d+\.)\s+/, ''))}</li>`);
+      } else {
+        closeList();
+        htmlParts.push(`<p style="margin:5px 0;">${formatInlineRich(line)}</p>`);
+      }
+    }
+    closeList();
+    htmlParts.push('</div>');
+    return htmlParts.join('');
+  }
+  window.__pgRenderColorfulGuruCard = renderColorfulGuruCard;
+
+  function cleanTextForTTS(raw) {
+    return String(raw || '').replace(/[#>*_`]/g, ' ').replace(/\[NEXT_PAGE\]/g, '').replace(/\s+/g, ' ').trim().slice(0, 1400);
+  }
+  function stopActiveTitanAudio() {
+    if (guruAbortCtrl) { try { guruAbortCtrl.abort(); } catch (e) {} guruAbortCtrl = null; }
+    if (guruAudioEl) { try { guruAudioEl.pause(); guruAudioEl = null; } catch (e) {} }
+    if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+  }
+
+  // --- 3-UNIVERSE SWITCHER WITH CLEAN CROSS-UNIVERSE TEARDOWN ---
+  function setActiveUniverse(uni) {
+    const valid = ['mcq', 'pdf', 'chat'].includes(uni) ? uni : 'mcq';
+    const prevUni = document.body.getAttribute('data-universe') || 'mcq';
+    if (prevUni !== valid) {
+      if (typeof stopActiveVoicePlayback === 'function') { try { stopActiveVoicePlayback(); } catch (e) {} }
+      stopActiveTitanAudio();
+      if (pdfMicActive && pdfMicRec) {
+        pdfMicActive = false;
+        const pm = document.getElementById('btn-pdf-voice-ask');
+        if (pm) { pm.classList.remove('recording'); pm.textContent = '🎤 Ask by Voice'; }
+        try { pdfMicRec.stop(); } catch (e) {}
+      }
+      if (chatMicActive && chatMicRec) {
+        chatMicActive = false;
+        const cm = document.getElementById('btn-chat-mic');
+        if (cm) { cm.classList.remove('recording'); cm.textContent = '🎤 Mic'; }
+        try { chatMicRec.stop(); } catch (e) {}
+      }
+      const stBtn = document.getElementById('btn-pdf-stop-audio');
+      if (stBtn) stBtn.style.display = 'none';
+    }
+    document.body.setAttribute('data-universe', valid);
+    safeSetStorage(PG_UNIVERSE_KEY, valid);
+    document.querySelectorAll('.pg-uni-btn').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-uni') === valid);
+    });
+    const pdfPanel = document.getElementById('universe-pdf-view');
+    const chatPanel = document.getElementById('universe-chat-view');
+    if (pdfPanel) pdfPanel.classList.toggle('active', valid === 'pdf');
+    if (chatPanel) chatPanel.classList.toggle('active', valid === 'chat');
+    if (valid === 'pdf') initPdfVaultList();
+    else if (valid === 'chat') renderChatFeed();
+  }
+
+  document.querySelectorAll('.pg-uni-btn').forEach(btn => {
+    btn.addEventListener('click', () => setActiveUniverse(btn.getAttribute('data-uni')));
+  });
+
+  // ===================================================================
+  // UNIVERSE 2: PDF POINTER TUTOR (ROYAL PDFs + CIVIL DEMO SHEET)
+  // ===================================================================
+  let pdfDoc = null, pdfIsDemo = false, pdfRenderTask = null, pdfCurrentId = '';
+  let pdfCurrentPage = 1, pdfTotalPages = 0, pdfScale = 1.25;
+  let pdfPointerEnabled = true, pdfVoiceAutoPlay = true;
+  let pdfPointerNorm = { x: 0.50, y: 0.42 };
+  let pdfTutorHistory = [], pdfBusy = false;
+  let pdfMicRec = null, pdfMicChunks = [], pdfMicActive = false;
+
+  function openPdfDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(PG_PDF_DB_NAME, 1);
+      req.onupgradeneeded = () => {
+        if (!req.result.objectStoreNames.contains(PG_PDF_STORE)) {
+          req.result.createObjectStore(PG_PDF_STORE, { keyPath: 'id' });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  async function savePdfToVault(rec) {
+    const db = await openPdfDB();
+    return new Promise((res, rej) => {
+      const tx = db.transaction(PG_PDF_STORE, 'readwrite');
+      tx.objectStore(PG_PDF_STORE).put(rec);
+      tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
+    });
+  }
+  async function getAllPdfsFromVault() {
+    const db = await openPdfDB();
+    return new Promise((res, rej) => {
+      const tx = db.transaction(PG_PDF_STORE, 'readonly');
+      const r = tx.objectStore(PG_PDF_STORE).getAll();
+      r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error);
+    });
+  }
+  async function deletePdfFromVault(id) {
+    const db = await openPdfDB();
+    return new Promise((res, rej) => {
+      const tx = db.transaction(PG_PDF_STORE, 'readwrite');
+      tx.objectStore(PG_PDF_STORE).delete(id);
+      tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
+    });
+  }
+  function ensurePdfJsReady() {
+    if (window.pdfjsLib) {
+      if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+      return Promise.resolve(true);
+    }
+    return new Promise((resolve) => {
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js';
+      s.onload = () => {
+        if (window.pdfjsLib) {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+          resolve(true);
+        } else resolve(false);
+      };
+      s.onerror = () => resolve(false);
+      document.head.appendChild(s);
+    });
+  }
+
+  function renderBuiltInDemoSheet() {
+    pdfDoc = null; pdfIsDemo = true; pdfTotalPages = 1; pdfCurrentPage = 1; pdfTutorHistory = [];
+    document.getElementById('pdf-empty-state').style.display = 'none';
+    document.getElementById('pdf-canvas-wrap').style.display = 'inline-block';
+    document.getElementById('pdf-page-input').value = 1;
+    document.getElementById('pdf-page-total').textContent = '/ 1';
+
+    const canvas = document.getElementById('pdf-render-canvas');
+    const W = 720, H = 960;
+    canvas.width = W; canvas.height = H;
+    canvas.style.width = '100%'; canvas.style.maxWidth = '540px'; canvas.style.height = 'auto';
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = '#CBD5E1'; ctx.lineWidth = 1;
+    for (let y = 90; y < H - 30; y += 34) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    ctx.strokeStyle = '#FB7185'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(74, 0); ctx.lineTo(74, H); ctx.stroke();
+
+    ctx.fillStyle = '#1E3A8A'; ctx.font = 'bold 32px sans-serif';
+    ctx.fillText('IS 456:2000 — RCC & CONCRETE', 95, 62);
+    ctx.fillStyle = '#1D4ED8'; ctx.font = 'bold 22px sans-serif';
+    ctx.fillText('1. Minimum Grade of Concrete (Table 5):', 95, 130);
+    ctx.fillStyle = '#1E293B'; ctx.font = '20px sans-serif';
+    ctx.fillText('* Plain Concrete (PCC) Mild Exposure: M15 (1:2:4)', 98, 168);
+    ctx.fillText('* Reinforced Concrete (RCC) Mild Exposure: M20', 98, 204);
+    ctx.fillText('* Sea Water / Severe RCC Exposure: M30 Minimum', 98, 240);
+
+    ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 3;
+    ctx.strokeRect(110, 285, 520, 240);
+    ctx.fillStyle = '#FEF08A'; ctx.fillRect(135, 315, 220, 56);
+    ctx.strokeStyle = '#B45309'; ctx.lineWidth = 2; ctx.strokeRect(135, 315, 220, 56);
+    ctx.fillStyle = '#0F172A'; ctx.font = 'bold 19px sans-serif';
+    ctx.fillText('Nominal Cover (IS 456)', 148, 350);
+    ctx.fillStyle = '#1E293B'; ctx.font = 'bold 19px sans-serif';
+    ctx.fillText('Slab: 20 mm   |   Beam: 25 mm', 148, 415);
+    ctx.fillText('Column: 40 mm |   Footing: 50 mm', 148, 455);
+    ctx.fillStyle = '#047857'; ctx.font = 'bold 18px sans-serif';
+    ctx.fillText('Rule: Higher Soil/Water Exposure -> Thicker Cover!', 145, 500);
+
+    ctx.fillStyle = '#1D4ED8'; ctx.font = 'bold 22px sans-serif';
+    ctx.fillText('2. Key Bogue Compounds (OPC Cement):', 95, 590);
+    ctx.fillStyle = '#1E293B'; ctx.font = '20px sans-serif';
+    ctx.fillText('* C3A (Celite): Flash Set + Max Heat (Gypsum retards)', 98, 628);
+    ctx.fillText('* C3S (Alite): Early 7-Day Strength & Best Cementing', 98, 664);
+    ctx.fillText('* C2S (Belite): Ultimate Strength (after 28 days)', 98, 700);
+
+    ctx.fillStyle = '#FEF08A'; ctx.fillRect(365, 755, 315, 145);
+    ctx.strokeStyle = '#CA8A04'; ctx.lineWidth = 2; ctx.strokeRect(365, 755, 315, 145);
+    ctx.fillStyle = '#B91C1C'; ctx.font = 'bold 20px sans-serif';
+    ctx.fillText('SSC JE / RRB JE TRAP:', 385, 790);
+    ctx.fillStyle = '#1E3A8A'; ctx.font = '18px sans-serif';
+    ctx.fillText('Max w/c ratio for M20 = 0.55', 385, 825);
+    ctx.fillText('Modulus of Elasticity:', 385, 853);
+    ctx.fillText('Ec = 5000 * sqrt(fck) N/mm2', 385, 881);
+
+    updatePointerBallCss();
+    document.getElementById('pdf-tutor-status').textContent = '🧪 Civil Demo Sheet Ready — Ball रखकर Explain दबाओ!';
+  }
+
+  async function initPdfVaultList(autoSelectId) {
+    const sel = document.getElementById('pdf-library-select');
+    const delBtn = document.getElementById('btn-pdf-delete');
+    if (!sel) return;
+    try {
+      const list = await getAllPdfsFromVault();
+      list.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+      sel.innerHTML = `<option value="">-- Saved PDFs (${list.length}) --</option>`;
+      for (const item of list) {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = `📄 ${item.name} (${item.totalPages || '?'}p)`;
+        sel.appendChild(opt);
+      }
+      const pickId = autoSelectId || pdfCurrentId || (list[0] ? list[0].id : '');
+      if (pickId && list.some(x => x.id === pickId)) {
+        sel.value = pickId;
+        if (delBtn) delBtn.style.display = 'inline-flex';
+        if (pickId !== pdfCurrentId || !pdfDoc) {
+          const found = list.find(x => x.id === pickId);
+          if (found) await loadPdfFromBuffer(found.id, found.name, found.data, found.lastPage || 1);
+        }
+      } else if (delBtn) delBtn.style.display = 'none';
+    } catch (e) {}
+  }
+
+  async function loadPdfFromBuffer(id, name, arrayBuffer, startPage) {
+    if (!(await ensurePdfJsReady())) { showToast('⚠️ PDF.js load नहीं हो पाया — internet check करो'); return; }
+    document.getElementById('pdf-tutor-status').textContent = '⏳ Loading PDF...';
+    try {
+      const task = window.pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
+      pdfDoc = await task.promise;
+      pdfIsDemo = false; pdfCurrentId = id; pdfTotalPages = pdfDoc.numPages;
+      pdfCurrentPage = Math.max(1, Math.min(startPage || 1, pdfTotalPages));
+      pdfTutorHistory = [];
+      document.getElementById('pdf-empty-state').style.display = 'none';
+      document.getElementById('pdf-canvas-wrap').style.display = 'inline-block';
+      document.getElementById('pdf-page-total').textContent = `/ ${pdfTotalPages}`;
+      document.getElementById('pdf-page-input').max = pdfTotalPages;
+      await renderPdfPage(pdfCurrentPage);
+      document.getElementById('pdf-tutor-status').textContent = `🎯 ${name} — Ball रखकर Explain दबाओ`;
+    } catch (err) {
+      document.getElementById('pdf-tutor-status').textContent = '❌ PDF खोलने में दिक्कत आई';
+      showToast('❌ Invalid PDF file');
+    }
+  }
+
+  async function renderPdfPage(pageNum) {
+    if (!pdfDoc) return;
+    pdfCurrentPage = Math.max(1, Math.min(pageNum, pdfTotalPages));
+    document.getElementById('pdf-page-input').value = pdfCurrentPage;
+    const page = await pdfDoc.getPage(pdfCurrentPage);
+    const stageOuter = document.getElementById('pdf-stage-outer');
+    const availW = Math.max(300, (stageOuter ? stageOuter.clientWidth : 360) - 24);
+    const baseVp = page.getViewport({ scale: 1.0 });
+    const fitScale = (availW / baseVp.width) * (pdfScale / 1.25);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const vp = page.getViewport({ scale: fitScale });
+    const canvas = document.getElementById('pdf-render-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = Math.floor(vp.width * dpr);
+    canvas.height = Math.floor(vp.height * dpr);
+    canvas.style.width = `${Math.floor(vp.width)}px`;
+    canvas.style.height = `${Math.floor(vp.height)}px`;
+    if (pdfRenderTask) { try { pdfRenderTask.cancel(); } catch (e) {} pdfRenderTask = null; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pdfRenderTask = page.render({ canvasContext: ctx, viewport: vp });
+    try { await pdfRenderTask.promise; }
+    catch (e) { if (e && e.name === 'RenderingCancelledException') return; throw e; }
+    finally { pdfRenderTask = null; }
+    updatePointerBallCss();
+    try {
+      const list = await getAllPdfsFromVault();
+      const rec = list.find(x => x.id === pdfCurrentId);
+      if (rec) { rec.lastPage = pdfCurrentPage; await savePdfToVault(rec); }
+    } catch (e) {}
+  }
+
+  function updatePointerBallCss() {
+    const ball = document.getElementById('pdf-pointer-ball');
+    if (!ball) return;
+    ball.classList.toggle('visible', pdfPointerEnabled && (!!pdfDoc || pdfIsDemo));
+    ball.style.left = `${(pdfPointerNorm.x * 100).toFixed(2)}%`;
+    ball.style.top = `${(pdfPointerNorm.y * 100).toFixed(2)}%`;
+  }
+
+  function capturePdfPointerSnapshots(canvas, normX, normY) {
+    const cw = canvas.width, ch = canvas.height;
+    const fullScale = Math.min(1, 1024 / Math.max(1, cw));
+    const fc = document.createElement('canvas');
+    fc.width = Math.max(1, Math.round(cw * fullScale));
+    fc.height = Math.max(1, Math.round(ch * fullScale));
+    const fctx = fc.getContext('2d');
+    fctx.drawImage(canvas, 0, 0, fc.width, fc.height);
+    const tx = normX * fc.width, ty = normY * fc.height;
+    const r = Math.max(18, Math.round(fc.width * 0.045));
+    fctx.save();
+    fctx.strokeStyle = '#E11D48'; fctx.lineWidth = 4;
+    fctx.beginPath(); fctx.arc(tx, ty, r, 0, Math.PI * 2); fctx.stroke();
+    fctx.fillStyle = 'rgba(225, 29, 72, 0.20)'; fctx.fill();
+    fctx.fillStyle = '#E11D48'; fctx.beginPath(); fctx.arc(tx, ty, 5, 0, Math.PI * 2); fctx.fill();
+    fctx.restore();
+    const fullB64 = fc.toDataURL('image/jpeg', 0.84).split(',')[1];
+
+    const cropW = Math.min(cw, Math.max(120, Math.round(cw * 0.46)));
+    const cropH = Math.min(ch, Math.max(100, Math.round(ch * 0.32)));
+    const sx = Math.max(0, Math.min(cw - cropW, Math.round(normX * cw - cropW / 2)));
+    const sy = Math.max(0, Math.min(ch - cropH, Math.round(normY * ch - cropH / 2)));
+    const zc = document.createElement('canvas');
+    const zScale = Math.min(1.4, 780 / Math.max(1, cropW));
+    zc.width = Math.max(1, Math.round(cropW * zScale));
+    zc.height = Math.max(1, Math.round(cropH * zScale));
+    zc.getContext('2d').drawImage(canvas, sx, sy, cropW, cropH, 0, 0, zc.width, zc.height);
+    const cropB64 = zc.toDataURL('image/jpeg', 0.88).split(',')[1];
+    return { fullB64, cropB64 };
+  }
+
+  const PDF_POINTER_SYSTEM_PROMPT = `You are Titan Guru, a legendary, warm, super-charismatic North Indian / Purvanchal classroom mentor who makes the toughest SSC JE / RRB JE Civil Engineering & GK/GS concepts feel ridiculously easy using vivid everyday desi analogies.
+
+ABSOLUTE NON-NEGOTIABLE RULES:
+1. VISION FOCUS: You receive TWO images — Image 1 is the FULL PDF page with a RED TARGET RING marking the exact spot where the student placed their pointer ball; Image 2 is a ZOOMED CLOSE-UP of that spot. Explain ONLY the exact formula, IS code, clause, diagram, or line under that RED TARGET RING.
+2. IRONCLAD SCRIPT RULE (ZERO WORD SWAPPING — NEVER VIOLATE):
+   - Write ALL normal Hindi sentences, connectors, explanations, and everyday examples STRICTLY in clean, ultra-simple **Devanagari Hindi script** (देवनागरी हिंदी). NEVER write Hindi words in Roman/English letters (NO Hinglish like "yeh formula aise kaam karta hai"!).
+   - Keep ALL English engineering, scientific, constitutional, and exam technical terms STRICTLY in **English Latin script** wrapped in backticks (e.g., \`IS 456:2000\`, \`M20 Grade\`, \`Nominal Cover\`, \`Reynolds Number\`, \`Article 123\`, \`Void Ratio\`, \`C3A\`). NEVER transliterate English technical words into Devanagari (NEVER write "कंक्रीट", "रिसेप्टर", "रेनॉल्ड्स", "आर्टिकल"!).
+   - ❌ WRONG: "Yeh C3A cement mein flash set kar deta hai" OR "सी3ए सीमेंट में फ्लैश सेट कर देता है।"
+   - ✅ RIGHT: "देखो भाई, \`OPC Cement\` में \`C3A\` (Tricalcium Aluminate) सबसे गरम मिज़ाज वाला खिलाड़ी है। पानी पड़ते ही यह तुरंत भड़ककर \`Flash Set\` कर देता है — बिल्कुल वैसे ही जैसे गरम तवे पर छींटा पड़ते ही भाप उठे! इसी को शांत करने के लिए 2–3% \`Gypsum\` मिलाते हैं।"
+3. ULTRA-SIMPLE DESI TEACHING STYLE: Zero heavy textbook Hindi, zero robotic tone, zero meta-labels. Use 1 super-relatable everyday Indian analogy so it sticks in 10 seconds!
+4. COLORFUL FORMAT:
+   ## [Short English Technical Title]
+   - 2–4 छोटे, एकदम आसान देवनागरी हिंदी points (सारे technical terms \`English\` में)
+   > 💡 देसी उदाहरण: [1 मज़ेदार रोज़मर्रा का उदाहरण]
+   > ✅ Exam में याद रखो: [1 ज़रूरी SSC JE / RRB JE trap या exam point]
+5. If the student asks for the next page ("next page", "अगला पेज"), start your reply with [NEXT_PAGE] on line 1.`;
+
+  async function runPdfPointerExplain(userAskText, audioB64, audioMime) {
+    if ((!pdfDoc && !pdfIsDemo) || pdfBusy) {
+      if (!pdfDoc && !pdfIsDemo) showToast('📂 पहले PDF load करो या 🧪 Demo Sheet दबाओ!');
+      return;
+    }
+    unlockGuruAudioSync();
+    pdfBusy = true;
+    const statusEl = document.getElementById('pdf-tutor-status');
+    const btnEx = document.getElementById('btn-pdf-explain-here');
+    const btnStop = document.getElementById('btn-pdf-stop-audio');
+    btnEx.disabled = true;
+    statusEl.textContent = '🧠 Titan Guru उस spot को देख रहा है...';
+    try {
+      const canvas = document.getElementById('pdf-render-canvas');
+      const snaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
+      const parts = [
+        { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
+        { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } }
+      ];
+      if (audioB64) {
+        parts.push({ inlineData: { mimeType: audioMime || 'audio/webm', data: audioB64 } });
+        parts.push({ text: `Student placed the red pointer ring on Page ${pdfCurrentPage}/${pdfTotalPages} and asked this voice question. Reply strictly in simplest Devanagari Hindi + Latin English technical terms!` });
+      } else {
+        parts.push({ text: userAskText || `Page ${pdfCurrentPage}/${pdfTotalPages}: जहाँ Red Target Ring रखा है, उस exact हिस्से को एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (सारे Technical Terms सिर्फ \`English\` में रखना, Devanagari में बिल्कुल मत बदलना)।` });
+      }
+      const reply = await callTitanMultimodal(parts, PDF_POINTER_SYSTEM_PROMPT, pdfTutorHistory);
+      const wantsNext = reply.includes('[NEXT_PAGE]');
+      const cleanReply = reply.replace(/\[NEXT_PAGE\]/g, '').trim();
+      pdfTutorHistory.push({ role: 'user', text: userAskText || `[Pointed Page ${pdfCurrentPage}]` });
+      pdfTutorHistory.push({ role: 'model', text: cleanReply });
+      if (pdfTutorHistory.length > 10) pdfTutorHistory = pdfTutorHistory.slice(-10);
+
+      const ansBox = document.getElementById('pdf-answer-box');
+      const ansContent = document.getElementById('pdf-answer-content');
+      ansContent.innerHTML = renderColorfulGuruCard(cleanReply) + `
+        <div class="guru-card-actions">
+          <button type="button" class="ctrl-btn" id="btn-pdf-replay-voice">🔊 फिर से सुनो</button>
+          <button type="button" class="ctrl-btn" id="btn-pdf-copy-ans">📋 Copy</button>
+        </div>`;
+      ansBox.classList.add('show');
+      document.getElementById('btn-pdf-replay-voice').addEventListener('click', () => {
+        unlockGuruAudioSync(); stopActiveTitanAudio();
+        btnStop.style.display = 'inline-flex';
+        speakWithStudioVoice(cleanTextForTTS(cleanReply), getVoiceConfig(), () => { btnStop.style.display = 'none'; });
+      });
+      document.getElementById('btn-pdf-copy-ans').addEventListener('click', () => {
+        navigator.clipboard.writeText(cleanReply).then(() => showToast('📋 Copied!')).catch(() => {});
+      });
+
+      if (wantsNext && pdfDoc && pdfCurrentPage < pdfTotalPages) await renderPdfPage(pdfCurrentPage + 1);
+
+      if (pdfVoiceAutoPlay) {
+        stopActiveTitanAudio();
+        statusEl.textContent = '🔊 Titan Guru समझा रहा है...';
+        btnStop.style.display = 'inline-flex';
+        await speakWithStudioVoice(cleanTextForTTS(cleanReply), getVoiceConfig(), () => {
+          btnStop.style.display = 'none';
+          statusEl.textContent = '✅ समझ आ गया? Ball आगे बढ़ाओ या "आगे समझाओ" दबाओ';
+        });
+      } else {
+        statusEl.textContent = '✅ नीचे explanation तैयार है (Silent Mode)';
+      }
+    } catch (err) {
+      if (err && err.message === 'NO_API_KEY') {
+        statusEl.textContent = '🔑 पहले Titan Guru Settings में अपनी Key डालो';
+      } else {
+        const msg = err && err.message ? err.message : 'Explain failed';
+        statusEl.textContent = '❌ ' + msg;
+        showToast('❌ ' + msg);
+      }
+    } finally {
+      pdfBusy = false;
+      btnEx.disabled = false;
+    }
+  }
+
+  const ballEl = document.getElementById('pdf-pointer-ball');
+  const wrapEl = document.getElementById('pdf-canvas-wrap');
+  let draggingBall = false;
+  function moveBallToClientXY(cx, cy) {
+    const rect = document.getElementById('pdf-render-canvas').getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    pdfPointerNorm.x = Math.max(0.03, Math.min(0.97, (cx - rect.left) / rect.width));
+    pdfPointerNorm.y = Math.max(0.03, Math.min(0.97, (cy - rect.top) / rect.height));
+    updatePointerBallCss();
+  }
+  ballEl.addEventListener('pointerdown', (e) => {
+    e.preventDefault(); e.stopPropagation(); draggingBall = true; ballEl.classList.add('dragging');
+    if (ballEl.setPointerCapture) ballEl.setPointerCapture(e.pointerId);
+  });
+  ballEl.addEventListener('pointermove', (e) => { if (draggingBall) { e.preventDefault(); moveBallToClientXY(e.clientX, e.clientY); } });
+  const endDrag = () => { draggingBall = false; ballEl.classList.remove('dragging'); };
+  ballEl.addEventListener('pointerup', endDrag);
+  ballEl.addEventListener('pointercancel', endDrag);
+  wrapEl.addEventListener('click', (e) => {
+    if (!pdfPointerEnabled || draggingBall || e.target.closest('#pdf-pointer-ball')) return;
+    moveBallToClientXY(e.clientX, e.clientY);
+  });
+
+  const pdfFileInput = document.getElementById('pdf-file-input');
+  document.getElementById('btn-pdf-upload').addEventListener('click', () => pdfFileInput.click());
+  document.getElementById('btn-pdf-empty-upload').addEventListener('click', () => pdfFileInput.click());
+  document.getElementById('btn-pdf-demo-page').addEventListener('click', renderBuiltInDemoSheet);
+  document.getElementById('btn-pdf-empty-demo').addEventListener('click', renderBuiltInDemoSheet);
+  document.getElementById('btn-pdf-voice-mode').addEventListener('click', (e) => {
+    pdfVoiceAutoPlay = !pdfVoiceAutoPlay;
+    e.currentTarget.textContent = pdfVoiceAutoPlay ? '🔊 Voice: ON' : '🔇 Text Only';
+  });
+
+  pdfFileInput.addEventListener('change', async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const buf = await f.arrayBuffer();
+    if (!(await ensurePdfJsReady())) { showToast('⚠️ PDF.js load नहीं हो पाया'); return; }
+    try {
+      const probe = await window.pdfjsLib.getDocument({ data: buf.slice(0) }).promise;
+      const id = 'pdf_' + Date.now();
+      await savePdfToVault({ id, name: f.name.replace(/\.pdf$/i, ''), size: f.size, addedAt: Date.now(), lastPage: 1, totalPages: probe.numPages, data: buf });
+      await initPdfVaultList(id);
+      showToast(`📄 ${f.name} Vault में save हो गया!`);
+    } catch (err) { showToast('❌ यह valid PDF file नहीं है'); }
+    e.target.value = '';
+  });
+
+  document.getElementById('pdf-library-select').addEventListener('change', async (e) => {
+    const id = e.target.value;
+    if (!id) return;
+    const found = (await getAllPdfsFromVault()).find(x => x.id === id);
+    if (found) {
+      document.getElementById('btn-pdf-delete').style.display = 'inline-flex';
+      await loadPdfFromBuffer(found.id, found.name, found.data, found.lastPage || 1);
+    }
+  });
+  document.getElementById('btn-pdf-delete').addEventListener('click', async () => {
+    if (!pdfCurrentId) return;
+    await deletePdfFromVault(pdfCurrentId);
+    pdfDoc = null; pdfIsDemo = false; pdfCurrentId = '';
+    document.getElementById('pdf-canvas-wrap').style.display = 'none';
+    document.getElementById('pdf-empty-state').style.display = 'block';
+    document.getElementById('pdf-page-total').textContent = '/ 0';
+    await initPdfVaultList();
+    showToast('🗑️ PDF हटाया गया');
+  });
+  document.getElementById('btn-pdf-prev').addEventListener('click', () => pdfDoc && renderPdfPage(pdfCurrentPage - 1));
+  document.getElementById('btn-pdf-next').addEventListener('click', () => pdfDoc && renderPdfPage(pdfCurrentPage + 1));
+  document.getElementById('pdf-page-input').addEventListener('change', (e) => {
+    const v = parseInt(e.target.value, 10);
+    if (pdfDoc && v >= 1 && v <= pdfTotalPages) renderPdfPage(v);
+  });
+  function applyDemoZoom() {
+    const c = document.getElementById('pdf-render-canvas');
+    if (c) c.style.maxWidth = `${Math.round(540 * (pdfScale / 1.25))}px`;
+  }
+  document.getElementById('btn-pdf-zoom-in').addEventListener('click', () => {
+    pdfScale = Math.min(2.4, pdfScale + 0.25);
+    if (pdfDoc) renderPdfPage(pdfCurrentPage); else if (pdfIsDemo) applyDemoZoom();
+  });
+  document.getElementById('btn-pdf-zoom-out').addEventListener('click', () => {
+    pdfScale = Math.max(0.75, pdfScale - 0.25);
+    if (pdfDoc) renderPdfPage(pdfCurrentPage); else if (pdfIsDemo) applyDemoZoom();
+  });
+  document.getElementById('btn-pdf-pointer-toggle').addEventListener('click', (e) => {
+    pdfPointerEnabled = !pdfPointerEnabled;
+    e.currentTarget.textContent = pdfPointerEnabled ? '🎯 Pointer: ON' : '🎯 Pointer: OFF';
+    e.currentTarget.classList.toggle('active', pdfPointerEnabled);
+    updatePointerBallCss();
+  });
+  document.getElementById('btn-pdf-explain-here').addEventListener('click', () => runPdfPointerExplain());
+  document.getElementById('btn-pdf-next-explain').addEventListener('click', () => runPdfPointerExplain(`पिछला point समझ आ गया! अब Page ${pdfCurrentPage} पर इसी के आगे का अगला हिस्सा आसान देवनागरी हिंदी + \`English\` technical terms में समझा दो (या page खत्म हो तो [NEXT_PAGE] लिखकर अगले page की शुरुआत बताओ)।`));
+  document.getElementById('btn-pdf-stop-audio').addEventListener('click', () => {
+    stopActiveTitanAudio();
+    document.getElementById('btn-pdf-stop-audio').style.display = 'none';
+    document.getElementById('pdf-tutor-status').textContent = '⏹️ Voice रुकी हुई है';
+  });
+
+  function pickSafeAudioMime() {
+    if (window.MediaRecorder && typeof MediaRecorder.isTypeSupported === 'function') {
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) return 'audio/webm;codecs=opus';
+      if (MediaRecorder.isTypeSupported('audio/webm')) return 'audio/webm';
+      if (MediaRecorder.isTypeSupported('audio/mp4')) return 'audio/mp4';
+    }
+    return '';
+  }
+
+  const btnPdfMic = document.getElementById('btn-pdf-voice-ask');
+  btnPdfMic.addEventListener('click', async () => {
+    if (!pdfDoc && !pdfIsDemo) { showToast('📂 पहले PDF load करो या Demo Sheet दबाओ!'); return; }
+    unlockGuruAudioSync();
+    if (pdfMicActive && pdfMicRec) {
+      pdfMicActive = false; btnPdfMic.classList.remove('recording'); btnPdfMic.textContent = '🎤 Ask by Voice';
+      try { pdfMicRec.stop(); } catch (e) {}
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      pdfMicChunks = [];
+      const mime = pickSafeAudioMime();
+      pdfMicRec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      pdfMicRec.ondataavailable = (ev) => { if (ev.data && ev.data.size > 0) pdfMicChunks.push(ev.data); };
+      pdfMicRec.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+        const blob = new Blob(pdfMicChunks, { type: mime || 'audio/webm' });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const b64 = String(reader.result || '').split(',')[1];
+          if (b64) runPdfPointerExplain('', b64, mime || 'audio/webm');
+        };
+        reader.readAsDataURL(blob);
+      };
+      pdfMicRec.start();
+      pdfMicActive = true;
+      btnPdfMic.classList.add('recording');
+      btnPdfMic.textContent = '⏹️ Done Speaking';
+      document.getElementById('pdf-tutor-status').textContent = '🎤 बोलो... (बोलकर Done Speaking दबाओ)';
+    } catch (err) { showToast('🎤 Mic permission allow करो (HTTPS पर)'); }
+  });
+
+  // ===================================================================
+  // UNIVERSE 3: ASK TITAN GURU MULTIMODAL CHAT
+  // ===================================================================
+  let chatPendingImg = null, chatActiveSubject = 'SSC JE & RRB JE Civil + GK/GS', chatBusy = false;
+  let chatMicRec = null, chatMicChunks = [], chatMicActive = false;
+
+  function buildAskGuruSystemPrompt() {
+    return `You are Titan Guru, a legendary, warm, super-charismatic North Indian / Purvanchal classroom mentor for SSC JE, RRB JE Civil Engineering & GK/GS who explains the toughest concepts in the simplest everyday language with unforgettable desi examples. Active Subject: ${chatActiveSubject}.
+
+IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
+1. DEVANAGARI HINDI FOR ALL EXPLANATIONS: Write ALL everyday Hindi sentences, stories, and explanations STRICTLY in ultra-simple, warm **Devanagari Hindi script** (बिल्कुल आम बोलचाल की पूर्वांचल/UP वाली आसान हिंदी — कठिन किताबी हिंदी बिल्कुल नहीं!). NEVER write Hindi sentences in Roman English letters (NO Hinglish like "yeh aise kaam karta hai"!).
+2. LATIN ENGLISH FOR ALL TECHNICAL TERMS: Keep EVERY engineering, scientific, constitutional, IS-code, formula, and exam technical term STRICTLY in **English Latin script** wrapped in backticks (e.g., \`IS 456:2000\`, \`M20 Grade\`, \`Void Ratio\`, \`Reynolds Number\`, \`Article 123\`, \`Vicat Apparatus\`, \`Bending Moment\`). NEVER transliterate English technical words into Devanagari (NEVER write "कंक्रीट", "रेनॉल्ड्स", "आर्टिकल", "वॉइड रेशियो"!).
+   - ❌ WRONG: "Void ratio mein voids aur solids ka ratio hota hai" OR "वॉइड रेशियो में वॉइड्स और सॉलिड्स का रेशियो होता है।"
+   - ✅ RIGHT: "देखो भाई, \`Soil Mechanics\` में \`Void Ratio (e)\` का मतलब है मिट्टी के खाली छेद (\`Voids\`) और ठोस कणों (\`Solids\`) का अनुपात — जैसे भरी हुई बाल्टी में कंकड़ों के बीच की हवा बनाम कंकड़ों की जगह! इसीलिए \`e > 0\` की कोई ऊपरी सीमा नहीं होती।"
+3. COLORFUL STRUCTURED PRESENTATION:
+   ## [Topic Name in English]
+   - 2–4 एकदम आसान देवनागरी हिंदी points (सारे technical terms \`English\` में)
+   ### 🔬 असली Concept / Formula (Step-by-Step)
+   - आसान steps में समझाओ (जहाँ तुलना हो वहाँ clean Markdown comparison table बनाओ)
+   > 💡 देसी उदाहरण: [1 ऐसा मज़ेदार रोज़मर्रा का उदाहरण जिसे सुनकर हँसी भी आए और ज़िंदगी भर याद रहे]
+   > ✅ SSC JE / RRB JE Exam Point: [2–3 crisp \`English Keywords / IS Code / Limits\` जिनसे exam में सवाल सीधा फँसे]
+   > ⚠️ Examiner Trap & Short Trick: [1 छोटा-सा super-easy याद रखने का जुगाड़]
+4. If the student sends ONLY a photo or voice clip without text, automatically read/listen and explain it completely in this exact colorful format!`;
+  }
+
+  function loadChatHistory() {
+    try { const raw = safeGetStorage(PG_CHAT_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+  }
+  function saveChatHistory(list) {
+    try { safeSetStorage(PG_CHAT_KEY, JSON.stringify(list.slice(-30))); }
+    catch (e) {
+      const slim = list.slice(-20).map((m, idx, arr) => idx < arr.length - 4 ? { ...m, imgThumb: '' } : m);
+      try { safeSetStorage(PG_CHAT_KEY, JSON.stringify(slim)); } catch (e2) {}
+    }
+  }
+
+  function renderChatFeed() {
+    const feed = document.getElementById('chat-feed');
+    if (!feed) return;
+    const hist = loadChatHistory();
+    feed.innerHTML = '';
+    if (hist.length === 0) {
+      feed.innerHTML = `
+        <div class="chat-msg ai">
+          <div class="guru-rich-card">
+            <div class="guru-ai-head"><span class="guru-ai-avatar">🧠</span><span>Titan Guru</span></div>
+            <div class="guru-rich-h2">🙏 नमस्ते प्रदीप! मैं हूँ Titan Guru</div>
+            <p style="margin:6px 0;">यहाँ तुम अपनी Civil book, PYQ, या GK notes की <strong>📷 Camera से photo</strong> खींचकर डाल सकते हो, <strong>🖼️ Photo</strong> भेज सकते हो, <strong>🎤 बोलकर</strong> या <strong>लिखकर</strong> पूछ सकते हो।</p>
+            <div class="guru-callout">💡 <strong>खास बात:</strong> सारे <span class="guru-tech-pill">Technical Terms</span> एकदम साफ English में रहेंगे और समझाने का अंदाज़ बिल्कुल आसान देसी Hindi में — ताकि एक बार पढ़ते ही दिमाग में बैठ जाए!</div>
+          </div>
+        </div>`;
+      return;
+    }
+    hist.forEach((msg, idx) => {
+      const div = document.createElement('div');
+      div.className = `chat-msg ${msg.role === 'user' ? 'user' : 'ai'}`;
+      if (msg.role === 'user') {
+        let inner = '';
+        if (msg.imgThumb) inner += `<img src="${msg.imgThumb}" alt="Doubt photo">`;
+        if (msg.text) inner += `<div>${escapeHtmlSafe(msg.text)}</div>`;
+        div.innerHTML = inner || '📷 Photo भेजा गया';
+      } else {
+        div.innerHTML = renderColorfulGuruCard(msg.text) + `
+          <div class="guru-card-actions">
+            <button type="button" class="ctrl-btn btn-chat-speak" data-idx="${idx}">🔊 आवाज़ में सुनो</button>
+            <button type="button" class="ctrl-btn btn-chat-copy" data-idx="${idx}">📋 Copy</button>
+          </div>`;
+      }
+      feed.appendChild(div);
+    });
+    feed.querySelectorAll('.btn-chat-speak').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = loadChatHistory()[Number(btn.getAttribute('data-idx'))];
+        if (!item) return;
+        unlockGuruAudioSync(); stopActiveTitanAudio();
+        btn.textContent = '🔊 बोल रहा है...';
+        speakWithStudioVoice(cleanTextForTTS(item.text), getVoiceConfig(), () => { btn.textContent = '🔊 आवाज़ में सुनो'; });
+      });
+    });
+    feed.querySelectorAll('.btn-chat-copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = loadChatHistory()[Number(btn.getAttribute('data-idx'))];
+        if (item) navigator.clipboard.writeText(item.text).then(() => showToast('📋 Copied!')).catch(() => {});
+      });
+    });
+    feed.scrollTop = feed.scrollHeight;
+  }
+
+  function compressImageFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const sc = Math.min(1, 1280 / Math.max(img.width, img.height));
+          const c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(img.width * sc));
+          c.height = Math.max(1, Math.round(img.height * sc));
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          const dataUrl = c.toDataURL('image/jpeg', 0.82);
+          resolve({ dataUrl, b64: dataUrl.split(',')[1] });
+        };
+        img.onerror = reject; img.src = reader.result;
+      };
+      reader.onerror = reject; reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleChatImagePick(e) {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    try {
+      const comp = await compressImageFile(f);
+      chatPendingImg = comp;
+      document.getElementById('chat-img-preview').src = comp.dataUrl;
+      document.getElementById('chat-img-preview-bar').classList.add('show');
+    } catch (err) { showToast('❌ Photo load नहीं हो पाई'); }
+    e.target.value = '';
+  }
+
+  document.querySelectorAll('.chat-subj-pill').forEach(p => {
+    p.addEventListener('click', () => {
+      chatActiveSubject = p.getAttribute('data-subj') || 'SSC JE & RRB JE Civil + GK/GS';
+      document.querySelectorAll('.chat-subj-pill').forEach(x => x.classList.toggle('active', x === p));
+    });
+  });
+  document.getElementById('btn-chat-camera').addEventListener('click', () => document.getElementById('chat-camera-input').click());
+  document.getElementById('btn-chat-gallery').addEventListener('click', () => document.getElementById('chat-gallery-input').click());
+  document.getElementById('chat-camera-input').addEventListener('change', handleChatImagePick);
+  document.getElementById('chat-gallery-input').addEventListener('change', handleChatImagePick);
+  document.getElementById('btn-chat-remove-img').addEventListener('click', () => {
+    chatPendingImg = null;
+    document.getElementById('chat-img-preview-bar').classList.remove('show');
+  });
+  document.querySelectorAll('.chat-chip').forEach(ch => {
+    ch.addEventListener('click', () => {
+      const inp = document.getElementById('chat-text-input');
+      const p = ch.getAttribute('data-prompt') || '';
+      inp.value = inp.value.trim() ? `${inp.value.trim()} — ${p}` : p;
+      inp.focus();
+    });
+  });
+  document.getElementById('btn-chat-clear').addEventListener('click', () => {
+    saveChatHistory([]); renderChatFeed(); showToast('🗑️ Chat साफ हो गई');
+  });
+
+  async function sendAskGuruMessage(voiceAudioB64, voiceAudioMime) {
+    if (chatBusy) return;
+    const inp = document.getElementById('chat-text-input');
+    const txt = (inp.value || '').trim();
+    if (!txt && !chatPendingImg && !voiceAudioB64) {
+      showToast('✏️ कुछ लिखो, 📷 Photo चुनो या 🎤 बोलो');
+      return;
+    }
+    const imgCopy = chatPendingImg ? { ...chatPendingImg } : null;
+    chatPendingImg = null; inp.value = ''; inp.style.height = 'auto';
+    document.getElementById('chat-img-preview-bar').classList.remove('show');
+
+    const hist = loadChatHistory();
+    const priorTurns = hist.slice(-6).map(m => ({ role: m.role === 'user' ? 'user' : 'model', text: m.text || '[Image/Voice]' }));
+    hist.push({ role: 'user', text: txt || (voiceAudioB64 ? '🎤 Voice Doubt भेजा गया' : ''), imgThumb: imgCopy ? imgCopy.dataUrl : '' });
+    saveChatHistory(hist);
+    renderChatFeed();
+
+    const feed = document.getElementById('chat-feed');
+    const loader = document.createElement('div');
+    loader.className = 'chat-msg ai';
+    loader.innerHTML = '<div class="guru-ai-head"><span class="guru-ai-avatar">🧠</span><span>Titan Guru लिख रहा है</span></div><div class="pg-typing-dots"><span></span><span></span><span></span></div>';
+    feed.appendChild(loader);
+    feed.scrollTop = feed.scrollHeight;
+
+    chatBusy = true;
+    const sendBtn = document.getElementById('btn-chat-send');
+    sendBtn.disabled = true;
+    try {
+      const parts = [];
+      if (imgCopy) parts.push({ inlineData: { mimeType: 'image/jpeg', data: imgCopy.b64 } });
+      if (voiceAudioB64) parts.push({ inlineData: { mimeType: voiceAudioMime || 'audio/webm', data: voiceAudioB64 } });
+      parts.push({ text: (txt ? txt + '\n[Reply strictly in simplest Devanagari Hindi with vivid desi analogy; keep ALL technical terms strictly in English Latin script inside backticks — zero word swapping.]' : (voiceAudioB64 ? 'इस voice doubt को ध्यान से सुनकर एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (सारे Technical Terms सिर्फ `English` में रखना)।' : 'इस photo में जो भी लिखा या बना है, उसे एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (सारे Technical Terms सिर्फ `English` में रखना)।')) });
+
+      const reply = await callTitanMultimodal(parts, buildAskGuruSystemPrompt(), priorTurns);
+      const updated = loadChatHistory();
+      updated.push({ role: 'model', text: reply });
+      saveChatHistory(updated);
+      renderChatFeed();
+    } catch (err) {
+      loader.remove();
+      if (err && err.message !== 'NO_API_KEY') showToast('❌ ' + (err && err.message ? err.message : 'Reply failed'));
+    } finally {
+      chatBusy = false;
+      sendBtn.disabled = false;
+    }
+  }
+
+  document.getElementById('btn-chat-send').addEventListener('click', () => sendAskGuruMessage());
+  const chatTa = document.getElementById('chat-text-input');
+  chatTa.addEventListener('input', () => {
+    chatTa.style.height = 'auto';
+    chatTa.style.height = Math.min(150, chatTa.scrollHeight) + 'px';
+  });
+  chatTa.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatTa.style.height = 'auto'; sendAskGuruMessage(); }
+  });
+
+  const btnChatMic = document.getElementById('btn-chat-mic');
+  btnChatMic.addEventListener('click', async () => {
+    if (chatMicActive && chatMicRec) {
+      chatMicActive = false; btnChatMic.classList.remove('recording'); btnChatMic.textContent = '🎤 Mic';
+      try { chatMicRec.stop(); } catch (e) {}
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      chatMicChunks = [];
+      const mime = pickSafeAudioMime();
+      chatMicRec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      chatMicRec.ondataavailable = (ev) => { if (ev.data && ev.data.size > 0) chatMicChunks.push(ev.data); };
+      chatMicRec.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+        const blob = new Blob(chatMicChunks, { type: mime || 'audio/webm' });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const b64 = String(reader.result || '').split(',')[1];
+          if (b64) sendAskGuruMessage(b64, mime || 'audio/webm');
+        };
+        reader.readAsDataURL(blob);
+      };
+      chatMicRec.start();
+      chatMicActive = true;
+      btnChatMic.classList.add('recording');
+      btnChatMic.textContent = '⏹️ Stop';
+      showToast('🎤 बोलो... खत्म करके फिर से ⏹️ Stop दबाओ');
+    } catch (err) { showToast('🎤 Mic permission allow करो (HTTPS पर)'); }
+  });
+
+  setActiveUniverse(safeGetStorage(PG_UNIVERSE_KEY) || 'mcq');
+})();
+
 </script>
 </body>
 </html>
