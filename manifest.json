@@ -1,0 +1,19 @@
+{
+  "name": "Brahmastra Titan OS",
+  "short_name": "Titan OS",
+  "description": "Offline SSC JE / RRB JE 2027 Master MCQ, Titan SRS & Voice Tutor App",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
