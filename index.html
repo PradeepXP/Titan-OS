@@ -1537,6 +1537,13 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
   border-color: #6366f1 !important;
   animation: guruAuraGlow 1.1s ease-in-out infinite;
 }
+#btn-start-voice-quiz.quiz-live-on {
+  background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899) !important;
+  color: #fff !important;
+  border-color: #8b5cf6 !important;
+  font-weight: 800;
+  animation: guruAuraGlow 1.6s ease-in-out infinite;
+}
 .btn-speak-q.is-speaking {
   background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899) !important;
   color: #fff !important;
@@ -1655,6 +1662,7 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
         <button type="button" class="ctrl-btn" id="btn-open-srs" title="Titan SRS Spaced Repetition (1→3→7→15→30 Days · Midnight Auto-Unlock)">🧠 SRS: 0</button>
         <button type="button" class="ctrl-btn" id="btn-open-heatmap" title="Daily Study Streak & 90-Day Activity Heatmap">🔥 0d</button>
         <button type="button" class="ctrl-btn" id="btn-open-voice" title="Titan Guru — Live Interactive Voice Tutor Settings">🎙️ Titan Guru</button>
+        <button type="button" class="ctrl-btn" id="btn-start-voice-quiz" title="Hands-Free Voice Quiz Mode — Reads Q &amp; Options, Confirms &amp; Locks by Voice, Auto-Advances Batch">🎯 Voice Quiz</button>
         <button type="button" class="ctrl-btn btn-success" id="btn-export-html" title="Download standalone HTML file with current chapter baked in for sharing">📦 Share HTML</button>
         <button type="button" class="ctrl-btn" id="btn-theme-paper" title="Warm Paper Theme">📜</button>
         <button type="button" class="ctrl-btn" id="btn-theme-sage" title="Sage Comfort Theme">🌿</button>
@@ -2292,7 +2300,9 @@ body.theme-night .hm-cell.lv4 { background: #4ade80; }
         <div style="font-size:0.7rem; color:#94a3b8; font-weight:600;" id="guru-dock-status">Connecting</div>
       </div>
     </div>
-    <div style="display:flex; gap:6px; flex-shrink:0;">
+    <div style="display:flex; gap:5px; flex-shrink:0; align-items:center;">
+      <button type="button" class="guru-dock-btn" id="btn-guru-hook" title="Instant Desi Phonetic / Visual Memory Hook" style="padding:5px 8px; font-size:0.86rem;">💡</button>
+      <button type="button" class="guru-dock-btn" id="btn-guru-basic" title="Zero-Level Ultra-Basic Explanation" style="padding:5px 8px; font-size:0.86rem;">😵‍💫</button>
       <button type="button" class="guru-dock-btn" id="btn-guru-mute" title="Tap to Interrupt or Mute Hands-Free Mic">🎙️ Live</button>
       <button type="button" class="guru-dock-btn btn-end" id="btn-guru-stop" title="End Session">End</button>
     </div>
@@ -3140,8 +3150,9 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     flushActiveFocusTimer();
     activeFocusSince = 0;
-  } else if (activeFocusQid !== null) {
-    activeFocusSince = Date.now();
+  } else {
+    if (activeFocusQid !== null) activeFocusSince = Date.now();
+    if (typeof guruSessionMode !== 'undefined' && guruSessionMode === 'quiz' && activeSpeakingQid !== null) acquireGuruWakeLock();
   }
 });
 let cbtInterval = null;
@@ -4334,6 +4345,21 @@ function resetWaveBarsCss() {
 let guruLiveMicNode = null;
 let guruLiveConnected = false;
 let guruSwitchDebounce = null;
+let guruSessionMode = 'tutor'; // 'tutor' (card 🎙️) | 'quiz' (top-bar 🎯 Hands-Free Quiz Mode)
+let guruWakeLock = null;
+
+async function acquireGuruWakeLock() {
+  try {
+    if ('wakeLock' in navigator && !guruWakeLock) {
+      guruWakeLock = await navigator.wakeLock.request('screen');
+      guruWakeLock.addEventListener('release', () => { guruWakeLock = null; });
+    }
+  } catch (e) {}
+}
+
+function releaseGuruWakeLock() {
+  if (guruWakeLock) { try { guruWakeLock.release(); } catch (e) {} guruWakeLock = null; }
+}
 
 function getVoiceConfig() {
   try {
@@ -4542,6 +4568,10 @@ function stopActiveVoicePlayback() {
     b.classList.remove('is-loading', 'is-speaking');
     b.textContent = '🎙️';
   });
+  releaseGuruWakeLock();
+  guruSessionMode = 'tutor';
+  const qzBtn = document.getElementById('btn-start-voice-quiz');
+  if (qzBtn) { qzBtn.classList.remove('quiz-live-on'); qzBtn.textContent = '🎯 Voice Quiz'; }
   activeSpeakingQid = null;
 }
 
@@ -4549,27 +4579,109 @@ function formatQuestionContextSnippet(q) {
   if (!q) return '';
   const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
   const isAnswered = !!hist[q.id];
-  const optsTxt = (q.opts || []).map((o, i) => `${['A','B','C','D'][i]}) ${cleanTextForSpeech(o)}`).join(' | ');
+  const dispOrder = (appState && appState.optionOrders && appState.optionOrders[q.id]) || [0, 1, 2, 3];
+  const optsTxt = dispOrder.map((origIdx, dispIdx) => `${['A','B','C','D'][dispIdx]}) ${cleanTextForSpeech((q.opts || [])[origIdx])}`).join(' | ');
   return `ACTIVE QUESTION (Q#${q.id}):\nEnglish: ${cleanTextForSpeech(q.en || q.hi)}\nHindi: ${cleanTextForSpeech(q.hi || '')}\nOptions: ${optsTxt}\n${isAnswered ? `Correct Answer: ${cleanTextForSpeech(q.opts[q.ans])}\nConcept: ${cleanTextForSpeech(q.flowHtml || q.ankiFact || '')}\nHook: ${cleanTextForSpeech(q.hook || '')}` : 'IMPORTANT: The student has NOT answered yet. Do NOT spoil the final option unless explicitly asked—guide their thinking naturally!'}`;
 }
 
 function buildTitanGuruSystemPrompt(q, cfg) {
+  const ctx = q ? ('\n' + formatQuestionContextSnippet(q)) : '';
+  if (guruSessionMode === 'quiz') {
+    return `You are a warm, polite, charismatic Indian Quiz Host running a 100% hands-free voice MCQ session while the student may be away from the phone (cooking, walking, or relaxing).
+HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
+1. READ QUESTION & 4 OPTIONS CLEARLY: Start immediately by reading the active question cleanly in natural Indian Hinglish/English at a balanced, comfortable pace—neither rushed nor overly slow. Then read Option A, Option B, Option C, and Option D clearly in order.
+2. ASK FOR CHOICE: Politely ask which option they want to lock ("बताइए, कौन से option पर ताला लगाया जाए?"). Then STOP and listen.
+3. DOUBLE-CONFIRM BEFORE LOCKING: When the student picks an option (e.g., "Option B"), ask warmly for final confirmation ("Option B — पक्का ताला लगा दें?").
+4. LOCK ON CONFIRMATION: The moment the student confirms ("हाँ / पक्का / lock कर दो / ताला लगा दो"), IMMEDIATELY call the tool lock_mcq_option with that exact displayed letter (A, B, C, or D) (or end your reply with [LOCK:B] if tools are unavailable).
+5. FEEDBACK & COMPLETE SATISFACTION: After locking, warmly congratulate if right—or gently explain the exact concept and why the right answer wins in dead-simple everyday Hindi if wrong. Then ask clearly if they understood completely and are ready for the next question ("अच्छे से समझ आ गया? अगले सवाल पर चलें?").
+6. WAIT FOR EXPLICIT PERMISSION BEFORE MOVING ON: NEVER call go_to_next_question until the student explicitly gives permission ("हाँ / चलो / next / आगे बढ़ो"). Once they say yes, call go_to_next_question (or include [NEXT_Q]) and immediately begin Step 1 for the newly loaded question!
+7. ZERO META-CLICHES & ZERO MARKDOWN: Never output markdown (*, #, bullets) and never use robotic meta-labels. Speak naturally like a real human host.${ctx}`;
+  }
+
   const persona = cfg.style === 'bada_bhai'
     ? 'You are a warm, witty, genuinely human Indian elder brother sitting right next to the student, speaking completely natural everyday Hinglish.'
     : cfg.style === 'exam_crisp'
       ? 'You are a sharp, human SSC JE mentor explaining things in effortless, crisp conversational Indian Hinglish.'
       : 'You are a beloved, witty Patna-style veteran Indian teacher sitting at a tea stall with your student—so naturally human, warm, and funny that even an 8th-grade village student understands the toughest Civil Engineering or GK concept in 10 seconds and smiles.';
-  const ctx = q ? ('\n' + formatQuestionContextSnippet(q)) : '';
   return `${persona}
 ULTRA-HUMANIZED VOICE RULES:
 1. ZERO ROBOTIC FEEL: Talk like a real human—use natural conversational openers ("अरे सुनो...", "देखो बड़ी सीधी बात है...", "हाँ बिल्कुल!"), natural pauses ("..."), and genuine warmth. NEVER sound like a formal AI assistant or textbook reader.
 2. NATURAL INDIAN HINGLISH: Write/speak natural conversational North-Indian Hindi mixed with standard English technical words (IS Code, Concrete, Article, Option, Trap, Formula). NEVER output markdown symbols (*, #, bullets).
 3. INCINERATE JARGON: Replace every tough textbook phrase with a dead-simple everyday Indian analogy.
-4. SHORT & CONVERSATIONAL (35-55 WORDS MAX): Keep every reply crisp like real human back-and-forth talk. On the very first turn, briefly explain what the question is asking in 2-3 simple lines, proactively guess the exact confusion point ("क्या यहाँ [X] समझने में अटक रहे हो, या [Y] में doubt है?"), and pause warmly to listen.${ctx}`;
+4. STRICT ZERO META-CLICHES: NEVER utter meta-phrases or repetitive catchphrases like "exam hall pressure", "memory hook suno", "main ungli pakad ke sikhaunga", "ultra basic level", or "chai ki chuski". Jump DIRECTLY into the real explanation or hook naturally!
+5. SHORT & CONVERSATIONAL (35-55 WORDS MAX): Keep every reply crisp like real human back-and-forth talk. On the very first turn, briefly explain what the question is asking in 2-3 simple lines, proactively guess the exact confusion point, and pause warmly to listen.
+6. OPTIONAL OPTION LOCK: If the student asks you to lock an option, confirm once and call lock_mcq_option (or [LOCK:X]). If they ask to go to the next question, call go_to_next_question (or [NEXT_Q]).${ctx}`;
+}
+
+// KBC VOICE OPTION LOCK + AUTO-NEXT QUESTION EXECUTOR (SHUFFLED-SAFE!)
+function executeGuruLockOption(letterRaw) {
+  const letter = String(letterRaw || '').trim().toUpperCase().replace(/[^ABCD]/g, '').slice(0, 1);
+  const dispIdx = ['A', 'B', 'C', 'D'].indexOf(letter);
+  if (dispIdx < 0 || !activeSpeakingQid || activeSpeakingQid === 'test') {
+    return { ok: false, error: 'No active question or invalid option letter' };
+  }
+  const q = QUIZ_DATA.find(x => x.id === activeSpeakingQid);
+  if (!q) return { ok: false, error: 'Question not found' };
+  const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
+  if (hist[q.id]) {
+    return { ok: true, alreadyAnswered: true, isCorrect: hist[q.id].status === 'correct', correctAnswer: cleanTextForSpeech(q.opts[q.ans]) };
+  }
+  const order = (appState && appState.optionOrders && appState.optionOrders[q.id]) || [0, 1, 2, 3];
+  const origIdx = order[dispIdx];
+  handleAnswerClick(q.id, origIdx);
+  const isCorrect = (origIdx === q.ans);
+  const correctDispLetter = ['A', 'B', 'C', 'D'][order.indexOf(q.ans)] || '';
+  return {
+    ok: true,
+    lockedLetter: letter,
+    isCorrect,
+    correctLetter: correctDispLetter,
+    correctAnswer: cleanTextForSpeech(q.opts[q.ans]),
+    concept: cleanTextForSpeech(q.flowHtml || q.ankiFact || '')
+  };
+}
+
+function executeGuruGoNextQuestion() {
+  const { slice } = getActiveBatchSlice();
+  const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
+  const curIdx = slice.indexOf(activeSpeakingQid);
+  let nextQid = null;
+  for (let i = Math.max(0, curIdx + 1); i < slice.length; i++) {
+    if (!hist[slice[i]]) { nextQid = slice[i]; break; }
+  }
+  if (!nextQid) {
+    for (let i = 0; i < Math.max(0, curIdx); i++) {
+      if (!hist[slice[i]]) { nextQid = slice[i]; break; }
+    }
+  }
+  if (!nextQid) return { ok: false, message: 'All questions in this batch are already completed!' };
+  const el = document.getElementById('q-' + nextQid);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Immediately move active aura & context to nextQid
+  const oldBtn = document.getElementById('speak-' + activeSpeakingQid);
+  if (oldBtn) { oldBtn.classList.remove('is-loading', 'is-speaking'); oldBtn.textContent = '🎙️'; }
+  const newBtn = document.getElementById('speak-' + nextQid);
+  if (newBtn) { newBtn.classList.add('is-speaking'); newBtn.textContent = '✨'; }
+  activeSpeakingQid = nextQid;
+  const nextQ = QUIZ_DATA.find(x => x.id === nextQid);
+  guruActiveQ = nextQ;
+  const titleEl = document.getElementById('guru-dock-title');
+  if (titleEl && nextQ) titleEl.textContent = `${guruSessionMode === 'quiz' ? '🎯 Voice Quiz' : 'Titan Guru'} · Q#${nextQ.id}`;
+  guruChatHistory = [];
+  return { ok: true, nextQuestionId: nextQid, context: formatQuestionContextSnippet(nextQ) };
+}
+
+function triggerGuruQuickAction(kind) {
+  if (!activeSpeakingQid || activeSpeakingQid === 'test') return;
+  const prompt = (kind === 'hook')
+    ? 'इस सवाल के लिए अभी एक सबसे bizarre, मज़ेदार Purvanchal/UP-style phonetic या visual sound-alike association बताओ (जैसे n = Porosity = No 0%, No 100%)। कोई फालतू intro या meta लाइन मत बोलना—सीधा 2 लाइन में अनोखा hook बताओ!'
+    : 'मान लो मैं इस topic को ज़िंदगी में पहली बार देख रहा हूँ। एकदम ज़ीरो लेवल से, बिना किसी कठिन शब्द के, सबसे आसान रोज़मर्रा के देसी उदाहरण से 3 छोटी लाइनों में समझाओ। कोई meta बात मत बोलना—सीधा समझाना शुरू करो!';
+  sendGuruTurn(prompt);
 }
 
 // SMART AUTO-QUESTION CONTEXT SWITCH (Q121 -> Q122 seamlessly when scrolling!)
 function syncGuruToFocusedQuestion(newQid) {
+  if (guruSessionMode === 'quiz') return;
   if (!activeSpeakingQid || activeSpeakingQid === 'test' || !newQid || newQid === activeSpeakingQid) return;
   if (guruSwitchDebounce) clearTimeout(guruSwitchDebounce);
   guruSwitchDebounce = setTimeout(() => {
@@ -4633,7 +4745,25 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               responseModalities: ['AUDIO'],
               speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: cfg.voiceName } } }
             },
-            systemInstruction: { parts: [{ text: buildTitanGuruSystemPrompt(q, cfg) }] }
+            systemInstruction: { parts: [{ text: buildTitanGuruSystemPrompt(q, cfg) }] },
+            tools: [{
+              functionDeclarations: [
+                {
+                  name: 'lock_mcq_option',
+                  description: 'Locks and submits the confirmed MCQ option (A, B, C, or D) ONLY AFTER the student explicitly confirms locking it.',
+                  parameters: {
+                    type: 'OBJECT',
+                    properties: { option_letter: { type: 'STRING', description: 'Displayed option letter: A, B, C, or D' } },
+                    required: ['option_letter']
+                  }
+                },
+                {
+                  name: 'go_to_next_question',
+                  description: 'Scrolls smoothly to the next unanswered question and switches focus to it when the student asks to move forward.',
+                  parameters: { type: 'OBJECT', properties: {} }
+                }
+              ]
+            }]
           }
         }));
       };
@@ -4676,13 +4806,30 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               guruLiveMicNode = proc;
             }
 
-            const kickoff = q
-              ? 'इस सवाल को 3 आसान देसी हिंदी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।'
-              : 'प्रदीप के लिए 2 लाइन का एकदम natural, warm human स्वागत बोलो।';
+            const kickoff = !q
+              ? 'प्रदीप के लिए 2 लाइन का एकदम natural, warm human स्वागत बोलो।'
+              : (guruSessionMode === 'quiz'
+                ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
+                : 'इस सवाल को 3 आसान देसी हिंदी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।');
             guruLiveWs.send(JSON.stringify({
               clientContent: { turns: [{ role: 'user', parts: [{ text: kickoff }] }], turnComplete: true }
             }));
             finish(true);
+            return;
+          }
+          if (msg.toolCall && Array.isArray(msg.toolCall.functionCalls)) {
+            const responses = msg.toolCall.functionCalls.map(fc => {
+              let resObj = { ok: false };
+              if (fc.name === 'lock_mcq_option') {
+                resObj = executeGuruLockOption(fc.args && fc.args.option_letter);
+              } else if (fc.name === 'go_to_next_question') {
+                resObj = executeGuruGoNextQuestion();
+              }
+              return { id: fc.id, name: fc.name, response: { result: resObj } };
+            });
+            if (guruLiveWs && guruLiveWs.readyState === WebSocket.OPEN) {
+              guruLiveWs.send(JSON.stringify({ toolResponse: { functionResponses: responses } }));
+            }
             return;
           }
           if (msg.serverContent && msg.serverContent.interrupted) {
@@ -4930,9 +5077,25 @@ async function sendGuruTurn(userInput) {
   updateGuruMicBtn();
   try {
     const parts = Array.isArray(userInput) ? userInput : [{ text: String(userInput) }];
-    const reply = await callGuruBrain(parts, cfg);
+    let reply = await callGuruBrain(parts, cfg);
+    const lockM = reply.match(/\[LOCK:([ABCD])\]/i);
+    if (lockM) {
+      executeGuruLockOption(lockM[1]);
+      reply = reply.replace(/\[LOCK:[ABCD]\]/gi, '').trim();
+    }
+    const nextM = /\[NEXT_Q\]/i.test(reply);
+    let movedNextInQuiz = false;
+    if (nextM) {
+      reply = reply.replace(/\[NEXT_Q\]/gi, '').trim();
+      const mv = executeGuruGoNextQuestion();
+      if (mv && mv.ok && guruSessionMode === 'quiz') movedNextInQuiz = true;
+    }
     setGuruCaption(reply);
     await speakWithStudioVoice(reply, cfg, () => {
+      if (movedNextInQuiz && activeSpeakingQid !== null) {
+        sendGuruTurn('अब यह नया सवाल और इसके चारों options (A, B, C, D) आराम से पढ़ो और पूछो किस option पर ताला लगाया जाए।');
+        return;
+      }
       if (activeSpeakingQid !== null && !guruMicMuted) startGuruVoiceListen(true);
     });
   } catch (err) {
@@ -4961,7 +5124,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
   if (btnEl) { btnEl.classList.add('is-loading'); btnEl.textContent = '⏳'; }
   const dock = document.getElementById('guru-live-dock');
   const titleEl = document.getElementById('guru-dock-title');
-  if (titleEl) titleEl.textContent = q ? `Titan Guru · Q#${q.id}` : 'Titan Guru · Live';
+  if (titleEl) titleEl.textContent = q ? `${guruSessionMode === 'quiz' ? '🎯 Voice Quiz' : 'Titan Guru'} · Q#${q.id}` : 'Titan Guru · Live';
   if (dock) dock.style.display = 'flex';
   setGuruCaption('');
   updateGuruDockState('Connecting...', false);
@@ -4977,9 +5140,11 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
   // Seamless Turbo HTTPS Fallback (works on BOTH file:// and HTTPS!)
   if (activeSpeakingQid !== qidTag) return;
   if (btnEl) { btnEl.classList.remove('is-loading'); btnEl.classList.add('is-speaking'); btnEl.textContent = '✨'; }
-  const kickoff = q
-    ? 'इस सवाल को एकदम आसान, human देसी Hinglish में 3 छोटी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।'
-    : 'प्रदीप के लिए 2 लाइन का एकदम natural, warm human स्वागत बोलो।';
+  const kickoff = !q
+    ? 'प्रदीप के लिए 2 लाइन का एकदम natural, warm human स्वागत बोलो।'
+    : (guruSessionMode === 'quiz'
+      ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
+      : 'इस सवाल को एकदम आसान, human देसी Hinglish में 3 छोटी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।');
   await sendGuruTurn(kickoff);
 }
 
@@ -4992,8 +5157,35 @@ function speakQuestionCard(qid) {
   unlockGuruAudioSync(); // Unlock Android/iOS AudioContext synchronously on user tap!
   const q = QUIZ_DATA.find(x => x.id === qid);
   if (!q) return;
+  guruSessionMode = 'tutor';
   const btnEl = document.getElementById('speak-' + qid);
   startTitanGuruLive(q, qid, btnEl);
+}
+
+function startHandsFreeVoiceQuiz() {
+  if (guruSessionMode === 'quiz' && activeSpeakingQid !== null) {
+    stopActiveVoicePlayback();
+    return;
+  }
+  stopActiveVoicePlayback();
+  unlockGuruAudioSync();
+  const { slice } = getActiveBatchSlice();
+  const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
+  const firstUnatt = slice.find(id => !hist[id]) || slice[0];
+  if (!firstUnatt) {
+    showToast('✨ इस Batch में कोई सवाल बाकी नहीं है!');
+    return;
+  }
+  const q = QUIZ_DATA.find(x => x.id === firstUnatt);
+  if (!q) return;
+  const el = document.getElementById('q-' + q.id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  guruSessionMode = 'quiz';
+  acquireGuruWakeLock();
+  const qzBtn = document.getElementById('btn-start-voice-quiz');
+  if (qzBtn) { qzBtn.classList.add('quiz-live-on'); qzBtn.textContent = '⏹️ Stop Quiz'; }
+  const btnEl = document.getElementById('speak-' + q.id);
+  startTitanGuruLive(q, q.id, btnEl);
 }
 
 /* =====================================================================
@@ -5797,7 +5989,8 @@ function handleAnswerClick(qid, origIdx) {
   renderRadar();
   updateExportDockVisibilityAndContent();
 
-  if (appState.autoNext && isCorrect && !batchJustDone) {
+  const inVoiceQuiz = (typeof guruSessionMode !== 'undefined' && guruSessionMode === 'quiz' && activeSpeakingQid !== null);
+  if (appState.autoNext && isCorrect && !batchJustDone && !inVoiceQuiz) {
     setTimeout(() => jumpToNextUnanswered(qid), 1050);
   }
 }
@@ -6830,6 +7023,9 @@ function bindEvents() {
     guruMicMuted = false;
     startGuruVoiceListen(false);
   });
+  document.getElementById('btn-guru-hook').addEventListener('click', () => triggerGuruQuickAction('hook'));
+  document.getElementById('btn-guru-basic').addEventListener('click', () => triggerGuruQuickAction('basic'));
+  document.getElementById('btn-start-voice-quiz').addEventListener('click', startHandsFreeVoiceQuiz);
   document.getElementById('btn-guru-send').addEventListener('click', () => {
     const inp = document.getElementById('guru-text-input');
     const txt = (inp && inp.value || '').trim();
