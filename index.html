@@ -9,7 +9,8 @@
   <meta name="apple-mobile-web-app-title" content="Brahmastra Titan OS">
   <meta name="theme-color" content="#0f172a">
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/png" href="./icon-512.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
   <title>Brahmastra Titan OS — PYQ-Sniper Super-App</title>
 <style>
@@ -4293,10 +4294,43 @@ let guruMicMuted = false;
 let activeSpeakingQid = null;
 // Live Streaming WebSocket state (active on HTTPS)
 let guruLiveWs = null;
+let guruSharedCtx = null; // Created & resumed SYNCHRONOUSLY inside user tap so Android/iOS NEVER suspend mic!
 let guruLivePlayCtx = null;
 let guruLiveNextTime = 0;
 let guruLiveSources = [];
 let guruLiveMicCtx = null;
+
+function unlockGuruAudioSync() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!guruSharedCtx || guruSharedCtx.state === 'closed') {
+      guruSharedCtx = new AC();
+    }
+    if (guruSharedCtx.state === 'suspended') guruSharedCtx.resume().catch(() => {});
+    if (!guruLivePlayCtx || guruLivePlayCtx.state === 'closed') {
+      guruLivePlayCtx = new AC({ sampleRate: 24000 });
+    }
+    if (guruLivePlayCtx.state === 'suspended') guruLivePlayCtx.resume().catch(() => {});
+  } catch (e) {}
+}
+
+function updateLiveWaveMeter(rms) {
+  const bars = document.querySelectorAll('#guru-waves span');
+  if (!bars.length) return;
+  const level = Math.min(1, rms * 14);
+  const mults = [0.6, 0.9, 1.0, 0.85, 0.55];
+  bars.forEach((b, i) => {
+    b.style.animation = 'none';
+    b.style.height = Math.max(5, Math.round(5 + level * 18 * mults[i])) + 'px';
+  });
+}
+
+function resetWaveBarsCss() {
+  document.querySelectorAll('#guru-waves span').forEach(b => {
+    b.style.animation = '';
+    b.style.height = '';
+  });
+}
 let guruLiveMicNode = null;
 let guruLiveConnected = false;
 let guruSwitchDebounce = null;
@@ -4473,9 +4507,10 @@ function stopGuruMicOnly() {
   guruRecorder = null;
   guruIsRecording = false;
   guruRecChunks = [];
-  if (guruVadCtx) { try { guruVadCtx.close(); } catch (e) {} guruVadCtx = null; }
+  resetWaveBarsCss();
+  guruVadCtx = null;
   if (guruLiveMicNode) { try { guruLiveMicNode.disconnect(); } catch (e) {} guruLiveMicNode = null; }
-  if (guruLiveMicCtx) { try { guruLiveMicCtx.close(); } catch (e) {} guruLiveMicCtx = null; }
+  guruLiveMicCtx = null;
   if (guruMicStream) { try { guruMicStream.getTracks().forEach(t => t.stop()); } catch (e) {} guruMicStream = null; }
 }
 
@@ -4615,16 +4650,29 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
             updateGuruMicBtn();
 
             if (micReady && guruMicStream) {
-              const AC = window.AudioContext || window.webkitAudioContext;
-              guruLiveMicCtx = new AC();
+              unlockGuruAudioSync();
+              guruLiveMicCtx = guruSharedCtx;
+              if (guruLiveMicCtx.state === 'suspended') guruLiveMicCtx.resume().catch(() => {});
               const src = guruLiveMicCtx.createMediaStreamSource(guruMicStream);
-              const proc = guruLiveMicCtx.createScriptProcessor(4096, 1, 1);
+              const proc = guruLiveMicCtx.createScriptProcessor(2048, 1, 1);
+              const silentGain = guruLiveMicCtx.createGain();
+              silentGain.gain.value = 0; // Prevents speaker feedback echo on Android!
               proc.onaudioprocess = (e) => {
                 if (!guruLiveWs || guruLiveWs.readyState !== WebSocket.OPEN || guruMicMuted) return;
-                const b64 = float32ToBase64Pcm16(e.inputBuffer.getChannelData(0), guruLiveMicCtx.sampleRate);
-                guruLiveWs.send(JSON.stringify({ realtimeInput: { mediaChunks: [{ mimeType: 'audio/pcm;rate=16000', data: b64 }] } }));
+                const ch = e.inputBuffer.getChannelData(0);
+                // Real-time mic volume meter on green wave bars
+                let sum = 0;
+                for (let i = 0; i < ch.length; i += 4) sum += ch[i] * ch[i];
+                const rms = Math.sqrt(sum / (ch.length / 4));
+                if (guruLiveSources.length === 0) updateLiveWaveMeter(rms);
+                const b64 = float32ToBase64Pcm16(ch, guruLiveMicCtx.sampleRate);
+                guruLiveWs.send(JSON.stringify({
+                  realtimeInput: { audio: { mimeType: 'audio/pcm;rate=16000', data: b64 } }
+                }));
               };
-              src.connect(proc); proc.connect(guruLiveMicCtx.destination);
+              src.connect(proc);
+              proc.connect(silentGain);
+              silentGain.connect(guruLiveMicCtx.destination);
               guruLiveMicNode = proc;
             }
 
@@ -4646,7 +4694,7 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
           if (msg.serverContent && msg.serverContent.modelTurn && Array.isArray(msg.serverContent.modelTurn.parts)) {
             msg.serverContent.modelTurn.parts.forEach(p => {
               if (p.inlineData && p.inlineData.data) {
-                updateGuruDockState('⚡ Instant Live · Speak to interrupt', false);
+                resetWaveBarsCss(); updateGuruDockState('⚡ Instant Live · Speak to interrupt', false);
                 updateGuruMicBtn();
                 playLivePcm24k(p.inlineData.data);
               }
@@ -4743,7 +4791,7 @@ async function speakWithStudioVoice(text, cfg, onFinish) {
         : wrapPcm16ToWavDataUri(b64, 24000);
       const audio = new Audio(dataUri);
       guruAudioEl = audio;
-      updateGuruDockState('Speaking · Tap orb to interrupt', false);
+      resetWaveBarsCss(); updateGuruDockState('Speaking · Tap orb to interrupt', false);
       updateGuruMicBtn();
       audio.onended = () => { guruAudioEl = null; updateGuruMicBtn(); if (onFinish) onFinish(); };
       audio.onerror = () => { guruAudioEl = null; updateGuruMicBtn(); if (onFinish) onFinish(); };
@@ -4792,8 +4840,9 @@ async function startGuruVoiceListen(isAutoLoop = false) {
     guruMicStream = await navigator.mediaDevices.getUserMedia({
       audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: cfg.scope === 'high_sens', channelCount: 1 }
     });
-    const AC = window.AudioContext || window.webkitAudioContext;
-    guruVadCtx = new AC();
+    unlockGuruAudioSync();
+    guruVadCtx = guruSharedCtx;
+    if (guruVadCtx.state === 'suspended') await guruVadCtx.resume().catch(() => {});
     const src = guruVadCtx.createMediaStreamSource(guruMicStream);
     const analyser = guruVadCtx.createAnalyser();
     analyser.fftSize = 1024;
@@ -4804,7 +4853,7 @@ async function startGuruVoiceListen(isAutoLoop = false) {
       : ((typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported('audio/mp4')) ? 'audio/mp4' : '');
 
     let speechStartAt = 0, lastVoiceAt = 0;
-    const threshold = cfg.scope === 'high_sens' ? 0.016 : 0.028;
+    const threshold = cfg.scope === 'high_sens' ? 0.011 : 0.022;
     updateGuruDockState('Listening · Speak naturally', true);
     updateGuruMicBtn();
 
@@ -4844,6 +4893,7 @@ async function startGuruVoiceListen(isAutoLoop = false) {
       let sum = 0;
       for (let i = 0; i < timeData.length; i++) { const n = (timeData[i] - 128) / 128; sum += n * n; }
       const rms = Math.sqrt(sum / timeData.length);
+      updateLiveWaveMeter(rms);
       const now = Date.now();
       if (rms > threshold) {
         lastVoiceAt = now;
@@ -4939,6 +4989,7 @@ function speakQuestionCard(qid) {
     return;
   }
   stopActiveVoicePlayback();
+  unlockGuruAudioSync(); // Unlock Android/iOS AudioContext synchronously on user tap!
   const q = QUIZ_DATA.find(x => x.id === qid);
   if (!q) return;
   const btnEl = document.getElementById('speak-' + qid);
