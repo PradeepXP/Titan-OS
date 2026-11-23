@@ -2709,12 +2709,9 @@ body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; co
       </div>
 
       <div class="chat-subject-bar" id="chat-subject-bar">
-        <button type="button" class="chat-subj-pill active" data-subj="SSC JE & RRB JE Civil + GK/GS">✨ All SSC/RRB</button>
-        <button type="button" class="chat-subj-pill" data-subj="RCC, Concrete Tech & Building Materials (IS 456)">🏗️ RCC &amp; BMC</button>
-        <button type="button" class="chat-subj-pill" data-subj="Soil Mechanics, Fluid Mechanics & Irrigation">🌍 Soil &amp; Fluid</button>
-        <button type="button" class="chat-subj-pill" data-subj="Surveying, SOM, Steel & Highway Engg">📐 Survey &amp; SOM</button>
-        <button type="button" class="chat-subj-pill" data-subj="Indian Polity, History, Geography & Economy">🏛️ GK / GS</button>
-        <button type="button" class="chat-subj-pill" data-subj="General Science (Physics, Chemistry, Biology)">🔬 Science</button>
+        <button type="button" class="chat-subj-pill active" data-subj="SSC JE & RRB JE Civil Engineering + General Awareness">✨ All</button>
+        <button type="button" class="chat-subj-pill" data-subj="Civil Engineering Technical Subjects (BMC, Concrete, RCC, Soil, Fluid, Survey, SOM, Steel, Irrigation, Highway, Environment, Estimating)">🏗️ Civil Engineering</button>
+        <button type="button" class="chat-subj-pill" data-subj="General Awareness (Indian Polity, History, Geography, Economy, General Science & Static GK)">🌍 General Awareness</button>
       </div>
 
       <div class="guru-q-ctx-bar" id="guru-q-ctx-bar" style="display:none;">
@@ -9916,53 +9913,95 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
     return engWords.split(' ').slice(0, 5).join(' ').trim();
   }
 
+  function scoreVisualMatch(title, query) {
+    const qLow = String(query || '').toLowerCase().trim();
+    const tLow = String(title || '').toLowerCase().trim();
+    if (!qLow || !tLow) return 0;
+    const stop = new Set(['the','and','for','with','from','into','this','that','what','how','why','of','in','on','to','a','an','is','are','by','or','as']);
+    const tokens = qLow.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 3 && !stop.has(w));
+    if (!tokens.length) return 0;
+    // Block noisy unrelated geology/random wiki files unless explicitly asked
+    const noise = ['regolith', 'rare earth', 'calthemite', 'flowstone', 'stalactite', 'stalagmite', 'speleothem', 'coat of arms', 'flag of ', 'logo', 'icon', 'portrait of', 'signature of'];
+    for (const bad of noise) {
+      if (tLow.includes(bad) && !qLow.includes(bad)) return 0;
+    }
+    if (tLow.includes(qLow)) return 100;
+    let hits = 0;
+    for (const tk of tokens) {
+      if (tLow.includes(tk)) hits++;
+    }
+    if (tokens.length >= 2 && hits < 2) return 0;
+    if (hits === 0) return 0;
+    return Math.round((hits / tokens.length) * 80);
+  }
+
   async function fetchRelatedVisualImages(query) {
     const q = String(query || '').trim();
     if (!q) return [];
-    const results = [];
+    const candidates = [];
     const seen = new Set();
+    const pushIfGood = (thumb, full, title) => {
+      if (!thumb || seen.has(thumb)) return;
+      const sc = scoreVisualMatch(title, q);
+      if (sc <= 0) return;
+      seen.add(thumb);
+      candidates.push({ thumb, full: full || thumb, title: String(title || q).slice(0, 68), score: sc });
+    };
+
+    // 1. Openverse API (CORS-free real photos from Flickr/Wikimedia/Educational sources)
     try {
-      // 1. Wikimedia Commons CORS-free real photos & engineering diagrams
-      const url1 = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=10&prop=imageinfo&iiprop=url|mime|extmetadata&iiurlwidth=640&format=json&origin=*`;
-      const r1 = await fetch(url1);
-      if (r1.ok) {
-        const d1 = await r1.json();
-        const pages = (d1 && d1.query && d1.query.pages) ? Object.values(d1.query.pages) : [];
-        for (const p of pages) {
-          const info = p.imageinfo && p.imageinfo[0];
-          if (!info || !info.thumburl) continue;
-          if (!/^image\/(jpeg|png|webp|svg)/i.test(info.mime || '')) continue;
-          if (/\.pdf|\.tif/i.test(info.url || '')) continue;
-          const fullUrl = info.thumburl || info.url;
-          if (seen.has(fullUrl)) continue;
-          seen.add(fullUrl);
-          const cleanTitle = String(p.title || '').replace(/^File:/i, '').replace(/\.[^.]+$/, '').replace(/_/g, ' ').slice(0, 65);
-          results.push({ thumb: info.thumburl, full: info.url || info.thumburl, title: cleanTitle || q });
-          if (results.length >= 7) break;
+      const ovUrl = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&page_size=14&mature=false`;
+      const rOv = await fetch(ovUrl);
+      if (rOv.ok) {
+        const dOv = await rOv.json();
+        const arr = (dOv && Array.isArray(dOv.results)) ? dOv.results : [];
+        for (const it of arr) {
+          const thumb = it.thumbnail || it.url;
+          const full = it.url || it.thumbnail;
+          const label = [it.title || '', Array.isArray(it.tags) ? it.tags.map(t => t.name || '').join(' ') : ''].join(' ').trim();
+          pushIfGood(thumb, full, label);
         }
       }
     } catch (e) {}
 
-    if (results.length < 4) {
+    // 2. Exact-Phrase Wikimedia Commons (strictly quoted so 'concrete leaching' never returns random cave/mining files)
+    if (candidates.length < 6) {
       try {
-        // 2. Wikipedia PageImages fallback (CORS-free)
-        const url2 = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=8&prop=pageimages&piprop=thumbnail|original&pithumbsize=640&format=json&origin=*`;
-        const r2 = await fetch(url2);
+        const wmUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent('"' + q + '"')}&gsrlimit=12&prop=imageinfo&iiprop=url|mime&iiurlwidth=640&format=json&origin=*`;
+        const r1 = await fetch(wmUrl);
+        if (r1.ok) {
+          const d1 = await r1.json();
+          const pages = (d1 && d1.query && d1.query.pages) ? Object.values(d1.query.pages) : [];
+          for (const p of pages) {
+            const info = p.imageinfo && p.imageinfo[0];
+            if (!info || !info.thumburl) continue;
+            if (!/^image\/(jpeg|png|webp|svg)/i.test(info.mime || '')) continue;
+            if (/\.pdf|\.tif/i.test(info.url || '')) continue;
+            const cleanTitle = String(p.title || '').replace(/^File:/i, '').replace(/\.[^.]+$/, '').replace(/_/g, ' ');
+            pushIfGood(info.thumburl, info.url || info.thumburl, cleanTitle);
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 3. Wikipedia PageImages (strict relevance scored)
+    if (candidates.length < 5) {
+      try {
+        const wpUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=10&prop=pageimages&piprop=thumbnail|original&pithumbsize=640&format=json&origin=*`;
+        const r2 = await fetch(wpUrl);
         if (r2.ok) {
           const d2 = await r2.json();
           const pages = (d2 && d2.query && d2.query.pages) ? Object.values(d2.query.pages) : [];
           for (const p of pages) {
             if (!p.thumbnail || !p.thumbnail.source) continue;
-            const thumb = p.thumbnail.source;
-            if (seen.has(thumb)) continue;
-            seen.add(thumb);
-            results.push({ thumb, full: (p.original && p.original.source) ? p.original.source : thumb, title: String(p.title || q).slice(0, 65) });
-            if (results.length >= 8) break;
+            pushIfGood(p.thumbnail.source, (p.original && p.original.source) ? p.original.source : p.thumbnail.source, p.title || '');
           }
         }
       } catch (e) {}
     }
-    return results;
+
+    candidates.sort((a, b) => b.score - a.score);
+    return candidates.slice(0, 7).map(({ thumb, full, title }) => ({ thumb, full, title }));
   }
 
   function buildVisualStripHtml(images, query, msgIdx) {
