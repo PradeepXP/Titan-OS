@@ -5782,13 +5782,27 @@ function updateExportDockVisibilityAndContent() {
 /* =====================================================================
    BREATHING LIVE BATCH TRANSITION STAGE (3.3s SERENE JOURNEY)
    ===================================================================== */
+let isTransitioningBatch = false;
 function unlockNextBatchWithAnimation() {
+  if (isTransitioningBatch) return;
+  const totalBatches = Math.max(1, Math.ceil(appState.activeRoundPool.length / BATCH_SIZE));
   const currIdx = appState.currentBatchIndex;
   const nextIdx = currIdx + 1;
+  if (nextIdx >= totalBatches) { triggerGrandVictoryCutscene(); return; }
+
+  isTransitioningBatch = true;
   const currComp = getCurrentCompanion(currIdx);
   const nextComp = getCurrentCompanion(nextIdx);
   const nextStart = nextIdx * BATCH_SIZE + 1;
   const nextEnd = Math.min(appState.activeRoundPool.length, (nextIdx + 1) * BATCH_SIZE);
+
+  // COMMIT NEXT BATCH IMMEDIATELY so in-flight Cloud Sync can NEVER revert currentBatchIndex!
+  appState.currentBatchIndex = nextIdx;
+  appState.batchRetryPool = null;
+  appState.batchRetryAttempt = 0;
+  appState.batchRetryHistory = {};
+  resetQuestionFocusTimers();
+  saveState();
 
   const overlay = document.getElementById('transition-overlay');
   const runner = document.getElementById('trans-runner');
@@ -5811,16 +5825,16 @@ function unlockNextBatchWithAnimation() {
       if (sparks) sparks.classList.add('burst');
       playFeedbackSound('fanfare');
     }
-  }, 1900);
+  }, 950);
   pFill.style.transition = 'none';
   pFill.style.width = '0%';
   overlay.classList.add('open');
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      runner.style.transition = 'left 2.95s cubic-bezier(0.25, 0.55, 0.35, 1)';
+      runner.style.transition = 'left 1.55s cubic-bezier(0.25, 0.55, 0.35, 1)';
       runner.style.left = '88%';
-      pFill.style.transition = 'width 3.05s linear';
+      pFill.style.transition = 'width 1.6s linear';
       pFill.style.width = '100%';
     });
   });
@@ -5828,18 +5842,14 @@ function unlockNextBatchWithAnimation() {
   const finishTransition = () => {
     clearTimeout(transitionTimer);
     overlay.classList.remove('open');
-    appState.currentBatchIndex = nextIdx;
-    appState.batchRetryPool = null;
-    appState.batchRetryAttempt = 0;
-    appState.batchRetryHistory = {};
-    saveState();
+    isTransitioningBatch = false;
     renderAll(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }));
   };
 
   document.getElementById('btn-skip-transition').onclick = finishTransition;
   clearTimeout(transitionTimer);
-  transitionTimer = setTimeout(finishTransition, 3250);
+  transitionTimer = setTimeout(finishTransition, 1700);
 }
 
 function triggerGrandVictoryCutscene() {
@@ -7570,6 +7580,15 @@ function mergeSingleChapterState(localSt, remoteSt) {
   base.everWrongSet = unionNumArray(base.everWrongSet, other.everWrongSet);
   base.everUnattemptedSet = unionNumArray(base.everUnattemptedSet, other.everUnattemptedSet);
   base.bestStreak = Math.max(Number(base.bestStreak || 0), Number(other.bestStreak || 0));
+  if (Number(base.currentRound || 1) === Number(other.currentRound || 1) && Boolean(base.isSpecialMode) === Boolean(other.isSpecialMode)) {
+    const maxB = Math.max(Number(base.currentBatchIndex || 0), Number(other.currentBatchIndex || 0));
+    if (maxB > Number(base.currentBatchIndex || 0)) {
+      base.currentBatchIndex = maxB;
+      base.batchRetryPool = null;
+      base.batchRetryAttempt = 0;
+      base.batchRetryHistory = {};
+    }
+  }
 
   // Merge Round 1 history keys without losing solved questions
   base.roundHistory = base.roundHistory || { 1: {} };
@@ -7634,7 +7653,7 @@ function applyMergedProgressToLocal(mergedMap) {
   if (STORAGE_KEY && mergedMap[STORAGE_KEY]) {
     appState = Object.assign(getDefaultState(), mergedMap[STORAGE_KEY]);
     reconcileSrsWithVault(appState);
-    renderAll(false);
+    if (!isTransitioningBatch) renderAll(false);
   }
   renderChapterLibraryPills();
   return count;
