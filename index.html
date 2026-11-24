@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
-  <title>Brahmastra Titan OS v3.8 — PYQ-Sniper &amp; Ask Guru</title>
+  <title>Brahmastra Titan OS v4.0 — PYQ-Sniper &amp; Ask Guru</title>
 <style>
 :root {
   --bg: #F4F1EA;
@@ -2357,7 +2357,7 @@ body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; co
           </svg>
         </div>
         <div>
-          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v3.8</span></h1>
+          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v4.0</span></h1>
           <div class="chapter-sub">
             <span id="app-exam-subtitle">SSC JE / RRB JE / All-India Competitive PYQ Engine</span>
             <button type="button" class="creator-sig" id="btn-creator-love" title="Optional appreciation">
@@ -5192,6 +5192,7 @@ let guruLiveMicCtx = null;
 
 let guruStudioWebSrc = null;
 let __titanUtteranceLock = null;
+let __titanSpeechGen = 0;
 function primeSilentAudioBuffer(ctx) {
   try {
     if (!ctx || ctx.state === 'closed') return;
@@ -5424,7 +5425,7 @@ function stopGuruAudioOnly() {
   if (guruAbortCtrl) { try { guruAbortCtrl.abort(); } catch (e) {} guruAbortCtrl = null; }
   if (guruStudioWebSrc) { try { guruStudioWebSrc.onended = null; guruStudioWebSrc.stop(); } catch (e) {} guruStudioWebSrc = null; }
   if (guruAudioEl) { try { guruAudioEl.pause(); guruAudioEl.currentTime = 0; } catch (e) {} guruAudioEl = null; }
-  __titanUtteranceLock = null;
+  __titanSpeechGen++; __titanUtteranceLock = null;
   if (typeof window !== 'undefined' && window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) {} }
 }
 
@@ -5832,7 +5833,7 @@ async function callGuruBrain(userParts, cfg) {
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: sysText }] },
           contents: guruChatHistory,
-          generationConfig: { temperature: 0.82, maxOutputTokens: 220 }
+          generationConfig: { temperature: 0.72, maxOutputTokens: 1800 }
         }),
         signal: guruAbortCtrl ? guruAbortCtrl.signal : undefined
       });
@@ -5870,8 +5871,9 @@ async function callGuruBrain(userParts, cfg) {
 
 async function speakWithStudioVoice(text, cfg, onFinish) {
   stopGuruMicOnly(); // Release Android earpiece/voice-call route so TTS plays loud on Media Speaker!
+  await new Promise(r => setTimeout(r, 320)); // Let Android audio router settle back to loud Media Speaker
   const ttsModels = ['gemini-2.5-flash-preview-tts', 'gemini-3.8-flash-lite-tts', 'gemini-3.8-flash-tts'];
-  const styleDesc = 'Speak like a completely real, warm, charismatic human mentor from North India sitting right next to the student—authentic natural Indian Hinglish accent for both Hindi and English words, relaxed human breathing pauses, gentle smile in the voice, zero robotic stiffness.';
+  const styleDesc = 'Speak at a calm, unhurried, relaxed teaching pace (around 0.88x speed, NEVER rushed or fast) like a patient North Indian elder brother sitting right next to the student—clear pronunciation, gentle pauses between sentences so a first-time learner absorbs every single concept effortlessly.';
   for (const m of ttsModels) {
     try {
       const is38 = m.startsWith('gemini-3.8');
@@ -5957,27 +5959,44 @@ async function speakWithStudioVoice(text, cfg, onFinish) {
   if (window.speechSynthesis) {
     try { window.speechSynthesis.cancel(); } catch (e) {}
     try { if (window.speechSynthesis.paused) window.speechSynthesis.resume(); } catch (e) {}
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'hi-IN'; u.rate = 0.96; u.volume = 1.0;
+    const rawChunks = String(text || '').replace(/\s+/g, ' ').match(/[^।.?!]+[।.?!]*/g) || [];
+    const chunks = rawChunks.map(s => s.trim()).filter(Boolean);
+    const speakList = chunks.length ? chunks : [String(text || '').trim()].filter(Boolean);
+    if (!speakList.length) { if (onFinish) onFinish(); return false; }
+
+    let chosenVoice = null;
     try {
       const vs = window.speechSynthesis.getVoices() || [];
-      const hiV = vs.find(v => /hi[-_]?IN/i.test(v.lang)) || vs.find(v => /en[-_]?IN/i.test(v.lang));
-      if (hiV) u.voice = hiV;
+      chosenVoice = vs.find(v => /hi[-_]?IN/i.test(v.lang)) || vs.find(v => /en[-_]?IN/i.test(v.lang)) || null;
     } catch (e) {}
-    __titanUtteranceLock = u;
-    let done = false;
-    const finishSpeech = () => {
-      if (done) return;
-      done = true;
-      if (__titanUtteranceLock === u) __titanUtteranceLock = null;
+
+    const myGen = ++__titanSpeechGen;
+    let idx = 0;
+    resetWaveBarsCss(); updateGuruDockState('🔊 Speaking · Tap orb to interrupt', false);
+
+    const speakNextChunk = () => {
+      if (myGen !== __titanSpeechGen || activeSpeakingQid === null) {
+        __titanSpeechGen++; __titanUtteranceLock = null;
+        updateGuruMicBtn();
+        return;
+      }
+      if (idx >= speakList.length) {
+        __titanSpeechGen++; __titanUtteranceLock = null;
+        updateGuruMicBtn();
+        if (onFinish) onFinish();
+        return;
+      }
+      const u = new SpeechSynthesisUtterance(speakList[idx++]);
+      u.lang = 'hi-IN'; u.rate = 0.88; u.pitch = 1.0; u.volume = 1.0;
+      if (chosenVoice) u.voice = chosenVoice;
+      __titanUtteranceLock = u;
       updateGuruMicBtn();
-      if (onFinish) onFinish();
+      u.onend = () => { if (myGen === __titanSpeechGen) speakNextChunk(); };
+      u.onerror = () => { if (myGen === __titanSpeechGen) speakNextChunk(); };
+      try { if (window.speechSynthesis.paused) window.speechSynthesis.resume(); } catch (e) {}
+      window.speechSynthesis.speak(u);
     };
-    u.onend = finishSpeech;
-    u.onerror = finishSpeech;
-    resetWaveBarsCss(); updateGuruDockState('Speaking · Tap orb to interrupt', false);
-    updateGuruMicBtn();
-    window.speechSynthesis.speak(u);
+    speakNextChunk();
     return true;
   }
   if (onFinish) onFinish();
@@ -6025,7 +6044,7 @@ async function startGuruVoiceListen(isAutoLoop = false) {
       : ((typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported('audio/mp4')) ? 'audio/mp4' : '');
 
     let speechStartAt = 0, lastVoiceAt = 0;
-    const threshold = cfg.scope === 'high_sens' ? 0.011 : 0.022;
+    const threshold = cfg.scope === 'high_sens' ? 0.020 : 0.032;
     updateGuruDockState('Listening · Speak naturally', true);
     updateGuruMicBtn();
 
@@ -6040,12 +6059,12 @@ async function startGuruVoiceListen(isAutoLoop = false) {
         stopGuruMicOnly();
         if (!chunks.length || activeSpeakingQid === null) return;
         const blob = new Blob(chunks, { type: usedMime });
-        if (blob.size < 1200) { if (activeSpeakingQid !== null && !guruMicMuted) startGuruVoiceListen(true); return; }
+        if (blob.size < 3800) { if (activeSpeakingQid !== null && !guruMicMuted) startGuruVoiceListen(true); return; }
         try {
           const b64 = await blobToBase64(blob);
           await sendGuruTurn([
             { inlineData: { mimeType: usedMime.split(';')[0], data: b64 } },
-            { text: 'Student spoke their doubt in this audio. Listen carefully to their Hindi/English words and reply naturally in crisp human Hinglish!' }
+            { text: 'Student spoke their cross-question or doubt in this audio. Listen very carefully to every word. DO NOT RUSH! Answer their exact cross-question thoroughly, patiently, and completely in simplest everyday Devanagari Hindi (keeping technical terms in English) with a vivid real-life desi analogy until a first-time learner feels 100% satisfied. Then gently ask if they understood or have another doubt.' }
           ]);
         } catch (err) {
           if (activeSpeakingQid !== null && !guruMicMuted) startGuruVoiceListen(true);
@@ -6169,7 +6188,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
     ? 'प्रदीप के लिए 2 लाइन का एकदम natural, warm human स्वागत बोलो।'
     : (guruSessionMode === 'quiz'
       ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
-      : 'इस सवाल को एकदम आसान, human देसी Hinglish में 3 छोटी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।');
+      : 'इस सवाल को एकदम तसल्ली से, आराम-आराम से, बिल्कुल आसान देसी हिंदी और असली ज़िंदगी के उदाहरण से पूरा समझाओ कि सवाल क्या पूछ रहा है, इसके पीछे का असली concept क्या है, और फिर प्यार से पूछो कि कोई और doubt या cross-question हो तो खुलकर पूछो।');
   await sendGuruTurn(kickoff);
 }
 
@@ -8642,10 +8661,17 @@ function mergeSingleChapterState(localSt, remoteSt) {
     }
   }
 
-  // Merge Round 1 history keys without losing solved questions
+  // Merge ALL roundHistory keys + batchRetryHistory without ever losing a solved question
   base.roundHistory = base.roundHistory || { 1: {} };
-  if (other.roundHistory && other.roundHistory[1]) {
-    base.roundHistory[1] = Object.assign({}, other.roundHistory[1], base.roundHistory[1] || {});
+  if (other.roundHistory) {
+    Object.keys(other.roundHistory).forEach(rk => {
+      base.roundHistory[rk] = Object.assign({}, other.roundHistory[rk] || {}, base.roundHistory[rk] || {});
+    });
+  }
+  if (Number(base.currentBatchIndex || 0) === Number(other.currentBatchIndex || 0) &&
+      Number(base.batchRetryAttempt || 0) === Number(other.batchRetryAttempt || 0) &&
+      other.batchRetryHistory) {
+    base.batchRetryHistory = Object.assign({}, other.batchRetryHistory, base.batchRetryHistory || {});
   }
   // Merge Titan SRS metadata: new v3 format ALWAYS beats legacy {box,nextDue}; among v3, latest lastReviewed wins
   base.leitnerMeta = base.leitnerMeta || {};
@@ -8706,7 +8732,8 @@ function applyMergedProgressToLocal(mergedMap) {
     const prevBatchIdx = appState.currentBatchIndex;
     const prevAnsCnt = Object.keys((appState.roundHistory && appState.roundHistory[appState.currentRound]) || {}).length;
     const prevY = window.scrollY || 0;
-    appState = Object.assign(getDefaultState(), mergedMap[STORAGE_KEY]);
+    const liveSafeMerged = mergeSingleChapterState(appState, mergedMap[STORAGE_KEY]);
+    appState = Object.assign(getDefaultState(), liveSafeMerged);
     reconcileSrsWithVault(appState);
     const newAnsCnt = Object.keys((appState.roundHistory && appState.roundHistory[appState.currentRound]) || {}).length;
     if (!isTransitioningBatch) {
@@ -8768,7 +8795,6 @@ async function runCloudSyncNow(silent) {
   };
 
   try {
-    const localMap = collectAllLocalProgress();
     let remoteMap = {};
     let gistId = cfg.gistId;
 
@@ -8785,7 +8811,10 @@ async function runCloudSyncNow(silent) {
       }
     }
 
-    const mergedMap = mergeAllProgressMaps(localMap, remoteMap);
+    // Read FRESH localMap AFTER network GET so clicks during GET are NEVER lost!
+    const prePatchStamp = Number(appState._updatedAt || 0);
+    const localMap = collectAllLocalProgress();
+    let mergedMap = mergeAllProgressMaps(localMap, remoteMap);
     const payloadStr = JSON.stringify({
       schemaVersion: 'brahmastra_titan_sync_1.0',
       syncedAt: Date.now(),
@@ -8812,6 +8841,11 @@ async function runCloudSyncNow(silent) {
       if (!patchRes.ok) throw new Error('Failed to update Private Gist (HTTP ' + patchRes.status + ')');
     }
 
+    // If user clicked an option or unlocked Next Batch WHILE PATCH was in flight, re-merge live local state so ZERO clicks are ever wiped!
+    if (Number(appState._updatedAt || 0) > prePatchStamp) {
+      mergedMap = mergeAllProgressMaps(collectAllLocalProgress(), mergedMap);
+      scheduleAutoCloudSync();
+    }
     const syncedCount = applyMergedProgressToLocal(mergedMap);
     cfg.lastSync = Date.now();
     saveCloudSyncConfig(cfg);
@@ -9204,7 +9238,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   function stopActiveTitanAudio() {
     if (guruAbortCtrl) { try { guruAbortCtrl.abort(); } catch (e) {} guruAbortCtrl = null; }
     if (typeof guruStudioWebSrc !== 'undefined' && guruStudioWebSrc) { try { guruStudioWebSrc.onended = null; guruStudioWebSrc.stop(); } catch (e) {} guruStudioWebSrc = null; }
-    if (typeof __titanUtteranceLock !== 'undefined') __titanUtteranceLock = null;
+    if (typeof __titanUtteranceLock !== 'undefined') __titanSpeechGen++; __titanUtteranceLock = null;
     if (guruAudioEl) { try { guruAudioEl.pause(); guruAudioEl = null; } catch (e) {} }
     if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch (e) {} }
   }
