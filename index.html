@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
-  <title>Brahmastra Titan OS v4.2 — PYQ-Sniper &amp; Ask Guru</title>
+  <title>Brahmastra Titan OS v4.3 — PYQ-Sniper &amp; Ask Guru</title>
 <style>
 :root {
   --bg: #F4F1EA;
@@ -2616,6 +2616,47 @@ body.theme-night .gsrs-export-info { color: #93C5FD !important; }
 body.theme-night .gsrs-2pc-bar { background: #261C0A !important; border-color: #F59E0B !important; }
 body.theme-night .gsrs-2pc-title { color: #FDE68A !important; }
 
+
+/* =====================================================================
+   BRAHMASTRA TITAN OS v4.3 — AUTO-PACK GIST SYNC & AES-256 PASSWORD LOCKER
+   ===================================================================== */
+.cs-v43-box {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(37, 99, 235, 0.25);
+  background: rgba(37, 99, 235, 0.05);
+  margin-bottom: 10px;
+}
+.cs-v43-box.locker-box {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.05);
+}
+.cs-v43-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.cs-v43-sub {
+  font-size: 0.74rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+body.theme-night .cs-v43-box {
+  background: #141E33 !important;
+  border-color: #2B3B5C !important;
+}
+body.theme-night .cs-v43-box.locker-box {
+  background: #0F2320 !important;
+  border-color: #1F5147 !important;
+}
+body.theme-night .cs-v43-head { color: #F1F5F9 !important; }
+body.theme-night .cs-v43-sub { color: #CBD5E1 !important; }
+
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
@@ -2634,7 +2675,7 @@ body.theme-night .gsrs-2pc-title { color: #FDE68A !important; }
           </svg>
         </div>
         <div>
-          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v4.2</span></h1>
+          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v4.3</span></h1>
           <div class="chapter-sub">
             <span id="app-exam-subtitle">SSC JE / RRB JE / All-India Competitive PYQ Engine</span>
             <button type="button" class="creator-sig" id="btn-creator-love" title="Optional appreciation">
@@ -3205,7 +3246,7 @@ body.theme-night .gsrs-2pc-title { color: #FDE68A !important; }
     <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;">
       <div>
         <h3 id="cloud-sync-title" style="margin:0; font-size:1.05rem;">☁️ Anki-Style Cloud Progress Sync</h3>
-        <div style="font-size:0.76rem; color:var(--muted);">Syncs only tiny Progress (&lt;200 KB) across iPad &amp; Android — never uploads your 158 MB JSON bank!</div>
+        <div style="font-size:0.76rem; color:var(--muted);">Syncs Progress, SRS, Vault Profiles &amp; Gzip-Compressed JSON Packs across Android, iPad &amp; Laptop (₹0 Private Gist)</div>
       </div>
       <button type="button" class="ctrl-btn" id="btn-close-cloudsync" style="padding:4px 9px;">✕</button>
     </div>
@@ -3240,8 +3281,48 @@ body.theme-night .gsrs-2pc-title { color: #FDE68A !important; }
       <button type="button" class="ctrl-btn btn-warn" id="btn-cs-disconnect" style="margin-left:auto;">🔌 Disconnect</button>
     </div>
 
+    <!-- v4.3 AUTO-PACK CLOUD SYNC PANEL -->
+    <div class="cs-v43-box" id="cs-pack-sync-box">
+      <div class="cs-v43-head">
+        <span>📦 Auto-Sync All JSON Packs (All Vaults)</span>
+        <label style="display:flex; align-items:center; gap:5px; font-size:0.73rem; cursor:pointer;">
+          <input type="checkbox" id="cs-packs-auto-toggle" checked> Auto-Sync Packs
+        </label>
+      </div>
+      <div class="cs-v43-sub" id="cs-packs-status">एक device पर नया JSON डालो ➔ दूसरे device पर अपने आप Gzip-compressed download हो जाएगा।</div>
+      <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:7px;">
+        <button type="button" class="ctrl-btn btn-primary" id="btn-cs-sync-packs" style="font-size:0.77rem; font-weight:800;">📦 Sync All JSON Packs Now</button>
+      </div>
+    </div>
+
+    <!-- v4.3 MASTER PASSWORD LOGIN (AES-256-GCM ENCRYPTED LOCKER) -->
+    <div class="cs-v43-box locker-box" id="cs-locker-box">
+      <div class="cs-v43-head">
+        <span>🔐 Master Password Login (Anki-Style Anywhere)</span>
+        <span style="font-size:0.68rem; opacity:0.85;">AES-256-GCM</span>
+      </div>
+      <div class="cs-v43-sub">Token या API Key याद रखने की ज़रूरत नहीं — सिर्फ <strong>Master Password</strong> से किसी भी device पर सब unlock व download करो।</div>
+      <div style="display:flex; gap:6px; margin-top:7px;">
+        <input type="password" id="cs-master-pass-input" class="search-input" style="flex:1; width:100%;" placeholder="Enter your Master Password (min 8 chars)..." autocomplete="off">
+        <button type="button" class="ctrl-btn" id="btn-cs-master-vis" style="padding:6px 9px;">👁️</button>
+      </div>
+      <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:8px;">
+        <button type="button" class="ctrl-btn btn-success" id="btn-cs-master-unlock" style="font-size:0.77rem; font-weight:800;">🔓 Unlock &amp; Restore All</button>
+        <button type="button" class="ctrl-btn" id="btn-cs-master-gen" style="font-size:0.77rem; font-weight:800;">🔐 Download vault-lock.json</button>
+        <button type="button" class="ctrl-btn btn-warn" id="btn-cs-guest-wipe" style="font-size:0.75rem; margin-left:auto;">🚪 Logout &amp; Wipe</button>
+      </div>
+      <div id="cs-locker-diag" style="display:none; margin-top:7px; font-size:0.75rem; font-weight:700; padding:6px 9px; border-radius:8px;"></div>
+      <div id="cs-wipe-confirm-bar" style="display:none; margin-top:8px; padding:8px 10px; border-radius:9px; background:rgba(220,38,38,0.1); border:1px solid rgba(220,38,38,0.4); font-size:0.75rem;">
+        <div style="font-weight:800; color:#DC2626; margin-bottom:6px;">⚠️ इस device से Token, API Key, Packs और local progress साफ हो जाएँगे (आपका Cloud Gist 100% सुरक्षित रहेगा):</div>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="ctrl-btn btn-warn" id="btn-cs-wipe-confirm" style="font-weight:900;">🧹 Confirm Wipe This Device</button>
+          <button type="button" class="ctrl-btn" id="btn-cs-wipe-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <div style="border-top:1px solid var(--border); padding-top:10px; margin-bottom:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-      <span style="font-size:0.75rem; font-weight:700; color:var(--muted);">All-17-Subjects Offline Progress:</span>
+      <span style="font-size:0.75rem; font-weight:700; color:var(--muted);">All-Subjects Offline Progress:</span>
       <button type="button" class="ctrl-btn" id="btn-cs-export-all" style="font-size:0.76rem;">📤 Export All Progress (.json)</button>
       <button type="button" class="ctrl-btn" id="btn-cs-import-all" style="font-size:0.76rem;">📥 Merge All Progress (.json)</button>
       <input type="file" id="cs-import-all-input" accept=".json" style="display:none;">
@@ -8357,6 +8438,7 @@ function saveChapterToLibrary(payload, setActive = true) {
   else chapterLibraryCache.push(entry);
   putChapterInIDB(entry);
   if (setActive) safeSetStorage(ACTIVE_CH_KEY, id);
+  if (typeof scheduleAutoPackSync === 'function') scheduleAutoPackSync();
   return id;
 }
 
@@ -11226,6 +11308,460 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   setTimeout(() => { if (typeof scanGlobalSrsAcrossAllVaults === 'function') scanGlobalSrsAcrossAllVaults(); }, 550);
+});
+</script>
+
+
+<script>
+/* =====================================================================
+   BRAHMASTRA TITAN OS v4.3 — ZERO-COST AUTO-PACK GIST SYNC + AES-256 LOCKER
+   ===================================================================== */
+const CS_PACK_MANIFEST_FILE = 'brahmastra_vault_manifest.json';
+const CS_PACKS_AUTO_KEY = 'brahmastra_packs_auto_sync_v1';
+let __csPackSyncInFlight = false;
+let __csPackAutoTimer = null;
+
+function isAutoPackSyncOn() {
+  const v = safeGetStorage(CS_PACKS_AUTO_KEY);
+  return v === null || v === '' ? true : (v === '1');
+}
+
+function bytesToBase64Safe(u8) {
+  let bin = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < u8.length; i += chunk) {
+    bin += String.fromCharCode.apply(null, u8.subarray(i, i + chunk));
+  }
+  return btoa(bin);
+}
+function base64ToBytesSafe(b64) {
+  const bin = atob(String(b64 || '').trim());
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+async function compressJsonToGzipB64(obj) {
+  const rawStr = JSON.stringify(obj);
+  const rawBytes = new TextEncoder().encode(rawStr);
+  if (typeof CompressionStream === 'function') {
+    try {
+      const cs = new CompressionStream('gzip');
+      const w = cs.writable.getWriter();
+      w.write(rawBytes);
+      w.close();
+      const resp = new Response(cs.readable);
+      const ab = await resp.arrayBuffer();
+      return 'GZ1:' + bytesToBase64Safe(new Uint8Array(ab));
+    } catch (e) {}
+  }
+  return 'RAW1:' + bytesToBase64Safe(rawBytes);
+}
+
+async function decompressGzipB64ToJson(encoded) {
+  const s = String(encoded || '').trim();
+  if (s.startsWith('GZ1:') && typeof DecompressionStream === 'function') {
+    const bytes = base64ToBytesSafe(s.slice(4));
+    const ds = new DecompressionStream('gzip');
+    const w = ds.writable.getWriter();
+    w.write(bytes);
+    w.close();
+    const text = await new Response(ds.readable).text();
+    return JSON.parse(text);
+  }
+  if (s.startsWith('RAW1:')) {
+    const text = new TextDecoder().decode(base64ToBytesSafe(s.slice(5)));
+    return JSON.parse(text);
+  }
+  return JSON.parse(s);
+}
+
+function writePackToAnyVaultIDB(vaultId, entry) {
+  const dbName = vaultId === 'default' ? 'BrahmastraTitanVaultDB' : ('BrahmastraTitanVaultDB__' + vaultId);
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.open(dbName, 1);
+      req.onupgradeneeded = (ev) => {
+        const db = ev.target.result;
+        if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE, { keyPath: 'id' });
+      };
+      req.onsuccess = (ev) => {
+        const db = ev.target.result;
+        try {
+          const tx = db.transaction(IDB_STORE, 'readwrite');
+          tx.objectStore(IDB_STORE).put(entry);
+          tx.oncomplete = () => { db.close(); resolve(true); };
+          tx.onerror = () => { db.close(); resolve(false); };
+        } catch (e) { try { db.close(); } catch (_) {} resolve(false); }
+      };
+      req.onerror = () => resolve(false);
+    } catch (e) { resolve(false); }
+  });
+}
+
+function ensureVaultProfileExists(prObj) {
+  if (!prObj || !prObj.id || prObj.id === 'default') return;
+  try {
+    const list = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList() : [{ id: 'default', name: 'Main Vault' }];
+    if (!list.some(x => x.id === prObj.id)) {
+      list.push({ id: prObj.id, name: prObj.name || prObj.id });
+      if (typeof saveVaultProfilesList === 'function') saveVaultProfilesList(list);
+      else safeSetStorage(VAULT_PROFILES_KEY, JSON.stringify(list));
+      if (typeof refreshVaultProfileSelect === 'function') refreshVaultProfileSelect();
+    }
+  } catch (e) {}
+}
+
+function setPackSyncStatus(msg) {
+  const el = document.getElementById('cs-packs-status');
+  if (el) el.textContent = msg;
+}
+
+function scheduleAutoPackSync() {
+  if (!isAutoPackSyncOn()) return;
+  const cfg = getCloudSyncConfig();
+  if (!cfg.token || !cfg.gistId || navigator.onLine === false) return;
+  clearTimeout(__csPackAutoTimer);
+  __csPackAutoTimer = setTimeout(() => { syncPacksWithCloud(true); }, 3500);
+}
+
+async function syncPacksWithCloud(silent) {
+  if (__csPackSyncInFlight) return false;
+  const cfg = getCloudSyncConfig();
+  if (!cfg.token || !cfg.gistId) {
+    if (!silent) showToast('⚠️ पहले ऊपर GitHub Sync Connect करो (Gist ID चाहिए)!', true);
+    return false;
+  }
+  if (navigator.onLine === false) {
+    if (!silent) showToast('🟠 Offline — Internet आते ही Packs sync हो जाएँगे।');
+    return false;
+  }
+
+  __csPackSyncInFlight = true;
+  const btn = document.getElementById('btn-cs-sync-packs');
+  if (btn) btn.disabled = true;
+  setPackSyncStatus('⏳ Scanning all Vault Profiles & Private Gist manifest...');
+
+  const headers = {
+    'Accept': 'application/vnd.github+json',
+    'Authorization': 'Bearer ' + cfg.token,
+    'Content-Type': 'application/json'
+  };
+
+  try {
+    // 1. Fetch Gist metadata & manifest
+    const gRes = await fetch('https://api.github.com/gists/' + encodeURIComponent(cfg.gistId), { headers });
+    if (!gRes.ok) throw new Error('Gist read failed (HTTP ' + gRes.status + ')');
+    const gistData = await gRes.json();
+    const gistFiles = gistData.files || {};
+
+    let remoteManifest = { schema: 'titan_packs_v1', profiles: [], packs: {} };
+    const mFile = gistFiles[CS_PACK_MANIFEST_FILE];
+    if (mFile) {
+      try {
+        let mText = mFile.content || '';
+        if (mFile.truncated && mFile.raw_url) {
+          const rRaw = await fetch(mFile.raw_url);
+          if (rRaw.ok) mText = await rRaw.text();
+        }
+        const parsed = JSON.parse(mText);
+        if (parsed && parsed.packs) remoteManifest = parsed;
+      } catch (e) {}
+    }
+
+    // Ensure remote Vault Profiles exist locally
+    (remoteManifest.profiles || []).forEach(pr => ensureVaultProfileExists(pr));
+
+    // 2. Collect ALL local packs across ALL Vault Profiles
+    const profiles = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList() : [{ id: 'default', name: 'Main Vault' }];
+    const localIndex = {};
+    for (const pr of profiles) {
+      const packs = await readPacksFromAnyVaultIDB(pr.id);
+      for (const entry of (packs || [])) {
+        if (!entry || !entry.id || !entry.payload) continue;
+        const fKey = `pack__${pr.id}__${entry.id}.json.gz.b64`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+        localIndex[fKey] = { vaultId: pr.id, vaultName: pr.name, entry, fKey };
+      }
+    }
+
+    // 3. PULL missing or newer remote packs into local IndexedDB
+    let pulled = 0;
+    const remoteKeys = Object.keys(remoteManifest.packs || {});
+    for (const fKey of remoteKeys) {
+      const rMeta = remoteManifest.packs[fKey];
+      const lObj = localIndex[fKey];
+      const needPull = !lObj || Number(rMeta.updatedAt || 0) > Number(lObj.entry.updatedAt || 0);
+      if (!needPull) continue;
+      const gFile = gistFiles[fKey];
+      if (!gFile) continue;
+      setPackSyncStatus(`⬇️ Downloading pack: ${rMeta.title || fKey}...`);
+      let contentStr = gFile.content || '';
+      if (gFile.truncated && gFile.raw_url) {
+        const rawRes = await fetch(gFile.raw_url);
+        if (rawRes.ok) contentStr = await rawRes.text();
+      }
+      if (!contentStr) continue;
+      try {
+        const entryObj = await decompressGzipB64ToJson(contentStr);
+        if (entryObj && entryObj.id && entryObj.payload) {
+          ensureVaultProfileExists({ id: rMeta.vaultId, name: rMeta.vaultName || rMeta.vaultId });
+          await writePackToAnyVaultIDB(rMeta.vaultId || 'default', entryObj);
+          localIndex[fKey] = { vaultId: rMeta.vaultId || 'default', vaultName: rMeta.vaultName || 'Main Vault', entry: entryObj, fKey };
+          pulled++;
+        }
+      } catch (e) {}
+    }
+
+    // 4. PUSH missing or newer local packs in safe batches of 5 packs per PATCH
+    const toPush = [];
+    for (const fKey of Object.keys(localIndex)) {
+      const lObj = localIndex[fKey];
+      const rMeta = (remoteManifest.packs || {})[fKey];
+      if (!rMeta || Number(lObj.entry.updatedAt || 0) > Number(rMeta.updatedAt || 0)) {
+        toPush.push(lObj);
+      }
+    }
+
+    let pushed = 0;
+    const mergedProfiles = [];
+    const seenPr = new Set();
+    [...profiles, ...(remoteManifest.profiles || [])].forEach(pr => {
+      if (pr && pr.id && !seenPr.has(pr.id)) { seenPr.add(pr.id); mergedProfiles.push({ id: pr.id, name: pr.name || pr.id }); }
+    });
+    const mergedPacksMeta = Object.assign({}, remoteManifest.packs || {});
+
+    const BATCH = 5;
+    for (let i = 0; i < toPush.length; i += BATCH) {
+      const chunk = toPush.slice(i, i + BATCH);
+      const filesPayload = {};
+      for (const item of chunk) {
+        setPackSyncStatus(`⬆️ Compressing & uploading (${pushed + 1}/${toPush.length}): ${item.entry.title || item.entry.id}...`);
+        const gzStr = await compressJsonToGzipB64(item.entry);
+        filesPayload[item.fKey] = { content: gzStr };
+        mergedPacksMeta[item.fKey] = {
+          vaultId: item.vaultId,
+          vaultName: item.vaultName,
+          packId: item.entry.id,
+          title: item.entry.title || item.entry.payload.chapterTitle || item.entry.id,
+          updatedAt: Number(item.entry.updatedAt || Date.now())
+        };
+        pushed++;
+      }
+      filesPayload[CS_PACK_MANIFEST_FILE] = {
+        content: JSON.stringify({ schema: 'titan_packs_v1', updatedAt: Date.now(), profiles: mergedProfiles, packs: mergedPacksMeta })
+      };
+      const pRes = await fetch('https://api.github.com/gists/' + encodeURIComponent(cfg.gistId), {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ files: filesPayload })
+      });
+      if (!pRes.ok) throw new Error('Pack upload failed (HTTP ' + pRes.status + ')');
+    }
+
+    if (pulled > 0) {
+      await loadLibraryFromIDB();
+      if (typeof refreshVaultProfileSelect === 'function') refreshVaultProfileSelect();
+      if (typeof renderChapterLibraryPills === 'function') renderChapterLibraryPills();
+      if (typeof scanGlobalSrsAcrossAllVaults === 'function') scanGlobalSrsAcrossAllVaults();
+    }
+
+    const totalSynced = Object.keys(mergedPacksMeta).length;
+    setPackSyncStatus(`✅ ${totalSynced} Packs Synced (⬆️ Uploaded: ${pushed} · ⬇️ Downloaded: ${pulled})`);
+    if (!silent || pulled > 0) {
+      showToast(`📦 Pack Sync Complete! ⬆️ ${pushed} Uploaded · ⬇️ ${pulled} Downloaded`);
+    }
+    return true;
+  } catch (err) {
+    setPackSyncStatus('⚠️ Pack Sync Error: ' + (err && err.message ? err.message : String(err)));
+    if (!silent) showToast('⚠️ Pack Sync: ' + (err && err.message ? err.message : 'Failed'), true);
+    return false;
+  } finally {
+    __csPackSyncInFlight = false;
+    if (btn) btn.disabled = false;
+  }
+}
+
+/* =====================================================================
+   AES-256-GCM + PBKDF2 (150,000 ITER) MASTER PASSWORD LOCKER
+   ===================================================================== */
+async function deriveTitanAesKey(password, saltBytes) {
+  const pwKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: saltBytes, iterations: 150000, hash: 'SHA-256' },
+    pwKey,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+
+async function encryptTitanVaultLocker(secretsObj, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveTitanAesKey(password, salt);
+  const plainBytes = new TextEncoder().encode(JSON.stringify(secretsObj));
+  const cipherBuf = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plainBytes);
+  return {
+    schema: 'titan_locker_v1',
+    kdf: 'PBKDF2-SHA256-150000',
+    alg: 'AES-256-GCM',
+    createdAt: new Date().toISOString(),
+    salt: bytesToBase64Safe(salt),
+    iv: bytesToBase64Safe(iv),
+    cipher: bytesToBase64Safe(new Uint8Array(cipherBuf))
+  };
+}
+
+async function decryptTitanVaultLocker(lockerObj, password) {
+  if (!lockerObj || lockerObj.schema !== 'titan_locker_v1' || !lockerObj.salt || !lockerObj.iv || !lockerObj.cipher) {
+    throw new Error('Invalid vault-lock.json format');
+  }
+  const salt = base64ToBytesSafe(lockerObj.salt);
+  const iv = base64ToBytesSafe(lockerObj.iv);
+  const cipherBytes = base64ToBytesSafe(lockerObj.cipher);
+  const key = await deriveTitanAesKey(password, salt);
+  const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipherBytes);
+  return JSON.parse(new TextDecoder().decode(plainBuf));
+}
+
+function showLockerDiag(msg, isErr) {
+  const el = document.getElementById('cs-locker-diag');
+  if (!el) return;
+  el.style.display = 'block';
+  el.style.background = isErr ? 'rgba(220,38,38,0.12)' : 'rgba(22,163,74,0.12)';
+  el.style.color = isErr ? '#DC2626' : '#15803D';
+  el.textContent = msg;
+}
+
+async function handleGenerateVaultLockFile() {
+  const pw = (document.getElementById('cs-master-pass-input')?.value || '').trim();
+  if (pw.length < 8) {
+    showLockerDiag('⚠️ कम से कम 8 characters का strong Master Password डालो!', true);
+    return;
+  }
+  const csCfg = getCloudSyncConfig();
+  const vCfg = (typeof getVoiceConfig === 'function') ? getVoiceConfig() : {};
+  if (!csCfg.token || !csCfg.gistId) {
+    showLockerDiag('⚠️ पहले ऊपर GitHub Sync Connect करो (Token + Gist ID दोनों चाहिए)!', true);
+    return;
+  }
+  try {
+    const lockerObj = await encryptTitanVaultLocker({
+      token: csCfg.token,
+      gistId: csCfg.gistId,
+      apiKey: vCfg.apiKey || '',
+      voiceName: vCfg.voiceName || 'Kore',
+      style: vCfg.style || 'patna_guru'
+    }, pw);
+    const blob = new Blob([JSON.stringify(lockerObj, null, 2)], { type: 'application/json' });
+    triggerBlobDownload(blob, 'vault-lock.json');
+    showLockerDiag('✅ vault-lock.json डाउनलोड हो गया! इसे GitHub पर index.html के बगल में upload कर दो — फिर कहीं भी सिर्फ Password से सब unlock हो जाएगा!', false);
+  } catch (e) {
+    showLockerDiag('❌ Encryption failed: ' + (e.message || String(e)), true);
+  }
+}
+
+async function handleMasterPasswordUnlock() {
+  const pw = (document.getElementById('cs-master-pass-input')?.value || '').trim();
+  if (!pw) {
+    showLockerDiag('⚠️ अपना Master Password डालो!', true);
+    return;
+  }
+  showLockerDiag('🔐 Decrypting vault-lock.json...', false);
+  try {
+    const resp = await fetch('./vault-lock.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!resp.ok) throw new Error('vault-lock.json इस website folder में नहीं मिला — पहले GitHub पर index.html के बगल में upload करो!');
+    const lockerObj = await resp.json();
+    let secrets = null;
+    try {
+      secrets = await decryptTitanVaultLocker(lockerObj, pw);
+    } catch (de) {
+      throw new Error('❌ गलत Master Password — कृपया सही password डालें!');
+    }
+    // Hydrate Cloud Sync + Gemini API Key automatically!
+    const csCfg = getCloudSyncConfig();
+    csCfg.token = secrets.token || '';
+    csCfg.gistId = secrets.gistId || '';
+    csCfg.autoSync = true;
+    saveCloudSyncConfig(csCfg);
+    const tokIn = document.getElementById('cs-token-input');
+    const gistIn = document.getElementById('cs-gist-input');
+    if (tokIn) tokIn.value = csCfg.token;
+    if (gistIn) gistIn.value = csCfg.gistId;
+
+    if (secrets.apiKey && typeof VOICE_CFG_KEY !== 'undefined') {
+      const vCfg = (typeof getVoiceConfig === 'function') ? getVoiceConfig() : {};
+      vCfg.apiKey = secrets.apiKey;
+      if (secrets.voiceName) vCfg.voiceName = secrets.voiceName;
+      if (secrets.style) vCfg.style = secrets.style;
+      safeSetStorage(VOICE_CFG_KEY, JSON.stringify(vCfg));
+    }
+
+    showLockerDiag('🔓 Unlocked! अब सारे JSON Packs + Progress + SRS download हो रहे हैं...', false);
+    await syncPacksWithCloud(false);
+    await runCloudSyncNow(false);
+    const lib = await loadLibraryFromIDB();
+    if (lib && lib.length > 0 && typeof switchActivePackById === 'function') {
+      switchActivePackById(lib[0].id);
+    }
+    showLockerDiag('✅ 100% Unlocked & Restored! सारे Vaults, Packs, Progress, SRS और AI Guru चालू हैं!', false);
+    document.getElementById('cs-master-pass-input').value = '';
+  } catch (err) {
+    showLockerDiag(err.message || String(err), true);
+  }
+}
+
+async function handleGuestDeviceWipe() {
+  try {
+    const profiles = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList() : [{ id: 'default' }];
+    for (const pr of profiles) {
+      const dbName = pr.id === 'default' ? 'BrahmastraTitanVaultDB' : ('BrahmastraTitanVaultDB__' + pr.id);
+      try { indexedDB.deleteDatabase(dbName); } catch (e) {}
+    }
+    try { indexedDB.deleteDatabase('BrahmastraPdfVaultDB'); } catch (e) {}
+    try { localStorage.clear(); } catch (e) {}
+    showToast('🚪 Device 100% Wiped! Reloading clean...');
+    setTimeout(() => location.reload(), 650);
+  } catch (e) {
+    location.reload();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const autoPackChk = document.getElementById('cs-packs-auto-toggle');
+  if (autoPackChk) {
+    autoPackChk.checked = isAutoPackSyncOn();
+    autoPackChk.addEventListener('change', () => {
+      safeSetStorage(CS_PACKS_AUTO_KEY, autoPackChk.checked ? '1' : '0');
+    });
+  }
+  document.getElementById('btn-cs-sync-packs')?.addEventListener('click', () => syncPacksWithCloud(false));
+  document.getElementById('btn-cs-master-vis')?.addEventListener('click', () => {
+    const inp = document.getElementById('cs-master-pass-input');
+    if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+  });
+  document.getElementById('btn-cs-master-gen')?.addEventListener('click', handleGenerateVaultLockFile);
+  document.getElementById('btn-cs-master-unlock')?.addEventListener('click', handleMasterPasswordUnlock);
+  document.getElementById('cs-master-pass-input')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); handleMasterPasswordUnlock(); }
+  });
+  document.getElementById('btn-cs-guest-wipe')?.addEventListener('click', () => {
+    const bar = document.getElementById('cs-wipe-confirm-bar');
+    if (bar) bar.style.display = bar.style.display === 'block' ? 'none' : 'block';
+  });
+  document.getElementById('btn-cs-wipe-cancel')?.addEventListener('click', () => {
+    const bar = document.getElementById('cs-wipe-confirm-bar');
+    if (bar) bar.style.display = 'none';
+  });
+  document.getElementById('btn-cs-wipe-confirm')?.addEventListener('click', handleGuestDeviceWipe);
+
+  // Silent background pack delta sync on startup when connected & online
+  setTimeout(() => {
+    const cfg = (typeof getCloudSyncConfig === 'function') ? getCloudSyncConfig() : {};
+    if (cfg.token && cfg.gistId && isAutoPackSyncOn() && navigator.onLine !== false) {
+      syncPacksWithCloud(true);
+    }
+  }, 2200);
 });
 </script>
 
