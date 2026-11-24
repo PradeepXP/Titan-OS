@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
-  <title>Brahmastra Titan OS v4.1 — PYQ-Sniper &amp; Ask Guru</title>
+  <title>Brahmastra Titan OS v4.2 — PYQ-Sniper &amp; Ask Guru</title>
 <style>
 :root {
   --bg: #F4F1EA;
@@ -2521,6 +2521,101 @@ body.theme-night .gsrs-cur-tag { background: rgba(59, 130, 246, 0.25) !important
 body.theme-night .gsrs-go-arrow { color: #93C5FD !important; }
 body.theme-night .gsrs-tmrw-pill { background: rgba(56, 189, 248, 0.2) !important; color: #7DD3FC !important; }
 
+
+/* =====================================================================
+   BRAHMASTRA TITAN OS v4.2 — 1-DAY VERIFY + 2-PHASE COMMIT ANKI EXPORT
+   ===================================================================== */
+.gsrs-top-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 9px;
+}
+.gsrs-verify-toggle {
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+.gsrs-verify-toggle.is-on {
+  background: linear-gradient(135deg, #0D9488, #16A34A);
+  color: #FFFFFF;
+  border-color: transparent;
+}
+.gsrs-mini-ctrl {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.73rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.gsrs-chk {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563EB;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.gsrs-chk-spacer { width: 18px; flex-shrink: 0; }
+.gsrs-ver-pill {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(13, 148, 136, 0.14);
+  color: #0F766E;
+  font-weight: 800;
+}
+.gsrs-anki-pill {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.12);
+  color: #6D28D9;
+  font-weight: 800;
+}
+.gsrs-export-dock {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  background: rgba(37, 99, 235, 0.08);
+  border: 1.5px solid rgba(37, 99, 235, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gsrs-export-info { font-size: 0.8rem; font-weight: 800; color: #1E40AF; }
+.gsrs-2pc-bar {
+  margin-top: 10px;
+  padding: 12px 13px;
+  border-radius: 13px;
+  background: #FFFBEB;
+  border: 1.5px solid #F59E0B;
+}
+.gsrs-2pc-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #92400E;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+.gsrs-2pc-actions { display: flex; gap: 7px; flex-wrap: wrap; }
+
+body.theme-night .gsrs-mini-ctrl { background: #1E293B !important; color: #E2E8F0 !important; border-color: #334155 !important; }
+body.theme-night .gsrs-ver-pill { background: rgba(45, 212, 191, 0.2) !important; color: #5EEAD4 !important; }
+body.theme-night .gsrs-anki-pill { background: rgba(167, 139, 250, 0.22) !important; color: #DDD6FE !important; }
+body.theme-night .gsrs-export-dock { background: #141E33 !important; border-color: #3B82F6 !important; }
+body.theme-night .gsrs-export-info { color: #93C5FD !important; }
+body.theme-night .gsrs-2pc-bar { background: #261C0A !important; border-color: #F59E0B !important; }
+body.theme-night .gsrs-2pc-title { color: #FDE68A !important; }
+
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
@@ -2539,7 +2634,7 @@ body.theme-night .gsrs-tmrw-pill { background: rgba(56, 189, 248, 0.2) !importan
           </svg>
         </div>
         <div>
-          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v4.1</span></h1>
+          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v4.2</span></h1>
           <div class="chapter-sub">
             <span id="app-exam-subtitle">SSC JE / RRB JE / All-India Competitive PYQ Engine</span>
             <button type="button" class="creator-sig" id="btn-creator-love" title="Optional appreciation">
@@ -3183,10 +3278,31 @@ body.theme-night .gsrs-tmrw-pill { background: rgba(56, 189, 248, 0.2) !importan
       <button type="button" class="gsrs-tab-btn" id="btn-gsrs-tab-current" data-gsrstab="current">📘 Current Subject</button>
     </div>
 
-    <!-- VIEW 0: GLOBAL ALL-VAULTS DUE RADAR -->
+    <!-- VIEW 0: GLOBAL ALL-VAULTS DUE RADAR + 2-STEP ANKI EXPORT PIPELINE -->
     <div id="srs-global-view" style="display:none;">
+      <div class="gsrs-top-controls">
+        <button type="button" class="gsrs-verify-toggle" id="btn-toggle-1day-verify" title="1st-try Right answers get 1 blind check tomorrow; pass tomorrow = graduated forever">🛡️ 1-Day Verify: ON</button>
+        <button type="button" class="gsrs-mini-ctrl" id="btn-gsrs-select-all">☑️ Select All Anki</button>
+        <button type="button" class="gsrs-mini-ctrl" id="btn-gsrs-undo-clear" style="display:none;">↩️ Undo Last Clear</button>
+      </div>
       <div class="gsrs-vault-pills" id="gsrs-vault-pills"></div>
       <div class="gsrs-list" id="gsrs-subject-list"></div>
+
+      <!-- STEP 1: DOWNLOAD BAR (ZERO DELETION!) -->
+      <div class="gsrs-export-dock" id="gsrs-export-dock" style="display:none;">
+        <div class="gsrs-export-info" id="gsrs-export-info">📥 0 Anki-ready questions selected</div>
+        <button type="button" class="ctrl-btn btn-primary" id="btn-gsrs-step1-download" style="font-weight:800; padding:8px 13px;">📥 Step 1: Download .txt / .zip</button>
+      </div>
+
+      <!-- STEP 2: TWO-PHASE COMMIT CONFIRM & CLEAR BAR (OPENS ONLY AFTER DOWNLOAD!) -->
+      <div class="gsrs-2pc-bar" id="gsrs-2pc-bar" style="display:none;">
+        <div class="gsrs-2pc-title" id="gsrs-2pc-title">✅ File downloaded! पहले Downloads में file चेक कर लो — अगर सही save हुई है, तभी नीचे Clear दबाओ:</div>
+        <div class="gsrs-2pc-actions">
+          <button type="button" class="ctrl-btn btn-warn" id="btn-gsrs-step2-clear" style="font-weight:900;">🧹 Step 2: Confirm &amp; Clear from SRS</button>
+          <button type="button" class="ctrl-btn" id="btn-gsrs-step2-redownload">🔄 Re-Download</button>
+          <button type="button" class="ctrl-btn" id="btn-gsrs-step2-cancel">❌ Keep in SRS</button>
+        </div>
+      </div>
     </div>
 
     <!-- VIEW A: DASHBOARD & UPCOMING FORECAST -->
@@ -4720,11 +4836,13 @@ function normalizeSrsRecord(raw) {
   if (typeof raw.stage === 'number') {
     return {
       stage: raw.stage,
-      dueDate: raw.mastered ? null : (raw.dueDate || getLocalDateStr(1)),
+      dueDate: (raw.mastered || raw.exportedToAnki) ? null : (raw.dueDate || getLocalDateStr(1)),
       lastReviewed: Number(raw.lastReviewed || 0),
       reviews: Number(raw.reviews || 0),
       lapses: Number(raw.lapses || 0),
-      mastered: Boolean(raw.mastered || raw.stage >= 6)
+      mastered: Boolean(raw.mastered || raw.stage >= 6),
+      verifyOnly: Boolean(raw.verifyOnly),
+      exportedToAnki: Boolean(raw.exportedToAnki)
     };
   }
   // Backward-compatible migration from legacy { box, nextDue }
@@ -4823,11 +4941,25 @@ function enrollSrsQuestion(qid, reason) {
 function advanceSrsOnCorrect(qid, forcePromote = false) {
   appState.leitnerMeta = appState.leitnerMeta || {};
   const rec = normalizeSrsRecord(appState.leitnerMeta[qid]);
-  if (!rec || rec.mastered) return null; // Zero-burnout: first-try right stays out of SRS
+  if (!rec || rec.mastered || rec.exportedToAnki) return null;
   const today = getLocalDateStr(0);
   if (!forcePromote && rec.dueDate && rec.dueDate > today) {
-    // Not due yet today—don't prematurely double-promote
     return rec;
+  }
+  // Passing Day-2 Blind Verify -> Instantly Graduated forever (never enters Anki!)
+  if (rec.verifyOnly) {
+    const gradRec = {
+      stage: 6,
+      dueDate: null,
+      lastReviewed: Date.now(),
+      reviews: rec.reviews + 1,
+      lapses: rec.lapses,
+      mastered: true,
+      verifyOnly: false,
+      exportedToAnki: false
+    };
+    appState.leitnerMeta[qid] = gradRec;
+    return gradRec;
   }
   const nextStage = rec.stage + 1;
   if (nextStage >= 6) {
@@ -4855,11 +4987,31 @@ function advanceSrsOnCorrect(qid, forcePromote = false) {
   return promoted;
 }
 
+const ONE_DAY_VERIFY_KEY = 'brahmastra_1day_verify_on_v1';
+function isOneDayVerifyOn() {
+  const v = safeGetStorage(ONE_DAY_VERIFY_KEY);
+  return v === null || v === '' ? true : (v === '1');
+}
 function updateLeitner(qid, isCorrect) {
   if (!isCorrect) {
     enrollSrsQuestion(qid, 'wrong');
   } else {
-    advanceSrsOnCorrect(qid, false);
+    appState.leitnerMeta = appState.leitnerMeta || {};
+    const existing = normalizeSrsRecord(appState.leitnerMeta[qid]);
+    if (!existing && isOneDayVerifyOn()) {
+      appState.leitnerMeta[qid] = {
+        stage: 1,
+        dueDate: getLocalDateStr(1),
+        lastReviewed: Date.now(),
+        reviews: 0,
+        lapses: 0,
+        mastered: false,
+        verifyOnly: true,
+        exportedToAnki: false
+      };
+    } else {
+      advanceSrsOnCorrect(qid, false);
+    }
     updateSrsUiBadges();
   }
 }
@@ -4880,7 +5032,7 @@ function getSrsStats() {
     if (!rec) return;
     const stKey = Math.max(1, Math.min(6, rec.mastered ? 6 : rec.stage));
     stageCounts[stKey]++;
-    if (rec.mastered) {
+    if (rec.mastered || rec.exportedToAnki) {
       masteredIds.push(q.id);
     } else if (rec.dueDate && rec.dueDate <= today) {
       dueIds.push(q.id);
@@ -4962,6 +5114,10 @@ function readPacksFromAnyVaultIDB(vaultId) {
   });
 }
 
+let __gsrsSelectedKeys = new Set();
+let __gsrsPending2PC = null; // { filename, blob, subjects: [{ vaultId, sKey, title, qids }] }
+let __gsrsLastClearedUndo = null; // [{ vaultId, sKey, prevRecs: { qid: oldRec } }]
+
 async function scanGlobalSrsAcrossAllVaults() {
   const today = getLocalDateStr(0);
   const tomorrow = getLocalDateStr(1);
@@ -4993,23 +5149,36 @@ async function scanGlobalSrsAcrossAllVaults() {
       if (!st || st.srsPaused) continue;
       const meta = st.leitnerMeta || {};
       let dueCnt = 0;
+      let verifyCnt = 0;
       let tmrwCnt = 0;
+      const ankiReadyIds = [];
       for (let i = 0; i < qs.length; i++) {
-        const rec = normalizeSrsRecord(meta[qs[i].id]);
-        if (!rec || rec.mastered) continue;
-        if (rec.dueDate && rec.dueDate <= today) dueCnt++;
-        else if (rec.dueDate === tomorrow) tmrwCnt++;
+        const q = qs[i];
+        const rec = normalizeSrsRecord(meta[q.id]);
+        if (!rec || rec.mastered || rec.exportedToAnki) continue;
+        if (!rec.verifyOnly) ankiReadyIds.push(q.id);
+        if (rec.dueDate && rec.dueDate <= today) {
+          dueCnt++;
+          if (rec.verifyOnly) verifyCnt++;
+        } else if (rec.dueDate === tomorrow) {
+          tmrwCnt++;
+        }
       }
-      if (dueCnt > 0 || tmrwCnt > 0) {
+      if (dueCnt > 0 || tmrwCnt > 0 || ankiReadyIds.length > 0) {
         vDue += dueCnt;
         vTmrw += tmrwCnt;
         allItems.push({
+          itemKey: pr.id + '::' + entry.id,
           vaultId: pr.id,
           vaultName: pr.name,
           packId: entry.id,
+          sKey,
           title,
           dueCnt,
+          verifyCnt,
           tmrwCnt,
+          ankiReadyIds,
+          questions: qs,
           isCurrent: (pr.id === currentVaultId && sKey === STORAGE_KEY)
         });
       }
@@ -5019,7 +5188,7 @@ async function scanGlobalSrsAcrossAllVaults() {
     byVault.push({ vaultId: pr.id, vaultName: pr.name, dueCnt: vDue, tmrwCnt: vTmrw });
   }
 
-  allItems.sort((a, b) => (b.dueCnt - a.dueCnt) || (b.tmrwCnt - a.tmrwCnt) || a.title.localeCompare(b.title));
+  allItems.sort((a, b) => (b.dueCnt - a.dueCnt) || (b.ankiReadyIds.length - a.ankiReadyIds.length) || a.title.localeCompare(b.title));
   const curItem = allItems.find(it => it.isCurrent);
   const otherDue = Math.max(0, totalDue - (curItem ? curItem.dueCnt : 0));
   __globalSrsSnapshot = { totalDue, otherDue, totalTomorrow, byVault, items: allItems, scannedAt: Date.now() };
@@ -5059,7 +5228,38 @@ function setGlobalSrsModalTab(tabName) {
   if (bC) bC.classList.toggle('active', !isGlobal);
 }
 
+function updateOneDayVerifyUi() {
+  const b = document.getElementById('btn-toggle-1day-verify');
+  if (!b) return;
+  const on = isOneDayVerifyOn();
+  b.classList.toggle('is-on', on);
+  b.textContent = on ? '🛡️ 1-Day Verify: ON' : '🛡️ 1-Day Verify: OFF';
+}
+
+function updateGlobalExportDockUi() {
+  const dock = document.getElementById('gsrs-export-dock');
+  const info = document.getElementById('gsrs-export-info');
+  const btn = document.getElementById('btn-gsrs-step1-download');
+  const undoBtn = document.getElementById('btn-gsrs-undo-clear');
+  if (undoBtn) {
+    undoBtn.style.display = (__gsrsLastClearedUndo && __gsrsLastClearedUndo.totalQs > 0) ? 'inline-block' : 'none';
+    if (__gsrsLastClearedUndo) undoBtn.textContent = `↩️ Undo Clear (${__gsrsLastClearedUndo.totalQs})`;
+  }
+  if (!dock || !info || !btn) return;
+  const selectedItems = (__globalSrsSnapshot.items || []).filter(it => __gsrsSelectedKeys.has(it.itemKey) && it.ankiReadyIds.length > 0);
+  const totalQs = selectedItems.reduce((a, b) => a + b.ankiReadyIds.length, 0);
+  if (totalQs === 0) {
+    dock.style.display = 'none';
+    return;
+  }
+  dock.style.display = 'flex';
+  const ext = selectedItems.length === 1 ? '.txt' : '.zip';
+  info.textContent = `📥 ${totalQs} Anki-Ready Qs · ${selectedItems.length} Subject${selectedItems.length > 1 ? 's' : ''}`;
+  btn.textContent = `📥 Step 1: Download ${ext} (${totalQs} Qs)`;
+}
+
 function renderGlobalSrsView() {
+  updateOneDayVerifyUi();
   const pillsEl = document.getElementById('gsrs-vault-pills');
   const listEl = document.getElementById('gsrs-subject-list');
   if (!pillsEl || !listEl) return;
@@ -5073,47 +5273,264 @@ function renderGlobalSrsView() {
   pillsEl.innerHTML = pHtml;
 
   const filtered = (snap.items || []).filter(it => (__globalSrsActiveVaultFilter === 'ALL' || it.vaultId === __globalSrsActiveVaultFilter));
-  const dueItems = filtered.filter(it => it.dueCnt > 0);
-  const tmrwOnly = filtered.filter(it => it.dueCnt === 0 && it.tmrwCnt > 0);
-
-  if (dueItems.length === 0 && tmrwOnly.length === 0) {
-    listEl.innerHTML = `<div class="gsrs-empty">🎉 शानदार! इस Vault में आज या कल के लिए कोई भी SRS सवाल Due नहीं है — 100% All Clear!</div>`;
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="gsrs-empty">🎉 शानदार! इस Vault में आज कोई भी Due या Pending Anki सवाल नहीं है — 100% All Clear!</div>`;
+    updateGlobalExportDockUi();
     return;
   }
 
   let htmlOut = '';
-  dueItems.forEach(it => {
+  filtered.forEach(it => {
+    const hasAnki = it.ankiReadyIds.length > 0;
+    const isChecked = hasAnki && __gsrsSelectedKeys.has(it.itemKey);
+    const cardCls = it.dueCnt > 0 ? 'is-due' : 'is-tmrw';
     htmlOut += `
-      <div class="gsrs-card is-due" data-vid="${escapeHtml(it.vaultId)}" data-pid="${escapeHtml(it.packId)}">
+      <div class="gsrs-card ${cardCls}" data-vid="${escapeHtml(it.vaultId)}" data-pid="${escapeHtml(it.packId)}">
+        ${hasAnki ? `<input type="checkbox" class="gsrs-chk" data-ikey="${escapeHtml(it.itemKey)}" ${isChecked ? 'checked' : ''} title="Select for Anki .txt/.zip Export">` : '<span class="gsrs-chk-spacer"></span>'}
         <div class="gsrs-card-main">
           <div class="gsrs-card-title">${escapeHtml(it.title)} ${it.isCurrent ? '<span class="gsrs-cur-tag">Open</span>' : ''}</div>
           <div class="gsrs-card-meta">
             <span class="gsrs-vbadge">🗂️ ${escapeHtml(it.vaultName)}</span>
-            ${it.tmrwCnt > 0 ? `<span class="gsrs-tmrw-meta">📅 +${it.tmrwCnt} Tomorrow</span>` : ''}
+            ${it.verifyCnt > 0 ? `<span class="gsrs-ver-pill">🛡️ ${it.verifyCnt} Verify</span>` : ''}
+            ${hasAnki ? `<span class="gsrs-anki-pill">📥 ${it.ankiReadyIds.length} Anki-Ready</span>` : ''}
+            ${it.tmrwCnt > 0 ? `<span class="gsrs-tmrw-meta">📅 +${it.tmrwCnt} Tmrw</span>` : ''}
           </div>
         </div>
         <div class="gsrs-card-right">
-          <span class="gsrs-due-pill">🔥 ${it.dueCnt} Due</span>
-          <span class="gsrs-go-arrow">Start ➔</span>
+          ${it.dueCnt > 0 ? `<span class="gsrs-due-pill">🔥 ${it.dueCnt} Due</span><span class="gsrs-go-arrow">Start ➔</span>` : `<span class="gsrs-tmrw-pill">📥 Export</span>`}
         </div>
       </div>`;
   });
-  if (tmrwOnly.length > 0) {
-    htmlOut += `<div class="gsrs-sub-lbl">📅 Coming Up Tomorrow</div>`;
-    tmrwOnly.forEach(it => {
-      htmlOut += `
-        <div class="gsrs-card is-tmrw" data-vid="${escapeHtml(it.vaultId)}" data-pid="${escapeHtml(it.packId)}">
-          <div class="gsrs-card-main">
-            <div class="gsrs-card-title">${escapeHtml(it.title)}</div>
-            <div class="gsrs-card-meta"><span class="gsrs-vbadge">🗂️ ${escapeHtml(it.vaultName)}</span></div>
-          </div>
-          <div class="gsrs-card-right">
-            <span class="gsrs-tmrw-pill">📅 ${it.tmrwCnt} Tomorrow</span>
-          </div>
-        </div>`;
-    });
-  }
   listEl.innerHTML = htmlOut;
+  updateGlobalExportDockUi();
+}
+
+// Zero-Dependency Offline ZIP Builder (Store method, CRC-32 verified, 100% Android/iOS safe!)
+function buildOfflineZipBlob(files) {
+  const enc = new TextEncoder();
+  const crcTable = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    crcTable[n] = c >>> 0;
+  }
+  const crc32 = (bytes) => {
+    let c = 0xFFFFFFFF;
+    for (let i = 0; i < bytes.length; i++) c = crcTable[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  };
+  const localParts = [];
+  const centralParts = [];
+  let offset = 0;
+
+  for (const f of files) {
+    const nameBytes = enc.encode(f.name);
+    const dataBytes = enc.encode(f.content);
+    const crc = crc32(dataBytes);
+
+    const lh = new ArrayBuffer(30 + nameBytes.length);
+    const lv = new DataView(lh);
+    lv.setUint32(0, 0x04034b50, true);
+    lv.setUint16(4, 20, true);
+    lv.setUint16(6, 0x0800, true);
+    lv.setUint16(8, 0, true);
+    lv.setUint32(14, crc, true);
+    lv.setUint32(18, dataBytes.length, true);
+    lv.setUint32(22, dataBytes.length, true);
+    lv.setUint16(26, nameBytes.length, true);
+    new Uint8Array(lh, 30).set(nameBytes);
+    localParts.push(new Uint8Array(lh), dataBytes);
+
+    const ch = new ArrayBuffer(46 + nameBytes.length);
+    const cv = new DataView(ch);
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true);
+    cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0x0800, true);
+    cv.setUint16(10, 0, true);
+    cv.setUint32(16, crc, true);
+    cv.setUint32(20, dataBytes.length, true);
+    cv.setUint32(24, dataBytes.length, true);
+    cv.setUint16(28, nameBytes.length, true);
+    cv.setUint32(42, offset, true);
+    new Uint8Array(ch, 46).set(nameBytes);
+    centralParts.push(new Uint8Array(ch));
+
+    offset += 30 + nameBytes.length + dataBytes.length;
+  }
+
+  let centralSize = 0;
+  centralParts.forEach(p => { centralSize += p.length; });
+  const eocd = new ArrayBuffer(22);
+  const ev = new DataView(eocd);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, files.length, true);
+  ev.setUint16(10, files.length, true);
+  ev.setUint32(12, centralSize, true);
+  ev.setUint32(16, offset, true);
+
+  return new Blob([...localParts, ...centralParts, new Uint8Array(eocd)], { type: 'application/zip' });
+}
+
+function formatAnkiPromptTxtForSubject(item) {
+  const letters = ['A)', 'B)', 'C)', 'D)'];
+  const header = `=================================================================\nSUBJECT: ${item.title} (${item.vaultName})\nANKI EXPORT QUEUE: ${item.ankiReadyIds.length} Questions | Date: ${getLocalDateStr(0)}\n=================================================================\n\n`;
+  const blocks = [];
+  item.ankiReadyIds.forEach((qid, idx) => {
+    const q = item.questions.find(x => x.id === qid);
+    if (!q) return;
+    const opts = (q.opts || []).map((o, oi) => `${letters[oi] || (oi + 1) + ')'} ${o}`).join('\n');
+    const ansText = (q.opts && q.opts[q.ans]) ? `${letters[q.ans]} ${q.opts[q.ans]}` : '';
+    blocks.push(
+      `Q${idx + 1}. [${q.topic || item.title}]\n` +
+      `${q.en || ''}\n` +
+      (q.hi ? `${q.hi}\n` : '') +
+      `${opts}\n` +
+      `✔ Correct Answer: ${ansText}\n` +
+      (q.ankiFact ? `📌 Fact: ${q.ankiFact}\n` : '') +
+      `-----------------------------------------------------------------`
+    );
+  });
+  return header + blocks.join('\n\n');
+}
+
+function triggerBlobDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) {} }, 4000);
+}
+
+function runAnkiExportStep1Download() {
+  const selectedItems = (__globalSrsSnapshot.items || []).filter(it => __gsrsSelectedKeys.has(it.itemKey) && it.ankiReadyIds.length > 0);
+  if (!selectedItems.length) {
+    showToast('⚠️ पहले कम से कम 1 Subject tick करो!');
+    return;
+  }
+  const safeSlug = (s) => String(s || 'Subject').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 38) || 'Subject';
+  const todayStr = getLocalDateStr(0);
+  let blob = null;
+  let filename = '';
+  let totalQs = 0;
+
+  if (selectedItems.length === 1) {
+    const it = selectedItems[0];
+    totalQs = it.ankiReadyIds.length;
+    filename = `${safeSlug(it.title)}_Anki_${totalQs}Q_${todayStr}.txt`;
+    blob = new Blob([formatAnkiPromptTxtForSubject(it)], { type: 'text/plain;charset=utf-8' });
+  } else {
+    const usedNames = new Set();
+    const files = selectedItems.map(it => {
+      totalQs += it.ankiReadyIds.length;
+      let fn = `${safeSlug(it.vaultName)}__${safeSlug(it.title)}_${it.ankiReadyIds.length}Q.txt`;
+      let c = 2;
+      while (usedNames.has(fn)) fn = `${safeSlug(it.vaultName)}__${safeSlug(it.title)}_${c++}.txt`;
+      usedNames.add(fn);
+      return { name: fn, content: formatAnkiPromptTxtForSubject(it) };
+    });
+    filename = `Brahmastra_Anki_Batch_${selectedItems.length}Subj_${totalQs}Q_${todayStr}.zip`;
+    blob = buildOfflineZipBlob(files);
+  }
+
+  // STEP 1 ONLY DOWNLOADS — ZERO DELETION FROM SRS!
+  triggerBlobDownload(blob, filename);
+  __gsrsPending2PC = {
+    filename,
+    blob,
+    totalQs,
+    subjects: selectedItems.map(it => ({ vaultId: it.vaultId, sKey: it.sKey, title: it.title, qids: [...it.ankiReadyIds] }))
+  };
+
+  const bar2 = document.getElementById('gsrs-2pc-bar');
+  const title2 = document.getElementById('gsrs-2pc-title');
+  if (bar2 && title2) {
+    title2.innerHTML = `✅ <strong>${escapeHtml(filename)}</strong> (${totalQs} Qs) download हो गई! पहले Downloads folder में file चेक कर लो — अगर सही save हुई है, तभी नीचे Clear दबाओ:`;
+    bar2.style.display = 'block';
+  }
+  showToast(`📥 Step 1 Done: ${filename} डाउनलोड हुई (SRS अभी सुरक्षित है!)`);
+}
+
+function runAnkiExportStep2ConfirmClear() {
+  if (!__gsrsPending2PC || !__gsrsPending2PC.subjects.length) return;
+  const undoEntries = [];
+  let clearedCount = 0;
+  const nowTs = Date.now();
+
+  __gsrsPending2PC.subjects.forEach(sub => {
+    const isLive = (sub.vaultId === currentVaultId && sub.sKey === STORAGE_KEY);
+    let st = null;
+    if (isLive) {
+      st = appState;
+    } else {
+      try { const raw = safeGetStorage(sub.sKey); if (raw) st = JSON.parse(raw); } catch (e) {}
+    }
+    if (!st) return;
+    st.leitnerMeta = st.leitnerMeta || {};
+    const prevRecs = {};
+    sub.qids.forEach(qid => {
+      if (st.leitnerMeta[qid]) {
+        prevRecs[qid] = JSON.parse(JSON.stringify(st.leitnerMeta[qid]));
+        st.leitnerMeta[qid] = Object.assign({}, st.leitnerMeta[qid], {
+          stage: 6,
+          dueDate: null,
+          mastered: true,
+          verifyOnly: false,
+          exportedToAnki: true,
+          exportedAt: nowTs,
+          lastReviewed: nowTs
+        });
+        clearedCount++;
+      }
+    });
+    st._updatedAt = nowTs;
+    safeSetStorage(sub.sKey, JSON.stringify(st));
+    undoEntries.push({ vaultId: sub.vaultId, sKey: sub.sKey, prevRecs });
+  });
+
+  __gsrsLastClearedUndo = { totalQs: clearedCount, entries: undoEntries };
+  __gsrsPending2PC = null;
+  __gsrsSelectedKeys.clear();
+  const bar2 = document.getElementById('gsrs-2pc-bar');
+  if (bar2) bar2.style.display = 'none';
+
+  if (typeof scheduleAutoCloudSync === 'function') scheduleAutoCloudSync();
+  scanGlobalSrsAcrossAllVaults().then(() => {
+    renderGlobalSrsView();
+    renderSrsDashboard();
+    checkDueBanner();
+  });
+  showToast(`🧹 ${clearedCount} सवाल Anki में Sent mark हो गए — अब दोबारा SRS/Export में नहीं आएँगे!`);
+}
+
+function undoLastAnkiClear() {
+  if (!__gsrsLastClearedUndo || !__gsrsLastClearedUndo.entries.length) return;
+  const nowTs = Date.now();
+  let restored = 0;
+  __gsrsLastClearedUndo.entries.forEach(ent => {
+    const isLive = (ent.vaultId === currentVaultId && ent.sKey === STORAGE_KEY);
+    let st = isLive ? appState : null;
+    if (!st) { try { const raw = safeGetStorage(ent.sKey); if (raw) st = JSON.parse(raw); } catch (e) {} }
+    if (!st) return;
+    st.leitnerMeta = st.leitnerMeta || {};
+    Object.keys(ent.prevRecs).forEach(qid => {
+      st.leitnerMeta[qid] = ent.prevRecs[qid];
+      restored++;
+    });
+    st._updatedAt = nowTs;
+    safeSetStorage(ent.sKey, JSON.stringify(st));
+  });
+  __gsrsLastClearedUndo = null;
+  if (typeof scheduleAutoCloudSync === 'function') scheduleAutoCloudSync();
+  scanGlobalSrsAcrossAllVaults().then(() => {
+    renderGlobalSrsView();
+    renderSrsDashboard();
+    checkDueBanner();
+  });
+  showToast(`↩️ ${restored} सवाल सुरक्षित वापस SRS में आ गए!`);
 }
 
 async function jumpToGlobalSrsPack(vaultId, packId, autoStartDue) {
@@ -10759,6 +11176,15 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGlobalSrsView();
   });
   document.getElementById('gsrs-subject-list')?.addEventListener('click', (e) => {
+    const chk = e.target.closest('.gsrs-chk');
+    if (chk) {
+      e.stopPropagation();
+      const ik = chk.dataset.ikey;
+      if (chk.checked) __gsrsSelectedKeys.add(ik);
+      else __gsrsSelectedKeys.delete(ik);
+      updateGlobalExportDockUi();
+      return;
+    }
     const card = e.target.closest('.gsrs-card');
     if (!card) return;
     const vid = card.dataset.vid;
@@ -10766,6 +11192,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDue = card.classList.contains('is-due');
     if (vid && pid) jumpToGlobalSrsPack(vid, pid, isDue);
   });
+  document.getElementById('btn-toggle-1day-verify')?.addEventListener('click', () => {
+    const next = !isOneDayVerifyOn();
+    safeSetStorage(ONE_DAY_VERIFY_KEY, next ? '1' : '0');
+    updateOneDayVerifyUi();
+    showToast(next ? '🛡️ 1-Day Verify ON — आज पहली बार सही सवाल कल 1 बार Blind Check में आएँगे!' : '🛡️ 1-Day Verify OFF');
+  });
+  document.getElementById('btn-gsrs-select-all')?.addEventListener('click', () => {
+    const visible = (__globalSrsSnapshot.items || []).filter(it => (__globalSrsActiveVaultFilter === 'ALL' || it.vaultId === __globalSrsActiveVaultFilter) && it.ankiReadyIds.length > 0);
+    const allSelected = visible.length > 0 && visible.every(it => __gsrsSelectedKeys.has(it.itemKey));
+    if (allSelected) visible.forEach(it => __gsrsSelectedKeys.delete(it.itemKey));
+    else visible.forEach(it => __gsrsSelectedKeys.add(it.itemKey));
+    renderGlobalSrsView();
+  });
+  document.getElementById('btn-gsrs-step1-download')?.addEventListener('click', runAnkiExportStep1Download);
+  document.getElementById('btn-gsrs-step2-clear')?.addEventListener('click', runAnkiExportStep2ConfirmClear);
+  document.getElementById('btn-gsrs-step2-redownload')?.addEventListener('click', () => {
+    if (__gsrsPending2PC && __gsrsPending2PC.blob) {
+      triggerBlobDownload(__gsrsPending2PC.blob, __gsrsPending2PC.filename);
+      showToast(`🔄 Re-downloaded: ${__gsrsPending2PC.filename}`);
+    }
+  });
+  document.getElementById('btn-gsrs-step2-cancel')?.addEventListener('click', () => {
+    __gsrsPending2PC = null;
+    const bar2 = document.getElementById('gsrs-2pc-bar');
+    if (bar2) bar2.style.display = 'none';
+    showToast('✅ सारे सवाल SRS में सुरक्षित हैं!');
+  });
+  document.getElementById('btn-gsrs-undo-clear')?.addEventListener('click', undoLastAnkiClear);
   document.getElementById('btn-srs-next-due-subj')?.addEventListener('click', () => {
     if (__globalSrsNextTarget) {
       jumpToGlobalSrsPack(__globalSrsNextTarget.vaultId, __globalSrsNextTarget.packId, true);
