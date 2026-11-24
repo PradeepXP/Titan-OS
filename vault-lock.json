@@ -1,0 +1,9 @@
+{
+  "schema": "titan_locker_v1",
+  "kdf": "PBKDF2-SHA256-150000",
+  "alg": "AES-256-GCM",
+  "createdAt": "2026-11-24T18:14:07.838Z",
+  "salt": "zM7Vwmh7uO3xqgFBsvRzoA==",
+  "iv": "ajRRoK0VzYNWhpFD",
+  "cipher": "0r046C/Bufq7nKbs7xYDgecbkXUVo90Rloq23miGm08x/Rmkysl93qhdqH25ZTtz8HsQpa5Z9FFc91q9jUmqKdr3wIoj7B3nUOz8Jhlcnf4zQYWgyxSskW6Ovdf/TTZGxUdMiFDjjmjYaGzgJKG6TqQKQSAiO75j38PZyc/R1+nihNVVkjCpAZbDJyoDVsKXyq6W5tFoumAm/KtoRtuO20ubOnf/fj1RNI66xn+Rw//j4H++FEO8Ow6AlZST2HJrwRfpRi+oRUC9rB3RKh5Y4+UOBRYko1m0CQ=="
+}
