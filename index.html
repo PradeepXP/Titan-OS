@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
   <link rel="apple-touch-icon" href="./icon-512.png">
-  <title>Brahmastra Titan OS v4.0 — PYQ-Sniper &amp; Ask Guru</title>
+  <title>Brahmastra Titan OS v4.1 — PYQ-Sniper &amp; Ask Guru</title>
 <style>
 :root {
   --bg: #F4F1EA;
@@ -2339,6 +2339,188 @@ body.theme-night .spd-sniper { background: rgba(34, 197, 94, 0.2) !important; co
 body.theme-night .spd-safe { background: rgba(56, 189, 248, 0.2) !important; color: #7DD3FC !important; }
 body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; color: #FCA5A5 !important; }
 
+
+/* =====================================================================
+   BRAHMASTRA TITAN OS v4.1 — GLOBAL ALL-SUBJECT CROSS-VAULT SRS RADAR
+   ===================================================================== */
+.gsrs-tab-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 4px;
+  margin: 8px 0 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.05);
+  border: 1px solid var(--border);
+}
+.gsrs-tab-btn {
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+}
+.gsrs-tab-btn.active {
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+.gsrs-tab-cnt {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.22);
+}
+.gsrs-tab-btn:not(.active) .gsrs-tab-cnt {
+  background: rgba(220, 38, 38, 0.12);
+  color: #DC2626;
+}
+.gsrs-vault-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.gsrs-vpill {
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.gsrs-vpill.active {
+  background: #0F172A;
+  color: #FFFFFF;
+  border-color: #0F172A;
+}
+.gsrs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.gsrs-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 13px;
+  border-radius: 13px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+}
+.gsrs-card.is-due {
+  border-color: rgba(234, 88, 12, 0.35);
+  background: linear-gradient(135deg, rgba(255, 247, 237, 0.75), var(--card));
+}
+.gsrs-card:hover {
+  transform: translateY(-1px);
+  border-color: #2563EB;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+}
+.gsrs-card-main { min-width: 0; flex: 1; }
+.gsrs-card-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.gsrs-cur-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 900;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.14);
+  color: #1D4ED8;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.gsrs-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+.gsrs-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.gsrs-due-pill {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #EA580C;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+.gsrs-go-arrow {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #2563EB;
+}
+.gsrs-tmrw-pill {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #1D4ED8;
+  font-size: 0.73rem;
+  font-weight: 800;
+}
+.gsrs-sub-lbl {
+  font-size: 0.74rem;
+  font-weight: 900;
+  color: var(--muted);
+  margin: 6px 0 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.gsrs-empty {
+  text-align: center;
+  padding: 24px 14px;
+  border-radius: 13px;
+  border: 1px dashed var(--border);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* EYE-COMFORT NIGHT MODE OVERRIDES FOR v4.1 GLOBAL SRS */
+body.theme-night .gsrs-tab-bar { background: #0F172A !important; border-color: #2A364F !important; }
+body.theme-night .gsrs-tab-btn:not(.active) { color: #CBD5E1 !important; }
+body.theme-night .gsrs-tab-btn:not(.active) .gsrs-tab-cnt { background: rgba(248, 113, 113, 0.22) !important; color: #FCA5A5 !important; }
+body.theme-night .gsrs-vpill { background: #1E293B !important; color: #E2E8F0 !important; border-color: #334155 !important; }
+body.theme-night .gsrs-vpill.active { background: #3B82F6 !important; color: #FFFFFF !important; border-color: #3B82F6 !important; }
+body.theme-night .gsrs-card { background: #1A2338 !important; border-color: #2A364F !important; }
+body.theme-night .gsrs-card.is-due { background: linear-gradient(135deg, rgba(234, 88, 12, 0.15), #1A2338) !important; border-color: rgba(251, 146, 60, 0.45) !important; }
+body.theme-night .gsrs-card-title { color: #F1F5F9 !important; }
+body.theme-night .gsrs-cur-tag { background: rgba(59, 130, 246, 0.25) !important; color: #93C5FD !important; }
+body.theme-night .gsrs-go-arrow { color: #93C5FD !important; }
+body.theme-night .gsrs-tmrw-pill { background: rgba(56, 189, 248, 0.2) !important; color: #7DD3FC !important; }
+
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
@@ -2357,7 +2539,7 @@ body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; co
           </svg>
         </div>
         <div>
-          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v4.0</span></h1>
+          <h1 class="brand-title" id="app-chapter-title">Brahmastra Titan OS <span class="pg-ver-pill">v4.1</span></h1>
           <div class="chapter-sub">
             <span id="app-exam-subtitle">SSC JE / RRB JE / All-India Competitive PYQ Engine</span>
             <button type="button" class="creator-sig" id="btn-creator-love" title="Optional appreciation">
@@ -2561,6 +2743,7 @@ body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; co
       <div style="font-size:0.78rem; color:var(--muted);" id="srs-banner-sub">Shuffled Options · सही करते ही अगली तारीख (+3d/+7d/+15d/+30d) पर promote होगा · Main Batch 100% सुरक्षित है</div>
     </div>
     <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <button type="button" class="ctrl-btn btn-success" id="btn-srs-next-due-subj" style="display:none; font-weight:800;">⚡ Next Due ➔</button>
       <button type="button" class="ctrl-btn" id="btn-srs-banner-stats">📊 SRS Stats</button>
       <button type="button" class="ctrl-btn btn-primary" id="btn-exit-srs-mode">← Return to Main Batch</button>
     </div>
@@ -2992,6 +3175,18 @@ body.theme-night .spd-sink { background: rgba(248, 113, 113, 0.2) !important; co
         <div style="font-size:0.76rem; color:var(--muted);" id="srs-subtitle-line">Ebbinghaus Curve: Day 1 ➔ 3 ➔ 7 ➔ 15 ➔ 30 ➔ 🏆 Mastered (Midnight Auto-Unlock)</div>
       </div>
       <button type="button" class="ctrl-btn" id="btn-close-srs" style="padding:5px 11px;">✕</button>
+    </div>
+
+    <!-- v4.1 GLOBAL ALL-SUBJECT SRS TAB SWITCHER -->
+    <div class="gsrs-tab-bar" id="gsrs-tab-bar">
+      <button type="button" class="gsrs-tab-btn active" id="btn-gsrs-tab-global" data-gsrstab="global">🌐 All Subjects Due <span class="gsrs-tab-cnt" id="gsrs-tab-global-cnt">0</span></button>
+      <button type="button" class="gsrs-tab-btn" id="btn-gsrs-tab-current" data-gsrstab="current">📘 Current Subject</button>
+    </div>
+
+    <!-- VIEW 0: GLOBAL ALL-VAULTS DUE RADAR -->
+    <div id="srs-global-view" style="display:none;">
+      <div class="gsrs-vault-pills" id="gsrs-vault-pills"></div>
+      <div class="gsrs-list" id="gsrs-subject-list"></div>
     </div>
 
     <!-- VIEW A: DASHBOARD & UPCOMING FORECAST -->
@@ -4705,24 +4900,248 @@ function getDueQuestionIds() {
   return getSrsStats().dueIds;
 }
 
+let __globalSrsSnapshot = { totalDue: 0, otherDue: 0, totalTomorrow: 0, byVault: [], items: [], scannedAt: 0 };
+let __globalSrsActiveVaultFilter = 'ALL';
+let __globalSrsNextTarget = null;
+
 function updateSrsUiBadges() {
   const stats = getSrsStats();
+  const curDue = appState.srsPaused ? 0 : stats.dueIds.length;
+  const globalDue = curDue + Number(__globalSrsSnapshot.otherDue || 0);
   const btn = document.getElementById('btn-open-srs');
   if (!btn) return;
-  if (appState.srsPaused) {
+  if (globalDue > 0) {
+    btn.classList.remove('is-paused');
+    btn.classList.add('has-due');
+    btn.textContent = (curDue > 0 && globalDue > curDue)
+      ? `🔥 SRS: ${curDue}/${globalDue}`
+      : `🔥 SRS: ${globalDue}`;
+    btn.title = `Global SRS Due across all Vaults: ${globalDue} (Current Subject: ${curDue})`;
+  } else if (appState.srsPaused) {
     btn.textContent = '⏸️ SRS: Anki';
     btn.classList.remove('has-due');
     btn.classList.add('is-paused');
+  } else {
+    btn.textContent = '🧠 SRS: 0';
+    btn.classList.remove('has-due', 'is-paused');
+  }
+  const cntBadge = document.getElementById('gsrs-tab-global-cnt');
+  if (cntBadge) cntBadge.textContent = String(globalDue);
+}
+
+function readPacksFromAnyVaultIDB(vaultId) {
+  const dbName = vaultId === 'default' ? 'BrahmastraTitanVaultDB' : ('BrahmastraTitanVaultDB__' + vaultId);
+  const libKey = vaultId === 'default' ? 'brahmastra_titan_os_library_v1' : ('brahmastra_titan_os_library_v1__' + vaultId);
+  if (vaultId === currentVaultId && Array.isArray(chapterLibraryCache) && chapterLibraryCache.length > 0) {
+    return Promise.resolve(chapterLibraryCache);
+  }
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.open(dbName, 1);
+      req.onupgradeneeded = (ev) => {
+        const db = ev.target.result;
+        if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE, { keyPath: 'id' });
+      };
+      req.onsuccess = (ev) => {
+        const db = ev.target.result;
+        try {
+          if (!db.objectStoreNames.contains(IDB_STORE)) { db.close(); resolve([]); return; }
+          const tx = db.transaction(IDB_STORE, 'readonly');
+          const gReq = tx.objectStore(IDB_STORE).getAll();
+          gReq.onsuccess = () => { const res = gReq.result || []; db.close(); resolve(res); };
+          gReq.onerror = () => { db.close(); resolve([]); };
+        } catch (e) { try { db.close(); } catch (_) {} resolve([]); }
+      };
+      req.onerror = () => {
+        try {
+          const raw = safeGetStorage(libKey);
+          resolve(raw ? JSON.parse(raw) : []);
+        } catch (e) { resolve([]); }
+      };
+    } catch (e) { resolve([]); }
+  });
+}
+
+async function scanGlobalSrsAcrossAllVaults() {
+  const today = getLocalDateStr(0);
+  const tomorrow = getLocalDateStr(1);
+  const profiles = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList() : [{ id: 'default', name: 'Main Vault' }];
+  const allItems = [];
+  const byVault = [];
+  let totalDue = 0;
+  let totalTomorrow = 0;
+
+  for (const pr of profiles) {
+    const packs = await readPacksFromAnyVaultIDB(pr.id);
+    let vDue = 0;
+    let vTmrw = 0;
+    for (const entry of (packs || [])) {
+      if (!entry || entry.hidden || !entry.payload || !Array.isArray(entry.payload.questions)) continue;
+      const qs = entry.payload.questions;
+      const firstQ = qs[0] ? qs[0].en : 'empty';
+      const title = entry.payload.chapterTitle || entry.title || 'Untitled Pack';
+      const sKey = 'brahmastra_titan_v10_' + qs.length + '_' + hashCode(title + '|' + firstQ);
+      let st = null;
+      if (pr.id === currentVaultId && sKey === STORAGE_KEY) {
+        st = appState;
+      } else {
+        try {
+          const raw = safeGetStorage(sKey);
+          if (raw) st = JSON.parse(raw);
+        } catch (e) {}
+      }
+      if (!st || st.srsPaused) continue;
+      const meta = st.leitnerMeta || {};
+      let dueCnt = 0;
+      let tmrwCnt = 0;
+      for (let i = 0; i < qs.length; i++) {
+        const rec = normalizeSrsRecord(meta[qs[i].id]);
+        if (!rec || rec.mastered) continue;
+        if (rec.dueDate && rec.dueDate <= today) dueCnt++;
+        else if (rec.dueDate === tomorrow) tmrwCnt++;
+      }
+      if (dueCnt > 0 || tmrwCnt > 0) {
+        vDue += dueCnt;
+        vTmrw += tmrwCnt;
+        allItems.push({
+          vaultId: pr.id,
+          vaultName: pr.name,
+          packId: entry.id,
+          title,
+          dueCnt,
+          tmrwCnt,
+          isCurrent: (pr.id === currentVaultId && sKey === STORAGE_KEY)
+        });
+      }
+    }
+    totalDue += vDue;
+    totalTomorrow += vTmrw;
+    byVault.push({ vaultId: pr.id, vaultName: pr.name, dueCnt: vDue, tmrwCnt: vTmrw });
+  }
+
+  allItems.sort((a, b) => (b.dueCnt - a.dueCnt) || (b.tmrwCnt - a.tmrwCnt) || a.title.localeCompare(b.title));
+  const curItem = allItems.find(it => it.isCurrent);
+  const otherDue = Math.max(0, totalDue - (curItem ? curItem.dueCnt : 0));
+  __globalSrsSnapshot = { totalDue, otherDue, totalTomorrow, byVault, items: allItems, scannedAt: Date.now() };
+  updateSrsUiBadges();
+  updateNextDueChainBtn();
+  return __globalSrsSnapshot;
+}
+
+function updateNextDueChainBtn() {
+  const btn = document.getElementById('btn-srs-next-due-subj');
+  if (!btn) return;
+  if (!srsReviewActive) { btn.style.display = 'none'; __globalSrsNextTarget = null; return; }
+  const total = srsReviewPool.length;
+  const done = Object.keys(srsReviewHistory).length;
+  if (done < total) { btn.style.display = 'none'; __globalSrsNextTarget = null; return; }
+  const nextSubj = (__globalSrsSnapshot.items || []).find(it => it.dueCnt > 0 && !it.isCurrent);
+  if (nextSubj) {
+    __globalSrsNextTarget = nextSubj;
+    const shortTitle = nextSubj.title.length > 22 ? nextSubj.title.slice(0, 22) + '…' : nextSubj.title;
+    btn.textContent = `⚡ Next Due: ${shortTitle} (${nextSubj.dueCnt}) ➔`;
+    btn.style.display = 'inline-block';
+  } else {
+    __globalSrsNextTarget = null;
+    btn.style.display = 'none';
+  }
+}
+
+function setGlobalSrsModalTab(tabName) {
+  const gView = document.getElementById('srs-global-view');
+  const cView = document.getElementById('srs-dashboard-view');
+  const bG = document.getElementById('btn-gsrs-tab-global');
+  const bC = document.getElementById('btn-gsrs-tab-current');
+  const isGlobal = tabName === 'global';
+  if (gView) gView.style.display = isGlobal ? 'block' : 'none';
+  if (cView) cView.style.display = isGlobal ? 'none' : 'block';
+  if (bG) bG.classList.toggle('active', isGlobal);
+  if (bC) bC.classList.toggle('active', !isGlobal);
+}
+
+function renderGlobalSrsView() {
+  const pillsEl = document.getElementById('gsrs-vault-pills');
+  const listEl = document.getElementById('gsrs-subject-list');
+  if (!pillsEl || !listEl) return;
+
+  const snap = __globalSrsSnapshot;
+  const vList = snap.byVault || [];
+  let pHtml = `<button type="button" class="gsrs-vpill ${__globalSrsActiveVaultFilter === 'ALL' ? 'active' : ''}" data-gv="ALL">✨ All Vaults (${snap.totalDue})</button>`;
+  vList.forEach(v => {
+    pHtml += `<button type="button" class="gsrs-vpill ${__globalSrsActiveVaultFilter === v.vaultId ? 'active' : ''}" data-gv="${escapeHtml(v.vaultId)}">🗂️ ${escapeHtml(v.vaultName)} (${v.dueCnt})</button>`;
+  });
+  pillsEl.innerHTML = pHtml;
+
+  const filtered = (snap.items || []).filter(it => (__globalSrsActiveVaultFilter === 'ALL' || it.vaultId === __globalSrsActiveVaultFilter));
+  const dueItems = filtered.filter(it => it.dueCnt > 0);
+  const tmrwOnly = filtered.filter(it => it.dueCnt === 0 && it.tmrwCnt > 0);
+
+  if (dueItems.length === 0 && tmrwOnly.length === 0) {
+    listEl.innerHTML = `<div class="gsrs-empty">🎉 शानदार! इस Vault में आज या कल के लिए कोई भी SRS सवाल Due नहीं है — 100% All Clear!</div>`;
     return;
   }
-  btn.classList.remove('is-paused');
-  if (stats.dueIds.length > 0) {
-    btn.textContent = `🔥 SRS: ${stats.dueIds.length}`;
-    btn.classList.add('has-due');
-  } else {
-    btn.textContent = `🧠 SRS: 0`;
-    btn.classList.remove('has-due');
+
+  let htmlOut = '';
+  dueItems.forEach(it => {
+    htmlOut += `
+      <div class="gsrs-card is-due" data-vid="${escapeHtml(it.vaultId)}" data-pid="${escapeHtml(it.packId)}">
+        <div class="gsrs-card-main">
+          <div class="gsrs-card-title">${escapeHtml(it.title)} ${it.isCurrent ? '<span class="gsrs-cur-tag">Open</span>' : ''}</div>
+          <div class="gsrs-card-meta">
+            <span class="gsrs-vbadge">🗂️ ${escapeHtml(it.vaultName)}</span>
+            ${it.tmrwCnt > 0 ? `<span class="gsrs-tmrw-meta">📅 +${it.tmrwCnt} Tomorrow</span>` : ''}
+          </div>
+        </div>
+        <div class="gsrs-card-right">
+          <span class="gsrs-due-pill">🔥 ${it.dueCnt} Due</span>
+          <span class="gsrs-go-arrow">Start ➔</span>
+        </div>
+      </div>`;
+  });
+  if (tmrwOnly.length > 0) {
+    htmlOut += `<div class="gsrs-sub-lbl">📅 Coming Up Tomorrow</div>`;
+    tmrwOnly.forEach(it => {
+      htmlOut += `
+        <div class="gsrs-card is-tmrw" data-vid="${escapeHtml(it.vaultId)}" data-pid="${escapeHtml(it.packId)}">
+          <div class="gsrs-card-main">
+            <div class="gsrs-card-title">${escapeHtml(it.title)}</div>
+            <div class="gsrs-card-meta"><span class="gsrs-vbadge">🗂️ ${escapeHtml(it.vaultName)}</span></div>
+          </div>
+          <div class="gsrs-card-right">
+            <span class="gsrs-tmrw-pill">📅 ${it.tmrwCnt} Tomorrow</span>
+          </div>
+        </div>`;
+    });
   }
+  listEl.innerHTML = htmlOut;
+}
+
+async function jumpToGlobalSrsPack(vaultId, packId, autoStartDue) {
+  closeSrsModal();
+  if (typeof stopActiveVoicePlayback === 'function') stopActiveVoicePlayback();
+  exitSrsReviewMode(true);
+
+  if (vaultId !== currentVaultId) {
+    viewingPrevBatchIdx = null; prevBatchMode = 'review'; retestHistory = {};
+    currentVaultId = vaultId || 'default';
+    safeSetStorage(VAULT_ACTIVE_PROFILE_KEY, currentVaultId);
+    IDB_NAME = currentVaultId === 'default' ? 'BrahmastraTitanVaultDB' : ('BrahmastraTitanVaultDB__' + currentVaultId);
+    LIBRARY_KEY = currentVaultId === 'default' ? 'brahmastra_titan_os_library_v1' : ('brahmastra_titan_os_library_v1__' + currentVaultId);
+    ACTIVE_CH_KEY = currentVaultId === 'default' ? 'brahmastra_titan_os_active_ch_v1' : ('brahmastra_titan_os_active_ch_v1__' + currentVaultId);
+    chapterLibraryCache = [];
+    await loadLibraryFromIDB();
+    if (typeof refreshVaultProfileSelect === 'function') refreshVaultProfileSelect();
+  }
+
+  switchActivePackById(packId);
+  if (typeof setActiveUniverse === 'function') setActiveUniverse('mcq');
+  if (autoStartDue && !appState.srsPaused && getDueQuestionIds().length > 0) {
+    startSrsReviewSession();
+    showToast(`🔥 ${currentPayload.chapterTitle} — ${getDueQuestionIds().length} Due सवाल शुरू!`);
+  } else {
+    showToast(`📘 ${currentPayload.chapterTitle} खुल गया!`);
+  }
+  scanGlobalSrsAcrossAllVaults();
 }
 
 function checkDueBanner() {
@@ -4763,6 +5182,16 @@ function openSrsModal(autoLaunch = false) {
   if (!modal) return;
   modal.style.display = 'flex';
   renderSrsDashboard();
+  setGlobalSrsModalTab('global');
+  const listEl = document.getElementById('gsrs-subject-list');
+  if (listEl && !__globalSrsSnapshot.scannedAt) {
+    listEl.innerHTML = '<div class="gsrs-empty">⏳ सभी Vaults के Due सवाल scan हो रहे हैं...</div>';
+  } else {
+    renderGlobalSrsView();
+  }
+  scanGlobalSrsAcrossAllVaults().then(() => {
+    renderGlobalSrsView();
+  });
 }
 
 function closeSrsModal() {
@@ -4884,6 +5313,11 @@ function updateSrsActiveBanner() {
   } else {
     titleEl.textContent = `🔥 Titan SRS Daily Review Active — ${done} / ${total} Done (Shuffled Full List)`;
     subEl.textContent = `✅ ${srsSessionPass} Promoted · 🔄 ${srsSessionAgain} Reset · तुम्हारा Main Running Batch 100% सुरक्षित है`;
+  }
+  if (done >= total && total > 0) {
+    scanGlobalSrsAcrossAllVaults();
+  } else {
+    updateNextDueChainBtn();
   }
 }
 
@@ -10308,5 +10742,38 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
 })();
 
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('gsrs-tab-bar')?.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-gsrstab]');
+    if (!b) return;
+    setGlobalSrsModalTab(b.dataset.gsrstab);
+    if (b.dataset.gsrstab === 'global') renderGlobalSrsView();
+    else renderSrsDashboard();
+  });
+  document.getElementById('gsrs-vault-pills')?.addEventListener('click', (e) => {
+    const p = e.target.closest('[data-gv]');
+    if (!p) return;
+    __globalSrsActiveVaultFilter = p.dataset.gv;
+    renderGlobalSrsView();
+  });
+  document.getElementById('gsrs-subject-list')?.addEventListener('click', (e) => {
+    const card = e.target.closest('.gsrs-card');
+    if (!card) return;
+    const vid = card.dataset.vid;
+    const pid = card.dataset.pid;
+    const isDue = card.classList.contains('is-due');
+    if (vid && pid) jumpToGlobalSrsPack(vid, pid, isDue);
+  });
+  document.getElementById('btn-srs-next-due-subj')?.addEventListener('click', () => {
+    if (__globalSrsNextTarget) {
+      jumpToGlobalSrsPack(__globalSrsNextTarget.vaultId, __globalSrsNextTarget.packId, true);
+    }
+  });
+  setTimeout(() => { if (typeof scanGlobalSrsAcrossAllVaults === 'function') scanGlobalSrsAcrossAllVaults(); }, 550);
+});
+</script>
+
 </body>
 </html>
