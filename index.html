@@ -2877,9 +2877,18 @@ body.theme-night .v45-visual-stage,
 body.theme-night .v45-pinned-card {
   border-color: rgba(167, 139, 250, 0.42) !important;
 }
-body.theme-night .v45-svg-wrap {
-  background: #EEF2F6 !important;
-  filter: brightness(0.93) contrast(1.03);
+.v45-svg-wrap:has(svg[data-svg-theme="dark"]),
+.v45-svg-modal-stage:has(svg[data-svg-theme="dark"]) {
+  background: #0F172A !important;
+}
+body.theme-night .v45-svg-wrap,
+body.theme-night .v45-svg-modal-stage {
+  background: #0F172A !important;
+  filter: none;
+}
+body.theme-night .v45-svg-wrap svg:not([data-svg-theme="dark"]),
+body.theme-night .v45-svg-modal-stage svg:not([data-svg-theme="dark"]) {
+  filter: invert(0.91) hue-rotate(180deg) contrast(1.05);
 }
 body.theme-night .v45-vis-bar {
   background: #141E33 !important;
@@ -3292,7 +3301,7 @@ body.theme-night .v45-unpin-btn {
       <div class="chat-feed" id="chat-feed"></div>
 
       <div class="chat-quick-chips" id="chat-quick-chips">
-        <button type="button" class="chat-img-toggle-pill" id="btn-toggle-img-search" aria-pressed="false" title="Enable Visual Image Strip above replies">🖼️ Images: OFF</button>
+        <button type="button" class="chat-img-toggle-pill active" id="btn-toggle-img-search" aria-pressed="true" title="Smart Auto Real Photos when helpful">🖼️ Images: ON</button>
         <button type="button" class="chat-vis-toggle-pill active" id="btn-toggle-visual-svg" aria-pressed="true" title="Auto-create Animated Visual Diagram when helpful">🎨 Visual: ON</button>
         <button type="button" class="chat-chip" data-prompt="इसे एकदम आसान भाषा और देसी example से समझा दो">💡 आसान भाषा में समझाओ</button>
         <button type="button" class="chat-chip" data-prompt="इसका Formula, Unit Trap और Exam Numerical step-by-step समझाओ">📐 Formula &amp; Trap</button>
@@ -3495,8 +3504,13 @@ body.theme-night .v45-unpin-btn {
 <div class="v45-svg-modal" id="v45-svg-modal" role="dialog" aria-modal="true" aria-label="Visual Diagram Viewer">
   <div class="v45-svg-modal-box">
     <div class="v45-svg-modal-top">
-      <span style="font-weight:800; font-size:0.86rem; color:#F8FAFC;">🎨 Visual Diagram</span>
-      <button type="button" class="v36-lb-btn close" id="btn-v45-svg-close">✕</button>
+      <span style="font-weight:800; font-size:0.86rem; color:#F8FAFC;">🎨 Visual Blueprint</span>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button type="button" class="v36-lb-btn" id="btn-v45-zoom-out" title="Zoom Out">−</button>
+        <button type="button" class="v36-lb-btn" id="btn-v45-zoom-reset" title="Reset Zoom">100%</button>
+        <button type="button" class="v36-lb-btn" id="btn-v45-zoom-in" title="Zoom In">+</button>
+        <button type="button" class="v36-lb-btn close" id="btn-v45-svg-close">✕</button>
+      </div>
     </div>
     <div class="v45-svg-modal-stage" id="v45-svg-modal-stage"></div>
   </div>
@@ -11260,11 +11274,15 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
       const wantImages = isGuruImageSearchOn();
       const wantVisual = isGuruVisualSvgOn();
       let extraRules = '\n[Keep zero robotic meta-headings or labels — explain naturally and clearly.]';
+      const visTheme = document.body.classList.contains('theme-night') ? 'dark' : 'light';
       if (wantVisual) {
-        extraRules += '\n[VISUAL DIAGRAM RULE: If a clear visual diagram, cross-section, force/flow arrows, graph, or step comparison will make this concept stick 10x faster, output ONE clean, self-contained animated <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">...</svg> wrapped strictly inside [[VISUAL_SVG]] and [[/VISUAL_SVG]] tags. Use crisp readable text (12-15px), zero overlapping labels, high-contrast modern palette on a light #F8FAFC card background, and subtle smooth CSS <style>@keyframes</style> motion (like flowing dashed arrows or gentle pulse). Skip the SVG if the question is purely a simple 1-line date or name.]';
+        const themePalette = visTheme === 'dark'
+          ? 'NATIVE DARK MODE CANVAS: Root <rect width="640" height="340" rx="14" fill="#0F172A"/>, inner cards fill="#1E293B" stroke="#334155", crisp text fill="#F8FAFC" and secondary "#CBD5E1", vibrant high-contrast accents (#38BDF8 sky, #34D399 emerald, #FBBF24 amber, #A78BFA violet, #FB7185 coral).'
+          : 'NATIVE LIGHT TEXTBOOK CANVAS: Root <rect width="640" height="340" rx="14" fill="#F8FAFC"/>, inner cards fill="#FFFFFF" stroke="#CBD5E1", crisp text fill="#0F172A" and secondary "#475569", vibrant accents (#2563EB blue, #16A34A green, #D97706 amber, #7C3AED violet, #DC2626 red).';
+        extraRules += '\n[EXTREME VISUAL BLUEPRINT RULE: Whenever a visual diagram, engineering cross-section (beam/neutral axis/zones), stress-strain or shear-moment curve, fluid/mechanism flow, chronological timeline, or side-by-side visual comparison will make this concept stick 10x faster, output ONE textbook-grade, self-contained animated <svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg">...</svg> wrapped strictly inside [[VISUAL_SVG]] and [[/VISUAL_SVG]] tags. ' + themePalette + ' Use font-family="system-ui, sans-serif", 12-15px crisp labels (max 4-5 words per label, generous spacing, ZERO overlapping text), clean <defs><marker> arrowheads, and smooth subtle CSS <style>@keyframes</style> motion (flowing dashed arrows or gentle highlight pulse). Skip SVG only for a trivial 1-line date/name.]';
       }
       if (wantImages) {
-        extraRules += '\n[Also append on the very last line ONLY a crisp 2-to-3 word Wikipedia-friendly English visual term inside [[IMG_Q: keyword]] (e.g. [[IMG_Q: Concrete efflorescence]], [[IMG_Q: Vicat apparatus]]).]';
+        extraRules += '\n[SMART REAL-PHOTO RULE: ONLY if a real-world photograph of a physical object, lab apparatus (e.g. Vicat apparatus, Venturi meter, Theodolite), historical monument/artifact (e.g. Ajanta Caves, Sanchi Stupa), rock/mineral, dam/bridge, or anatomical structure will genuinely help the student recognize it, append on the very last line [[IMG_Q: 2-to-3 word Wikipedia English term]]. If the question is abstract, a numerical, a constitutional article, a chronological order, or a formula where a real photo adds no value, output [[IMG_Q: NONE]] instead.]';
       }
       parts[parts.length - 1].text += extraRules;
 
@@ -11276,7 +11294,7 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
       let visualSvg = '';
       const vMatch = String(replyRaw || '').match(/\[\[VISUAL_SVG\]\]([\s\S]*?)\[\[\/VISUAL_SVG\]\]/i);
       if (vMatch && vMatch[1]) {
-        visualSvg = sanitizeVisualSvg(vMatch[1]);
+        visualSvg = sanitizeVisualSvg(vMatch[1], visTheme);
       }
 
       const reply = String(replyRaw || '')
@@ -11287,13 +11305,18 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
 
       let fetchedImgs = [];
       if (wantImages) {
-        try {
-          const fallbackQ = imgQuery || extractCleanVisualQuery(txt || '');
-          if (fallbackQ) {
-            fetchedImgs = await fetchRelatedVisualImages(fallbackQ);
-            imgQuery = fallbackQ;
+        const skipImg = !imgQuery || /^(none|skip|na|n\/a|null|false)$/i.test(imgQuery);
+        if (skipImg) {
+          imgQuery = '';
+        } else {
+          try {
+            fetchedImgs = await fetchRelatedVisualImages(imgQuery);
+            if (!fetchedImgs || !fetchedImgs.length) imgQuery = '';
+          } catch (imgErr) {
+            fetchedImgs = [];
+            imgQuery = '';
           }
-        } catch (imgErr) { fetchedImgs = []; }
+        }
       }
 
       const updated = loadChatHistory();
@@ -11386,7 +11409,8 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
   let lbQuery = '';
 
   function isGuruImageSearchOn() {
-    return safeGetStorage(GURU_IMG_PREF_KEY) === '1';
+    const v = safeGetStorage(GURU_IMG_PREF_KEY);
+    return v === null || v === '' ? true : (v === '1');
   }
   function updateImgToggleBtnUi() {
     const btn = document.getElementById('btn-toggle-img-search');
@@ -11400,7 +11424,7 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
     const next = !isGuruImageSearchOn();
     safeSetStorage(GURU_IMG_PREF_KEY, next ? '1' : '0');
     updateImgToggleBtnUi();
-    showToast(next ? '🖼️ Image Search ON — हर जवाब के ऊपर related images दिखेंगी!' : '🖼️ Image Search OFF');
+    showToast(next ? '🖼️ Smart Images ON — ज़रूरी physical objects/apparatus/monuments पर real photos खुद आएँगी!' : '🖼️ Smart Images OFF');
   });
   updateImgToggleBtnUi();
 
@@ -12374,7 +12398,7 @@ function updateVisualSvgToggleUi() {
 }
 
 let __v45SvgUid = 0;
-function sanitizeVisualSvg(rawSvg) {
+function sanitizeVisualSvg(rawSvg, theme) {
   let s = String(rawSvg || '').trim();
   const m = s.match(/<svg[\s\S]*?<\/svg>/i);
   if (!m) return '';
@@ -12387,11 +12411,11 @@ function sanitizeVisualSvg(rawSvg) {
   s = s.replace(/(?:javascript|vbscript|data\s*:\s*text\/html)\s*:/gi, '');
   // 2. Ensure responsive viewBox exists
   if (!/\bviewBox\s*=/i.test(s.slice(0, s.indexOf('>') + 1))) {
-    s = s.replace(/<svg\b/i, '<svg viewBox="0 0 600 320"');
+    s = s.replace(/<svg\b/i, '<svg viewBox="0 0 640 340"');
   }
   // 3. Unique scope ID to prevent global CSS leakage & <defs> ID collisions across SVGs/Modal
   const uid = 'v45s' + (++__v45SvgUid) + '_' + Math.random().toString(36).slice(2, 6);
-  s = s.replace(/<svg\b/i, `<svg data-svg-scope="${uid}"`);
+  const thAttr = (theme === "dark" || theme === "light") ? ` data-svg-theme="${theme}"` : ""; s = s.replace(/<svg\b/i, `<svg data-svg-scope="${uid}"${thAttr}`);
   // Collect and namespace all id="..." and references
   const ids = new Set();
   s.replace(/\bid\s*=\s*"([^"]+)"/g, (_, id) => { ids.add(id); return _; });
@@ -12512,11 +12536,21 @@ function buildPinnedMcqVisualHtml(q) {
     </div>`;
 }
 
+let __v45SvgZoom = 100;
+function applyFullscreenSvgZoom(nextPct) {
+  __v45SvgZoom = Math.max(75, Math.min(250, nextPct));
+  const st = document.getElementById('v45-svg-modal-stage');
+  const svg = st && st.querySelector('svg');
+  if (svg) svg.style.width = __v45SvgZoom + '%';
+  const rBtn = document.getElementById('btn-v45-zoom-reset');
+  if (rBtn) rBtn.textContent = __v45SvgZoom + '%';
+}
 function openFullscreenSvgViewer(svgHtml) {
   const m = document.getElementById('v45-svg-modal');
   const st = document.getElementById('v45-svg-modal-stage');
   if (!m || !st || !svgHtml) return;
   st.innerHTML = String(svgHtml).replace(/v45s(\d+)_/g, 'v45fs$1_');
+  applyFullscreenSvgZoom(100);
   m.classList.add('open');
 }
 function closeFullscreenSvgViewer() {
@@ -12587,6 +12621,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const svgModal = document.getElementById('v45-svg-modal');
   document.getElementById('btn-v45-svg-close')?.addEventListener('click', closeFullscreenSvgViewer);
+  document.getElementById('btn-v45-zoom-out')?.addEventListener('click', () => applyFullscreenSvgZoom(__v45SvgZoom - 25));
+  document.getElementById('btn-v45-zoom-reset')?.addEventListener('click', () => applyFullscreenSvgZoom(100));
+  document.getElementById('btn-v45-zoom-in')?.addEventListener('click', () => applyFullscreenSvgZoom(__v45SvgZoom + 25));
   svgModal?.addEventListener('click', (e) => { if (e.target === svgModal) closeFullscreenSvgViewer(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && svgModal?.classList.contains('open')) closeFullscreenSvgViewer(); });
 
