@@ -9124,7 +9124,9 @@ function bindEvents() {
     resetPrevBatchState();
     const keepPrefs = { theme: appState.theme, fontSize: appState.fontSize, soundOn: appState.soundOn, autoNext: appState.autoNext, recallBlur: appState.recallBlur };
     appState = Object.assign(getDefaultState(), keepPrefs);
+    appState._resetAt = Date.now();
     forceShowDock = false; saveState(); renderAll(true);
+    if (typeof scanGlobalSrsAcrossAllVaults === 'function') scanGlobalSrsAcrossAllVaults();
     window.scrollTo({ top: 0, behavior: 'smooth' }); showToast('🔄 Round 1 से फिर से शुरू!');
   });
 
@@ -9193,8 +9195,10 @@ function bindEvents() {
     resetPrevBatchState();
     const keepPrefs = { theme: appState.theme, fontSize: appState.fontSize, soundOn: appState.soundOn, autoNext: appState.autoNext, recallBlur: appState.recallBlur };
     appState = Object.assign(getDefaultState(), keepPrefs);
+    appState._resetAt = Date.now();
     forceShowDock = false; saveState(); rModal.classList.remove('open'); renderAll(true);
-    showToast('🔄 Pack progress reset to Round 1!');
+    if (typeof scanGlobalSrsAcrossAllVaults === 'function') scanGlobalSrsAcrossAllVaults();
+    showToast('🔄 Pack & SRS completely reset to Round 1!');
   });
 
   document.getElementById('btn-backup-json').addEventListener('click', () => {
@@ -9571,6 +9575,15 @@ function mergeSingleChapterState(localSt, remoteSt) {
   if (!remoteSt) return localSt;
   const lTime = Number(localSt._updatedAt || 0);
   const rTime = Number(remoteSt._updatedAt || 0);
+  const lReset = Number(localSt._resetAt || 0);
+  const rReset = Number(remoteSt._resetAt || 0);
+  // Honor deliberate Pack Reset across Cloud Sync (never resurrect pre-reset SRS/history!)
+  if (lReset > rReset && lReset >= rTime) {
+    return JSON.parse(JSON.stringify(localSt));
+  }
+  if (rReset > lReset && rReset >= lTime) {
+    return JSON.parse(JSON.stringify(remoteSt));
+  }
   const lCount = (localSt.roundHistory && localSt.roundHistory[1]) ? Object.keys(localSt.roundHistory[1]).length : 0;
   const rCount = (remoteSt.roundHistory && remoteSt.roundHistory[1]) ? Object.keys(remoteSt.roundHistory[1]).length : 0;
 
@@ -9629,6 +9642,7 @@ function mergeSingleChapterState(localSt, remoteSt) {
       }
     });
   }
+  base._resetAt = Math.max(lReset, rReset);
   reconcileSrsWithVault(base);
   base._updatedAt = Math.max(lTime, rTime, Date.now());
   return base;
