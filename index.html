@@ -2662,27 +2662,32 @@ body.theme-night .cs-v43-sub { color: #CBD5E1 !important; }
    BRAHMASTRA TITAN OS v4.4 — ULTRA-CLEAN PER-CARD RECALL LADDER PILLS
    ===================================================================== */
 .recall-ladder-bar {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin: 7px 0 8px;
-  padding: 4px 6px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.04);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 10px;
+  padding: 4px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.045);
   border: 1px solid var(--border);
 }
 .rl-pill {
-  min-width: 38px;
-  height: 26px;
-  padding: 0 10px;
-  border-radius: 999px;
+  width: 100%;
+  height: 36px;
+  padding: 0 6px;
+  border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
   color: var(--muted);
-  font-size: 0.74rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: all 0.16s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2691,21 +2696,28 @@ body.theme-night .cs-v43-sub { color: #CBD5E1 !important; }
   background: rgba(37, 99, 235, 0.1);
   color: #1D4ED8;
 }
+.rl-pill:active {
+  transform: scale(0.96);
+}
 .rl-pill.active {
   background: linear-gradient(135deg, #2563EB, #4F46E5);
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
 }
 .rl-pill.is-trophy.active {
   background: linear-gradient(135deg, #16A34A, #0D9488);
-  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(22, 163, 74, 0.32);
+}
+@media (max-width: 640px) {
+  .rl-pill { height: 38px; font-size: 0.8rem; }
 }
 body.theme-night .recall-ladder-bar {
-  background: #101829 !important;
-  border-color: #2A364F !important;
+  background: #111B2E !important;
+  border-color: #28354D !important;
 }
-body.theme-night .rl-pill { color: #94A3B8 !important; }
-body.theme-night .rl-pill:hover { background: rgba(59, 130, 246, 0.2) !important; color: #BFDBFE !important; }
+body.theme-night .rl-pill { color: #CBD5E1 !important; }
+body.theme-night .rl-pill:hover { background: rgba(59, 130, 246, 0.18) !important; color: #EFF6FF !important; }
 body.theme-night .rl-pill.active { color: #FFFFFF !important; }
 
 
@@ -3363,8 +3375,13 @@ body.theme-night .v45-unpin-btn {
     <div style="background:rgba(128,128,128,0.08); border:1px solid var(--border); border-radius:12px; padding:11px 12px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px;">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
         <span style="font-size:0.8rem; font-weight:800;">🏛️ Independent Vault Workspace (Zero Mixing!)</span>
-        <select id="vault-profile-select" class="search-input" style="max-width:250px; padding:5px 8px; font-weight:700;"></select>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <select id="vault-profile-select" class="search-input" style="max-width:230px; padding:5px 8px; font-weight:700;"></select>
+          <button type="button" class="ctrl-btn" id="btn-rename-vault-profile" title="Rename selected Vault" style="display:none; padding:5px 9px;">✏️</button>
+          <button type="button" class="ctrl-btn" id="btn-delete-vault-profile" title="Delete selected Vault" style="display:none; padding:5px 9px; color:#EF4444; border-color:rgba(239,68,68,0.42);">🗑️</button>
+        </div>
       </div>
+      <div id="vault-action-inline-bar" style="display:none; padding:9px 10px; border-radius:10px; border:1px solid rgba(239,68,68,0.35); background:rgba(239,68,68,0.08); align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;"></div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <input type="text" id="new-vault-name" class="search-input" style="flex:1; min-width:160px;" placeholder="New Vault name (e.g., GK_GS, Sociology, Revision)...">
         <button type="button" class="ctrl-btn btn-primary" id="btn-create-vault-profile">➕ Create &amp; Switch</button>
@@ -7021,7 +7038,7 @@ async function pgDiscoverFlashModels(apiKey) {
     const usable = list
       .filter(m => m && m.name && Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
       .map(m => String(m.name).replace(/^models\//, ''))
-      .filter(n => /gemini/i.test(n) && !/embedding|tts|imagen|veo|aqa|robotics|-image|-audio|vision|learnlm/i.test(n));
+      .filter(n => /gemini/i.test(n) && !/embedding|tts|imagen|veo|aqa|robotics|-image|-audio|vision|learnlm|live|computer-use|deep-research|gemma/i.test(n));
     const rank = (x) => {
       if (/gemini-4.*flash(?!-lite)/i.test(x)) return 0;
       if (/gemini-4.*flash-lite/i.test(x)) return 1;
@@ -9760,6 +9777,13 @@ function refreshVaultProfileSelect() {
   sel.innerHTML = profiles.map(pr =>
     `<option value="${escapeHtml(pr.id)}" ${pr.id === currentVaultId ? 'selected' : ''}>${escapeHtml(pr.name)}</option>`
   ).join('');
+  const isCustom = !!(currentVaultId && currentVaultId !== 'default');
+  const renBtn = document.getElementById('btn-rename-vault-profile');
+  const delBtn = document.getElementById('btn-delete-vault-profile');
+  const bar = document.getElementById('vault-action-inline-bar');
+  if (renBtn) renBtn.style.display = isCustom ? 'inline-flex' : 'none';
+  if (delBtn) delBtn.style.display = isCustom ? 'inline-flex' : 'none';
+  if (bar) { bar.style.display = 'none'; bar.innerHTML = ''; }
 }
 
 function switchVaultProfile(newVaultId) {
@@ -10422,6 +10446,8 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
           __pgCachedWorkingModel = m;
           return text;
         }
+        const fr = data && data.candidates && data.candidates[0] && data.candidates[0].finishReason;
+        lastErr = `Model ${m} returned empty (${fr || 'no text'})`;
       } catch (e) {
         lastErr = e && e.message ? e.message : 'Request failed';
       }
@@ -11058,16 +11084,24 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
 4. If the student sends ONLY a photo or voice clip without text, automatically read/listen and explain it completely in this exact colorful format!`;
   }
 
+  let __pgChatMem = null;
   function loadChatHistory() {
-    try { const raw = safeGetStorage(PG_CHAT_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+    if (Array.isArray(__pgChatMem)) return __pgChatMem.slice();
+    try {
+      const raw = safeGetStorage(PG_CHAT_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      __pgChatMem = Array.isArray(parsed) ? parsed : [];
+      return __pgChatMem.slice();
+    } catch (e) { return []; }
   }
   function saveChatHistory(list) {
-    const trimmed = list.slice(-24).map((m, idx, arr) => idx < arr.length - 10 ? { ...m, imgThumb: '', visualSvg: '' } : m);
-    try { safeSetStorage(PG_CHAT_KEY, JSON.stringify(trimmed)); }
-    catch (e) {
-      const slim = list.slice(-14).map((m, idx, arr) => idx < arr.length - 4 ? { ...m, imgThumb: '', visualSvg: '' } : m);
-      try { safeSetStorage(PG_CHAT_KEY, JSON.stringify(slim)); } catch (e2) {}
-    }
+    const trimmed = (list || []).slice(-24).map((m, idx, arr) => idx < arr.length - 8 ? { ...m, imgThumb: '', visualSvg: '' } : m);
+    __pgChatMem = trimmed.slice();
+    if (safeSetStorage(PG_CHAT_KEY, JSON.stringify(trimmed))) return;
+    const slim = trimmed.slice(-12).map((m, idx, arr) => idx < arr.length - 3 ? { ...m, imgThumb: '', visualSvg: '' } : m);
+    if (safeSetStorage(PG_CHAT_KEY, JSON.stringify(slim))) return;
+    const tiny = trimmed.slice(-6).map(m => ({ ...m, imgThumb: '', visualSvg: '' }));
+    safeSetStorage(PG_CHAT_KEY, JSON.stringify(tiny));
   }
 
   function renderChatFeed() {
@@ -11253,11 +11287,13 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
 
       let fetchedImgs = [];
       if (wantImages) {
-        const fallbackQ = imgQuery || extractCleanVisualQuery(txt || '');
-        if (fallbackQ) {
-          fetchedImgs = await fetchRelatedVisualImages(fallbackQ);
-          imgQuery = fallbackQ;
-        }
+        try {
+          const fallbackQ = imgQuery || extractCleanVisualQuery(txt || '');
+          if (fallbackQ) {
+            fetchedImgs = await fetchRelatedVisualImages(fallbackQ);
+            imgQuery = fallbackQ;
+          }
+        } catch (imgErr) { fetchedImgs = []; }
       }
 
       const updated = loadChatHistory();
@@ -11272,8 +11308,29 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
       saveChatHistory(updated);
       renderChatFeed();
     } catch (err) {
-      loader.remove();
-      if (err && err.message !== 'NO_API_KEY') showToast('❌ ' + (err && err.message ? err.message : 'Reply failed'));
+      const errMsg = (err && err.message) ? String(err.message) : 'Reply failed';
+      if (errMsg === 'NO_API_KEY') {
+        loader.remove();
+      } else {
+        loader.innerHTML = `<div class="guru-rich-card" style="border-color:rgba(239,68,68,0.45); background:rgba(239,68,68,0.08);">
+          <div style="font-weight:800; color:#EF4444; margin-bottom:6px;">⚠️ Ask Guru को जवाब नहीं मिल पाया</div>
+          <div style="font-size:0.83rem; opacity:0.92; margin-bottom:10px;">${escapeHtmlSafe(errMsg)}</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="ctrl-btn btn-primary" id="btn-retry-last-guru" style="padding:5px 12px; font-size:0.78rem;">🔄 Retry</button>
+            <button type="button" class="ctrl-btn" id="btn-open-key-from-err" style="padding:5px 12px; font-size:0.78rem;">🔑 Check API Key</button>
+          </div>
+        </div>`;
+        feed.scrollTop = feed.scrollHeight;
+        loader.querySelector('#btn-retry-last-guru')?.addEventListener('click', () => {
+          loader.remove();
+          if (txt && inp) inp.value = txt;
+          sendAskGuruMessage(voiceAudioB64, voiceAudioMime);
+        });
+        loader.querySelector('#btn-open-key-from-err')?.addEventListener('click', () => {
+          if (typeof openVoiceModal === 'function') openVoiceModal();
+        });
+        showToast('❌ ' + errMsg);
+      }
     } finally {
       chatBusy = false;
       sendBtn.disabled = false;
@@ -11770,8 +11827,25 @@ function writePackToAnyVaultIDB(vaultId, entry) {
   });
 }
 
+const DELETED_VAULTS_TOMBSTONE_KEY = 'brahmastra_deleted_vaults_v1';
+function getDeletedVaultsMap() {
+  try { return JSON.parse(safeGetStorage(DELETED_VAULTS_TOMBSTONE_KEY) || '{}') || {}; }
+  catch (e) { return {}; }
+}
+function saveDeletedVaultsMap(map) {
+  safeSetStorage(DELETED_VAULTS_TOMBSTONE_KEY, JSON.stringify(map || {}));
+}
+function purgeVaultLocallyOnly(vid) {
+  if (!vid || vid === 'default') return;
+  try { indexedDB.deleteDatabase('BrahmastraTitanVaultDB__' + vid); } catch (e) {}
+  try { localStorage.removeItem('brahmastra_titan_os_library_v1__' + vid); } catch (e) {}
+  try { localStorage.removeItem('brahmastra_titan_os_active_ch_v1__' + vid); } catch (e) {}
+  const list = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList().filter(x => x.id !== vid) : [];
+  if (typeof saveVaultProfilesList === 'function') saveVaultProfilesList(list);
+}
 function ensureVaultProfileExists(prObj) {
   if (!prObj || !prObj.id || prObj.id === 'default') return;
+  if (getDeletedVaultsMap()[prObj.id]) return;
   try {
     const list = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList() : [{ id: 'default', name: 'Main Vault' }];
     if (!list.some(x => x.id === prObj.id)) {
@@ -11840,8 +11914,27 @@ async function syncPacksWithCloud(silent) {
       } catch (e) {}
     }
 
-    // Ensure remote Vault Profiles exist locally
-    (remoteManifest.profiles || []).forEach(pr => ensureVaultProfileExists(pr));
+    // Merge deleted-vault tombstones across devices so deleted vaults NEVER resurrect
+    const localDelMap = getDeletedVaultsMap();
+    const remoteDelMap = (remoteManifest && remoteManifest.deletedVaults) ? remoteManifest.deletedVaults : {};
+    const mergedDelMap = Object.assign({}, remoteDelMap, localDelMap);
+    Object.keys(mergedDelMap).forEach(vid => {
+      if (vid && vid !== 'default') {
+        const curList = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList() : [];
+        if (curList.some(x => x.id === vid)) {
+          purgeVaultLocallyOnly(vid);
+          if (typeof currentVaultId !== 'undefined' && currentVaultId === vid && typeof switchVaultProfile === 'function') {
+            switchVaultProfile('default');
+          }
+        }
+      }
+    });
+    saveDeletedVaultsMap(mergedDelMap);
+
+    // Ensure non-deleted remote Vault Profiles exist locally
+    (remoteManifest.profiles || []).forEach(pr => {
+      if (pr && pr.id && !mergedDelMap[pr.id]) ensureVaultProfileExists(pr);
+    });
 
     // 2. Collect ALL local packs across ALL Vault Profiles
     const profiles = (typeof getVaultProfilesList === 'function') ? getVaultProfilesList() : [{ id: 'default', name: 'Main Vault' }];
@@ -11860,6 +11953,7 @@ async function syncPacksWithCloud(silent) {
     const remoteKeys = Object.keys(remoteManifest.packs || {});
     for (const fKey of remoteKeys) {
       const rMeta = remoteManifest.packs[fKey];
+      if (rMeta && rMeta.vaultId && mergedDelMap[rMeta.vaultId]) continue;
       const lObj = localIndex[fKey];
       const needPull = !lObj || Number(rMeta.updatedAt || 0) > Number(lObj.entry.updatedAt || 0);
       if (!needPull) continue;
@@ -11897,9 +11991,20 @@ async function syncPacksWithCloud(silent) {
     const mergedProfiles = [];
     const seenPr = new Set();
     [...profiles, ...(remoteManifest.profiles || [])].forEach(pr => {
-      if (pr && pr.id && !seenPr.has(pr.id)) { seenPr.add(pr.id); mergedProfiles.push({ id: pr.id, name: pr.name || pr.id }); }
+      if (pr && pr.id && !mergedDelMap[pr.id] && !seenPr.has(pr.id)) {
+        seenPr.add(pr.id);
+        mergedProfiles.push({ id: pr.id, name: pr.name || pr.id });
+      }
     });
     const mergedPacksMeta = Object.assign({}, remoteManifest.packs || {});
+    const filesToDeleteInGist = {};
+    Object.keys(mergedPacksMeta).forEach(fk => {
+      const vid = mergedPacksMeta[fk] && mergedPacksMeta[fk].vaultId;
+      if (vid && mergedDelMap[vid]) {
+        delete mergedPacksMeta[fk];
+        if (gistFiles[fk]) filesToDeleteInGist[fk] = null;
+      }
+    });
 
     const BATCH = 5;
     for (let i = 0; i < toPush.length; i += BATCH) {
@@ -11918,8 +12023,9 @@ async function syncPacksWithCloud(silent) {
         };
         pushed++;
       }
+      Object.assign(filesPayload, filesToDeleteInGist);
       filesPayload[CS_PACK_MANIFEST_FILE] = {
-        content: JSON.stringify({ schema: 'titan_packs_v1', updatedAt: Date.now(), profiles: mergedProfiles, packs: mergedPacksMeta })
+        content: JSON.stringify({ schema: 'titan_packs_v1', updatedAt: Date.now(), profiles: mergedProfiles, deletedVaults: mergedDelMap, packs: mergedPacksMeta })
       };
       const pRes = await fetch('https://api.github.com/gists/' + encodeURIComponent(cfg.gistId), {
         method: 'PATCH',
@@ -11927,6 +12033,22 @@ async function syncPacksWithCloud(silent) {
         body: JSON.stringify({ files: filesPayload })
       });
       if (!pRes.ok) throw new Error('Pack upload failed (HTTP ' + pRes.status + ')');
+    }
+    const needManifestOnlySync = toPush.length === 0 && (
+      Object.keys(filesToDeleteInGist).length > 0 ||
+      JSON.stringify(mergedDelMap) !== JSON.stringify(remoteDelMap) ||
+      JSON.stringify(mergedProfiles) !== JSON.stringify(remoteManifest.profiles || [])
+    );
+    if (needManifestOnlySync) {
+      const delPayload = Object.assign({}, filesToDeleteInGist);
+      delPayload[CS_PACK_MANIFEST_FILE] = {
+        content: JSON.stringify({ schema: 'titan_packs_v1', updatedAt: Date.now(), profiles: mergedProfiles, deletedVaults: mergedDelMap, packs: mergedPacksMeta })
+      };
+      await fetch('https://api.github.com/gists/' + encodeURIComponent(cfg.gistId), {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ files: delPayload })
+      });
     }
 
     if (pulled > 0) {
@@ -12467,6 +12589,68 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-v45-svg-close')?.addEventListener('click', closeFullscreenSvgViewer);
   svgModal?.addEventListener('click', (e) => { if (e.target === svgModal) closeFullscreenSvgViewer(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && svgModal?.classList.contains('open')) closeFullscreenSvgViewer(); });
+
+  // Double-Sure Cloud-Safe Delete Vault (🗑️) + Inline Rename Vault (✏️)
+  const vRenBtn = document.getElementById('btn-rename-vault-profile');
+  const vDelBtn = document.getElementById('btn-delete-vault-profile');
+  const vBar = document.getElementById('vault-action-inline-bar');
+
+  vRenBtn?.addEventListener('click', () => {
+    if (!vBar || !currentVaultId || currentVaultId === 'default') return;
+    const pObj = getVaultProfilesList().find(x => x.id === currentVaultId);
+    const curName = pObj ? pObj.name : currentVaultId;
+    vBar.style.borderColor = 'rgba(37, 99, 235, 0.4)';
+    vBar.style.background = 'rgba(37, 99, 235, 0.08)';
+    vBar.innerHTML = `
+      <input type="text" id="v45-rename-vault-input" class="search-input" style="flex:1; min-width:150px; padding:5px 9px;" value="${escapeHtml(curName)}">
+      <div style="display:flex; gap:6px;">
+        <button type="button" class="ctrl-btn btn-primary" id="v45-confirm-rename-vault" style="padding:5px 10px;">💾 Save</button>
+        <button type="button" class="ctrl-btn" id="v45-cancel-vault-bar" style="padding:5px 9px;">✕</button>
+      </div>`;
+    vBar.style.display = 'flex';
+    const inp = document.getElementById('v45-rename-vault-input');
+    inp?.focus(); inp?.select();
+    document.getElementById('v45-cancel-vault-bar')?.addEventListener('click', () => { vBar.style.display = 'none'; vBar.innerHTML = ''; });
+    document.getElementById('v45-confirm-rename-vault')?.addEventListener('click', () => {
+      const nextName = (inp?.value || '').trim();
+      if (!nextName) return showToast('⚠️ Vault का नाम खाली नहीं हो सकता');
+      const list = getVaultProfilesList().map(x => x.id === currentVaultId ? { ...x, name: nextName } : x);
+      saveVaultProfilesList(list);
+      refreshVaultProfileSelect();
+      if (typeof scheduleAutoPackSync === 'function') scheduleAutoPackSync();
+      showToast('✅ Vault का नाम बदलकर "' + nextName + '" कर दिया गया');
+    });
+  });
+
+  vDelBtn?.addEventListener('click', () => {
+    if (!vBar || !currentVaultId || currentVaultId === 'default') return;
+    const targetId = currentVaultId;
+    const pObj = getVaultProfilesList().find(x => x.id === targetId);
+    const targetName = pObj ? pObj.name : targetId;
+    const packCnt = Array.isArray(chapterLibraryCache) ? chapterLibraryCache.length : 0;
+    vBar.style.borderColor = 'rgba(239, 68, 68, 0.45)';
+    vBar.style.background = 'rgba(239, 68, 68, 0.09)';
+    vBar.innerHTML = `
+      <span style="font-size:0.78rem; font-weight:800; color:#EF4444;">⚠️ "${escapeHtml(targetName)}" (${packCnt} Packs) को permanently delete करें?</span>
+      <div style="display:flex; gap:6px;">
+        <button type="button" class="ctrl-btn" id="v45-confirm-delete-vault" style="padding:5px 11px; background:#DC2626; color:#FFFFFF; border-color:transparent; font-weight:800;">✅ हाँ, Delete</button>
+        <button type="button" class="ctrl-btn" id="v45-cancel-vault-bar" style="padding:5px 9px;">❌ Cancel</button>
+      </div>`;
+    vBar.style.display = 'flex';
+    document.getElementById('v45-cancel-vault-bar')?.addEventListener('click', () => { vBar.style.display = 'none'; vBar.innerHTML = ''; });
+    document.getElementById('v45-confirm-delete-vault')?.addEventListener('click', () => {
+      if (!targetId || targetId === 'default') return;
+      const delMap = typeof getDeletedVaultsMap === 'function' ? getDeletedVaultsMap() : {};
+      delMap[targetId] = Date.now();
+      if (typeof saveDeletedVaultsMap === 'function') saveDeletedVaultsMap(delMap);
+      if (typeof purgeVaultLocallyOnly === 'function') purgeVaultLocallyOnly(targetId);
+      vBar.style.display = 'none'; vBar.innerHTML = '';
+      if (typeof switchVaultProfile === 'function') switchVaultProfile('default');
+      if (typeof scanGlobalSrsAcrossAllVaults === 'function') setTimeout(scanGlobalSrsAcrossAllVaults, 300);
+      if (typeof scheduleAutoPackSync === 'function') scheduleAutoPackSync();
+      showToast('🗑️ Vault "' + targetName + '" permanently delete हो गया (Cloud Sync में भी साफ हो जाएगा)');
+    });
+  });
 });
 </script>
 
