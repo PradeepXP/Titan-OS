@@ -10077,10 +10077,20 @@ function stopActiveVoicePlayback() {
 function formatQuestionContextSnippet(q) {
   if (!q) return '';
   const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
-  const isAnswered = !!hist[q.id];
+  const rec = hist[q.id];
+  const isAnswered = !!rec;
   const dispOrder = (appState && appState.optionOrders && appState.optionOrders[q.id]) || [0, 1, 2, 3];
   const optsTxt = dispOrder.map((origIdx, dispIdx) => `${['A','B','C','D'][dispIdx]}) ${cleanTextForSpeech((q.opts || [])[origIdx])}`).join(' | ');
-  return `ACTIVE QUESTION (Q#${q.id}):\nEnglish: ${cleanTextForSpeech(q.en || q.hi)}\nHindi: ${cleanTextForSpeech(q.hi || '')}\nOptions: ${optsTxt}\n${isAnswered ? `Correct Answer: ${cleanTextForSpeech(q.opts[q.ans])}\nConcept: ${cleanTextForSpeech(q.flowHtml || q.ankiFact || '')}\nHook: ${cleanTextForSpeech(q.hook || '')}` : 'IMPORTANT: The student has NOT answered yet. Do NOT spoil the final option unless explicitly asked—guide their thinking naturally!'}`;
+  let statusBlock = 'IMPORTANT: The student has NOT answered yet. Do NOT spoil the final option unless explicitly asked—guide their thinking naturally!';
+  if (isAnswered) {
+    const selDisp = dispOrder.indexOf(rec.selectedOptId);
+    const corrDisp = dispOrder.indexOf(q.ans);
+    const selLetter = selDisp >= 0 ? ['A','B','C','D'][selDisp] : '?';
+    const corrLetter = corrDisp >= 0 ? ['A','B','C','D'][corrDisp] : '?';
+    const resTag = rec.status === 'correct' ? 'CORRECT' : 'WRONG';
+    statusBlock = `STATUS: ALREADY LOCKED ON SCREEN — Student selected Option ${selLetter} (${resTag}). NEVER ask "ताला लगा दें क्या?" or offer to lock an option for this question!\nCorrect Answer: Option ${corrLetter} (${cleanTextForSpeech(q.opts[q.ans])})\nConcept: ${cleanTextForSpeech(q.flowHtml || q.ankiFact || '')}\nHook: ${cleanTextForSpeech(q.hook || '')}`;
+  }
+  return `ACTIVE QUESTION (Q#${q.id}):\nEnglish: ${cleanTextForSpeech(q.en || q.hi)}\nHindi: ${cleanTextForSpeech(q.hi || '')}\nOptions: ${optsTxt}\n${statusBlock}`;
 }
 
 function buildTitanGuruSystemPrompt(q, cfg) {
@@ -10143,7 +10153,8 @@ function executeGuruLockOption(letterRaw) {
   }
   const order = (appState && appState.optionOrders && appState.optionOrders[q.id]) || [0, 1, 2, 3];
   const origIdx = order[dispIdx];
-  handleAnswerClick(q.id, origIdx);
+  window.__guruToolLocking = true;
+  try { handleAnswerClick(q.id, origIdx); } finally { window.__guruToolLocking = false; }
   const isCorrect = (origIdx === q.ans);
   const correctDispLetter = ['A', 'B', 'C', 'D'][order.indexOf(q.ans)] || '';
   return {
@@ -12245,6 +12256,39 @@ function handleAnswerClick(qid, origIdx) {
     timeSpent,
     streakAtTime: appState.currentStreak
   };
+  // Scientific Live Screen Awareness for Active Genie (Zero audio-engine touch!)
+  try {
+    if (!window.__guruToolLocking && typeof guruLiveConnected !== 'undefined' && guruLiveConnected && guruLiveWs && guruLiveWs.readyState === WebSocket.OPEN && String(activeSpeakingQid) === String(qid)) {
+      const dispOrder = (appState && appState.optionOrders && appState.optionOrders[qid]) || [0, 1, 2, 3];
+      const selDisp = dispOrder.indexOf(origIdx);
+      const corrDisp = dispOrder.indexOf(q.ans);
+      const selL = selDisp >= 0 ? ['A','B','C','D'][selDisp] : '?';
+      const corrL = corrDisp >= 0 ? ['A','B','C','D'][corrDisp] : '?';
+      const genieBusy = (guruLiveSources && guruLiveSources.length > 0) || (typeof guruLiveAwaitingStart !== 'undefined' && guruLiveAwaitingStart);
+      if (isCorrect) {
+        // Flow-State Protection: NEVER interrupt a correct answer — silently update Genie's memory!
+        guruLiveWs.send(JSON.stringify({
+          clientContent: {
+            turns: [{ role: 'user', parts: [{ text: `[LIVE SCREEN UPDATE: Student just tapped Option ${selL} on screen for Q#${qid} -> CORRECT! Do NOT ask "ताला लगा दें क्या?". Stay silent unless they speak, and naturally know it is already solved.]` }] }],
+            turnComplete: false
+          }
+        }));
+      } else {
+        // Hypercorrection Effect: If Genie is idle/listening, gently coach the exact trap right away; if speaking, update silently!
+        const shouldSpeakNow = !genieBusy;
+        if (shouldSpeakNow && IS_IOS_WEBKIT && typeof guruMicStream !== 'undefined' && guruMicStream) {
+          stopGuruMicOnly();
+          setTitanAudioSession('playback');
+        }
+        guruLiveWs.send(JSON.stringify({
+          clientContent: {
+            turns: [{ role: 'user', parts: [{ text: `[LIVE SCREEN UPDATE: Student just tapped Option ${selL} on screen for Q#${qid} -> WRONG. Correct answer is Option ${corrL} (${cleanTextForSpeech(q.opts[q.ans])}). Concept: ${cleanTextForSpeech(q.flowHtml || q.ankiFact || '')}. Do NOT ask to lock an option anymore.${shouldSpeakNow ? ' Gently and warmly explain in 2-3 crisp lines why their chosen option was a trap and why the right option wins!' : ' Acknowledge naturally after finishing your current thought.'}]` }] }],
+            turnComplete: shouldSpeakNow
+          }
+        }));
+      }
+    }
+  } catch (e) {}
 
   saveState();
   recordDailyActivity(1);
