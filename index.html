@@ -2663,8 +2663,8 @@ body.theme-night .cs-v43-sub { color: #CBD5E1 !important; }
    ===================================================================== */
 .recall-ladder-bar {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
   width: 100%;
   box-sizing: border-box;
   margin: 8px 0 10px;
@@ -2675,13 +2675,14 @@ body.theme-night .cs-v43-sub { color: #CBD5E1 !important; }
 }
 .rl-pill {
   width: 100%;
+  min-width: 0;
   height: 36px;
-  padding: 0 6px;
+  padding: 0 2px;
   border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.01em;
   cursor: pointer;
@@ -5309,11 +5310,11 @@ function advanceSrsOnCorrect(qid, forcePromote = false) {
   if (!forcePromote && !isSrsRecordDueNow(rec, today, Date.now())) {
     return rec;
   }
-  // Per-Card Recall Ladder auto-progression: 10m(0) -> 1d(1) -> 3d(2) -> 7d(3) -> 🏆 Mastered(4)
+  // Per-Card Scientific Recall Ladder: 10m(0) -> 1d(1) -> 3d(2) -> 7d(3) -> 15d(4) -> 30d(5) -> 🏆 Mastered(6)
   if (rec.verifyOnly) {
     const curStep = (typeof rec.verifyStep === 'number') ? rec.verifyStep : 1;
     const nextStep = curStep + 1;
-    if (nextStep >= 4) {
+    if (nextStep >= 6) {
       const gradRec = {
         stage: 6,
         dueDate: null,
@@ -5323,13 +5324,13 @@ function advanceSrsOnCorrect(qid, forcePromote = false) {
         lapses: rec.lapses,
         mastered: true,
         verifyOnly: false,
-        verifyStep: 4,
+        verifyStep: 6,
         exportedToAnki: false
       };
       appState.leitnerMeta[qid] = gradRec;
       return gradRec;
     }
-    const stepDays = { 1: 1, 2: 3, 3: 7 };
+    const stepDays = { 1: 1, 2: 3, 3: 7, 4: 15, 5: 30 };
     const nextRec = {
       stage: 1,
       dueDate: getLocalDateStr(stepDays[nextStep] || 1),
@@ -7210,9 +7211,10 @@ async function pgDiscoverFlashModels(apiKey) {
       .filter(n => /gemini/i.test(n) && !/embedding|tts|imagen|veo|aqa|robotics|-image|-audio|vision|learnlm|live|computer-use|deep-research|gemma/i.test(n));
     const rank = (x) => {
       const expPen = /preview|exp|thinking/i.test(x) ? 20 : 0;
-      if (/gemini-4.*flash(?!-lite)/i.test(x)) return expPen + 0;
-      if (/gemini-4.*flash-lite/i.test(x)) return expPen + 1;
-      if (/gemini-4/i.test(x)) return expPen + 2;
+      if (/gemini-4-hydrogen/i.test(x)) return expPen + 0;
+      if (/gemini-4.*flash(?!-lite)/i.test(x)) return expPen + 1;
+      if (/gemini-4.*neon/i.test(x)) return expPen + 2;
+      if (/gemini-4/i.test(x)) return expPen + 4;
       if (/gemini-3\.[5-9].*flash(?!-lite)/i.test(x)) return expPen + 3;
       if (/gemini-3.*flash(?!-lite)/i.test(x)) return expPen + 4;
       if (/gemini-3.*flash-lite/i.test(x)) return expPen + 5;
@@ -7227,22 +7229,16 @@ async function pgDiscoverFlashModels(apiKey) {
 }
 async function pgGetRankedModels(apiKey, fallbackModels) {
   const fp = String(apiKey || '').slice(-8);
-  if (__pgCachedWorkingModel && __pgDiscoveredKeyFp === fp) {
-    const base = Array.isArray(__pgDiscoveredModelsCache) && __pgDiscoveredModelsCache.length
-      ? __pgDiscoveredModelsCache : fallbackModels;
-    return [__pgCachedWorkingModel, ...base.filter(x => x !== __pgCachedWorkingModel)];
-  }
   if (__pgDiscoveredKeyFp !== fp) {
     __pgDiscoveredModelsCache = null;
     __pgCachedWorkingModel = null;
-  }
-  if (!__pgDiscoveredModelsCache) {
-    const disc = await pgDiscoverFlashModels(apiKey);
     __pgDiscoveredKeyFp = fp;
-    __pgDiscoveredModelsCache = disc;
   }
+  // Zero pre-flight blocking! Hit primary/cached model immediately (saves 1.5-2.5s on Turn 1).
+  // Discovery runs automatically as fallback ONLY if primary models fail.
   const merged = [];
-  (__pgDiscoveredModelsCache || []).concat(fallbackModels || []).forEach(m => {
+  if (__pgCachedWorkingModel) merged.push(__pgCachedWorkingModel);
+  (fallbackModels || []).concat(__pgDiscoveredModelsCache || []).forEach(m => {
     if (m && !merged.includes(m)) merged.push(m);
   });
   return merged;
@@ -7258,7 +7254,7 @@ async function pgParseApiError(resp) {
 
 async function callGuruBrain(userParts, cfg) {
   const cleanKey = sanitizeTitanApiKey(cfg.apiKey);
-  const baseModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+  const baseModels = ['gemini-4-hydrogen', 'gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash'];
   const models = await pgGetRankedModels(cleanKey, baseModels);
   const sysText = buildTitanGuruSystemPrompt(guruActiveQ, cfg);
   guruChatHistory.push({ role: 'user', parts: userParts });
@@ -7273,13 +7269,17 @@ async function callGuruBrain(userParts, cfg) {
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: sysText }] },
           contents: guruChatHistory,
-          generationConfig: { temperature: 0.72, maxOutputTokens: 1800 }
+          generationConfig: Object.assign({ temperature: 0.72, maxOutputTokens: 2048 }, /^gemini-4/i.test(m) ? { thinkingConfig: { thinkingLevel: 'low' } } : {})
         }),
         signal: guruAbortCtrl ? guruAbortCtrl.signal : undefined
       });
       if (!resp.ok) {
         const errMsg = await pgParseApiError(resp);
-        lastErr = new Error(errMsg);
+        const sugM = errMsg.match(/use\s+models\/([a-z0-9._-]+)/i);
+        if (sugM && sugM[1] && !models.includes(sugM[1])) models.splice(i + 1, 0, sugM[1]);
+        if (!lastErr || !/HTTP (429|403|401)/.test(lastErr.message || '') || resp.status !== 404) {
+          lastErr = new Error(errMsg);
+        }
         if (resp.status === 400 && /API_KEY_INVALID|API key not valid/i.test(errMsg)) break;
         if (i === models.length - 1 && !triedDiscovery) {
           triedDiscovery = true;
@@ -7290,7 +7290,7 @@ async function callGuruBrain(userParts, cfg) {
       }
       const json = await resp.json();
       const reply = json && json.candidates && json.candidates[0] && json.candidates[0].content &&
-        json.candidates[0].content.parts && json.candidates[0].content.parts.map(p => p.text || '').join(' ').trim();
+        json.candidates[0].content.parts && json.candidates[0].content.parts.filter(p => p && !p.thought && p.text).map(p => p.text).join(' ').trim();
       if (reply) {
         __pgCachedWorkingModel = m;
         const lastUser = guruChatHistory[guruChatHistory.length - 1];
@@ -7312,7 +7312,7 @@ async function callGuruBrain(userParts, cfg) {
 async function speakWithStudioVoice(text, cfg, onFinish) {
   stopGuruMicOnly(); // Release Android earpiece/voice-call route so TTS plays loud on Media Speaker!
   await new Promise(r => setTimeout(r, 320)); // Let Android audio router settle back to loud Media Speaker
-  const ttsModels = ['gemini-2.5-flash-preview-tts', 'gemini-3.8-flash-lite-tts', 'gemini-3.8-flash-tts'];
+  const ttsModels = ['gemini-3.8-flash-lite-tts', 'gemini-3.8-flash-tts', 'gemini-2.5-flash-preview-tts'];
   const styleDesc = 'Speak at a calm, unhurried, relaxed teaching pace (around 0.88x speed, NEVER rushed or fast) like a patient North Indian elder brother sitting right next to the student—clear pronunciation, gentle pauses between sentences so a first-time learner absorbs every single concept effortlessly.';
   for (const m of ttsModels) {
     try {
@@ -10567,7 +10567,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       btnVerifyKey.disabled = true;
       try {
         const discovered = await pgDiscoverFlashModels(cleanKey);
-        const testModels = [...new Set([...discovered, 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-3.5-flash-lite', 'gemini-2.0-flash'])];
+        const testModels = [...new Set([...discovered, 'gemini-4-hydrogen', 'gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash'])];
         let okModel = '';
         let lastErr = '';
         for (const m of testModels) {
@@ -10576,7 +10576,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               contents: [{ role: 'user', parts: [{ text: 'Reply OK' }] }],
-              generationConfig: { maxOutputTokens: 8 }
+              generationConfig: Object.assign({ maxOutputTokens: 32 }, /^gemini-4/i.test(m) ? { thinkingConfig: { thinkingLevel: 'low' } } : {})
             })
           });
           if (resp.ok) { okModel = m; break; }
@@ -10611,7 +10611,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       openVoiceModal();
       throw new Error('NO_API_KEY');
     }
-    const baseModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+    const baseModels = ['gemini-4-hydrogen', 'gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash'];
     const models = await pgGetRankedModels(cleanKey, baseModels);
 
     const contents = [];
@@ -10633,12 +10633,17 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
           body: JSON.stringify({
             systemInstruction: { parts: [{ text: systemInstruction }] },
             contents: contents,
-            generationConfig: { temperature: 0.45, maxOutputTokens: 8192 }
+            generationConfig: Object.assign({ temperature: 0.45, maxOutputTokens: 8192 }, /^gemini-4/i.test(m) ? { thinkingConfig: { thinkingLevel: 'low' } } : {})
           })
         });
         if (!resp.ok) {
-          lastErr = await pgParseApiError(resp);
-          if (resp.status === 400 && /API_KEY_INVALID|API key not valid/i.test(lastErr)) break;
+          const errMsg = await pgParseApiError(resp);
+          const sugM = errMsg.match(/use\s+models\/([a-z0-9._-]+)/i);
+          if (sugM && sugM[1] && !models.includes(sugM[1])) models.splice(i + 1, 0, sugM[1]);
+          if (!/HTTP (429|403|401)/.test(lastErr) || resp.status !== 404) {
+            lastErr = errMsg;
+          }
+          if (resp.status === 400 && /API_KEY_INVALID|API key not valid/i.test(errMsg)) break;
           if (i === models.length - 1 && !triedDiscovery) {
             triedDiscovery = true;
             const disc = await pgDiscoverFlashModels(cleanKey);
@@ -10659,6 +10664,108 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
         lastErr = `Model ${m} returned empty (${fr || 'no text'})`;
       } catch (e) {
         lastErr = e && e.message ? e.message : 'Request failed';
+      }
+    }
+    throw new Error(lastErr);
+  }
+
+  // --- Turbo Live SSE Streaming Engine (:streamGenerateContent?alt=sse) ---
+  async function callTitanMultimodalStream(parts, systemInstruction, historyTurns, onChunk) {
+    const cfg = getVoiceConfig();
+    const cleanKey = sanitizeTitanApiKey(cfg.apiKey);
+    if (!cleanKey) {
+      openVoiceModal();
+      throw new Error('NO_API_KEY');
+    }
+    const baseModels = ['gemini-4-hydrogen', 'gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash'];
+    const models = await pgGetRankedModels(cleanKey, baseModels);
+
+    const contents = [];
+    if (Array.isArray(historyTurns)) {
+      for (const t of historyTurns.slice(-8)) {
+        if (t && t.role && t.text) contents.push({ role: t.role, parts: [{ text: t.text }] });
+      }
+    }
+    contents.push({ role: 'user', parts: parts });
+
+    let lastErr = 'Network or API key error';
+    let triedDiscovery = false;
+    for (let i = 0; i < models.length; i++) {
+      const m = models[i];
+      try {
+        const resp = await pgFetchGemini(`models/${m}:streamGenerateContent?alt=sse`, cleanKey, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemInstruction }] },
+            contents: contents,
+            generationConfig: Object.assign({ temperature: 0.45, maxOutputTokens: 8192 }, /^gemini-4/i.test(m) ? { thinkingConfig: { thinkingLevel: 'low' } } : {})
+          })
+        });
+        if (!resp.ok) {
+          const errMsg = await pgParseApiError(resp);
+          const sugM = errMsg.match(/use\s+models\/([a-z0-9._-]+)/i);
+          if (sugM && sugM[1] && !models.includes(sugM[1])) models.splice(i + 1, 0, sugM[1]);
+          if (!/HTTP (429|403|401)/.test(lastErr) || resp.status !== 404) lastErr = errMsg;
+          if (resp.status === 400 && /API_KEY_INVALID|API key not valid/i.test(errMsg)) break;
+          if (i === models.length - 1 && !triedDiscovery) {
+            triedDiscovery = true;
+            const disc = await pgDiscoverFlashModels(cleanKey);
+            disc.forEach(dm => { if (!models.includes(dm)) models.push(dm); });
+          }
+          continue;
+        }
+        if (!resp.body || typeof resp.body.getReader !== 'function') {
+          return await callTitanMultimodal(parts, systemInstruction, historyTurns);
+        }
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let sseBuf = '';
+        let fullText = '';
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          sseBuf += decoder.decode(value, { stream: true });
+          const lines = sseBuf.split(/\r?\n/);
+          sseBuf = lines.pop() || '';
+          for (const rawLine of lines) {
+            const line = rawLine.trim();
+            if (!line.startsWith('data:')) continue;
+            const payload = line.slice(5).trim();
+            if (!payload || payload === '[DONE]') continue;
+            try {
+              const obj = JSON.parse(payload);
+              const cParts = obj && obj.candidates && obj.candidates[0] && obj.candidates[0].content && obj.candidates[0].content.parts;
+              if (Array.isArray(cParts)) {
+                let delta = '';
+                for (const p of cParts) {
+                  if (p && !p.thought && p.text) delta += p.text;
+                }
+                if (delta) {
+                  fullText += delta;
+                  if (typeof onChunk === 'function') onChunk(fullText);
+                }
+              }
+            } catch (pe) {}
+          }
+        }
+        const tail = sseBuf.trim();
+        if (tail.startsWith('data:')) {
+          try {
+            const obj = JSON.parse(tail.slice(5).trim());
+            const cParts = obj && obj.candidates && obj.candidates[0] && obj.candidates[0].content && obj.candidates[0].content.parts;
+            if (Array.isArray(cParts)) {
+              for (const p of cParts) { if (p && !p.thought && p.text) fullText += p.text; }
+            }
+          } catch (pe) {}
+        }
+        if (fullText.trim()) {
+          __pgCachedWorkingModel = m;
+          return fullText.trim();
+        }
+        lastErr = `Model ${m} returned empty stream`;
+      } catch (e) {
+        lastErr = e && e.message ? e.message : 'Stream failed';
       }
     }
     throw new Error(lastErr);
@@ -11275,22 +11382,21 @@ ABSOLUTE NON-NEGOTIABLE RULES:
   let chatMicRec = null, chatMicChunks = [], chatMicActive = false;
 
   function buildAskGuruSystemPrompt() {
-    return `You are Titan Guru, a legendary, warm, super-charismatic North Indian / Purvanchal classroom mentor for SSC JE, RRB JE Civil Engineering & GK/GS who explains the toughest concepts in the simplest everyday language with unforgettable desi examples. Active Subject: ${chatActiveSubject}.
+    return `You are Titan Guru, a warm, crystal-clear North Indian / Purvanchal elder-brother mentor for SSC JE, RRB JE Civil Engineering & GK/GS who explains every concept in the simplest, easiest possible way with unforgettable desi analogies. Active Subject: ${chatActiveSubject}.
 
-IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
-1. DEVANAGARI HINDI FOR ALL EXPLANATIONS: Write ALL everyday Hindi sentences, stories, and explanations STRICTLY in ultra-simple, warm **Devanagari Hindi script** (बिल्कुल आम बोलचाल की पूर्वांचल/UP वाली आसान हिंदी — कठिन किताबी हिंदी बिल्कुल नहीं!). NEVER write Hindi sentences in Roman English letters (NO Hinglish like "yeh aise kaam karta hai"!).
-2. LATIN ENGLISH FOR ALL TECHNICAL TERMS: Keep EVERY engineering, scientific, constitutional, IS-code, formula, and exam technical term STRICTLY in **English Latin script** wrapped in backticks (e.g., \`IS 456:2000\`, \`M20 Grade\`, \`Void Ratio\`, \`Reynolds Number\`, \`Article 123\`, \`Vicat Apparatus\`, \`Bending Moment\`). NEVER transliterate English technical words into Devanagari (NEVER write "कंक्रीट", "रेनॉल्ड्स", "आर्टिकल", "वॉइड रेशियो"!).
-   - ❌ WRONG: "Void ratio mein voids aur solids ka ratio hota hai" OR "वॉइड रेशियो में वॉइड्स और सॉलिड्स का रेशियो होता है।"
-   - ✅ RIGHT: "देखो भाई, \`Soil Mechanics\` में \`Void Ratio (e)\` का मतलब है मिट्टी के खाली छेद (\`Voids\`) और ठोस कणों (\`Solids\`) का अनुपात — जैसे भरी हुई बाल्टी में कंकड़ों के बीच की हवा बनाम कंकड़ों की जगह! इसीलिए \`e > 0\` की कोई ऊपरी सीमा नहीं होती।"
-3. COLORFUL STRUCTURED PRESENTATION:
+STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
+1. DEVANAGARI HINDI ONLY FOR HINDI WORDS: Write ALL everyday Hindi sentences, verbs, connectors, and desi analogies strictly in simple conversational **Devanagari Hindi** (जैसे: "यह कैसे काम करता है", "असली कारण समझो", "सीधा फंडा है"). NEVER write Hindi words in Roman/English letters.
+2. ENGLISH LATIN SCRIPT ONLY FOR ALL ENGLISH & TECHNICAL TERMS: Write EVERY Civil Engineering, Science, GK/Polity technical term, IS Code, formula, unit, apparatus, AND everyday English word (\`Option\`, \`Formula\`, \`Concept\`, \`Exam\`, \`Trap\`, \`Example\`, \`Table\`, \`Point\`, \`Step\`, \`Level\`, \`Normal\`, \`Direct\`, \`Concrete\`, \`Cement\`, \`Stress\`, \`Strain\`, \`Pressure\`, \`Volume\`, \`Ratio\`, \`Beam\`, \`Column\`, \`Article\`, \`Force\`) STRICTLY in **English Latin script**. Wrap key technical terms in backticks (e.g., \`IS 456:2000\`, \`M20 Grade\`, \`Void Ratio\`, \`Reynolds Number\`, \`Vicat Apparatus\`, \`Bending Moment\`, \`Article 123\`). NEVER transliterate ANY English or technical word into Devanagari script — NOT EVEN ONCE!
+3. SIMPLEST EASIEST POSSIBLE WAY: Avoid heavy Sanskritized Hindi jargon. Explain every concept from Ground Zero so a first-time learner gets it in 10 seconds. Before finalizing your response, silently scan every word to guarantee 0 English words in Devanagari and 0 Hindi words in Roman letters.
+4. COLORFUL STRUCTURED PRESENTATION:
    ## [Topic Name in English]
-   - 2–4 एकदम आसान देवनागरी हिंदी points (सारे technical terms \`English\` में)
+   - 2–4 एकदम आसान देवनागरी हिंदी points (सारे technical व English शब्द शुद्ध English Latin script में)
    ### 🔬 असली Concept / Formula (Step-by-Step)
    - आसान steps में समझाओ (जहाँ तुलना हो वहाँ clean Markdown comparison table बनाओ)
-   > 💡 देसी उदाहरण: [1 ऐसा मज़ेदार रोज़मर्रा का उदाहरण जिसे सुनकर हँसी भी आए और ज़िंदगी भर याद रहे]
+   > 💡 देसी उदाहरण: [1 मज़ेदार रोज़मर्रा का उदाहरण जिसे पढ़कर तुरंत दिमाग में छप जाए]
    > ✅ SSC JE / RRB JE Exam Point: [2–3 crisp \`English Keywords / IS Code / Limits\` जिनसे exam में सवाल सीधा फँसे]
-   > ⚠️ Examiner Trap & Short Trick: [1 छोटा-सा super-easy याद रखने का जुगाड़]
-4. If the student sends ONLY a photo or voice clip without text, automatically read/listen and explain it completely in this exact colorful format!`;
+   > ⚠️ Examiner Trap & Short Trick: [1 छोटा-सा आसान याद रखने का जुगाड़]
+5. If the student sends ONLY a photo or voice clip without text, automatically read/listen and explain it completely in this exact clean bilingual format!`;
   }
 
   let __pgChatMem = null;
@@ -11464,7 +11570,7 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
       const parts = [];
       if (imgCopy) parts.push({ inlineData: { mimeType: 'image/jpeg', data: imgCopy.b64 } });
       if (voiceAudioB64) parts.push({ inlineData: { mimeType: voiceAudioMime || 'audio/webm', data: voiceAudioB64 } });
-      parts.push({ text: (txt ? txt + '\n[Reply strictly in simplest Devanagari Hindi with vivid desi analogy; keep ALL technical terms strictly in English Latin script inside backticks — zero word swapping.]' : (voiceAudioB64 ? 'इस voice doubt को ध्यान से सुनकर एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (सारे Technical Terms सिर्फ `English` में रखना)।' : 'इस photo में जो भी लिखा या बना है, उसे एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (सारे Technical Terms सिर्फ `English` में रखना)।')) });
+      parts.push({ text: (txt ? txt + '\n[STRICT ZERO-SCRIPT-SWAPPING: Write ALL Hindi explanations in simplest everyday Devanagari Hindi (never Roman Hinglish). Keep EVERY English & Technical word (including common words like Option, Formula, Concrete, Cement, Stress, Pressure, Volume, Ratio, Level, Exam, Trap) strictly in English Latin script (wrap core technical terms in backticks) — NEVER transliterate any English word into Devanagari.]' : (voiceAudioB64 ? 'इस voice doubt को ध्यान से सुनकर एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (कोई भी English या Technical शब्द देवनागरी में मत लिखना — सारे English/Technical शब्द शुद्ध English Latin script में रखना)।' : 'इस photo में जो भी लिखा या बना है, उसे एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (कोई भी English या Technical शब्द देवनागरी में मत लिखना — सारे English/Technical शब्द शुद्ध English Latin script में रखना)।')) });
 
       const wantImages = isGuruImageSearchOn();
       const wantVisual = isGuruVisualSvgOn();
@@ -11481,7 +11587,25 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
       }
       parts[parts.length - 1].text += extraRules;
 
-      const replyRaw = await callTitanMultimodal(parts, buildAskGuruSystemPrompt(), priorTurns);
+      let lastPaintAt = 0;
+      const paintStreamPreview = (rawSoFar) => {
+        const nowMs = Date.now();
+        if (nowMs - lastPaintAt < 85) return;
+        lastPaintAt = nowMs;
+        const hasOpenSvg = /\[\[VISUAL_SVG\]\]/i.test(rawSoFar) && !/\[\[\/VISUAL_SVG\]\]/i.test(rawSoFar);
+        const cleanLive = String(rawSoFar || '')
+          .replace(/\[\[VISUAL_SVG\]\][\s\S]*?\[\[\/VISUAL_SVG\]\]/gi, '')
+          .replace(/\[\[VISUAL_SVG\]\][\s\S]*$/gi, '')
+          .replace(/\[\[IMG_Q:[^\]]*\]?\]?/gi, '')
+          .trim();
+        if (cleanLive || hasOpenSvg) {
+          loader.innerHTML = (cleanLive ? renderColorfulGuruCard(cleanLive) : '') +
+            (hasOpenSvg ? '<div style="margin-top:8px; font-size:0.78rem; font-weight:700; color:var(--accent); opacity:0.9;">🎨 Visual blueprint बन रहा है...</div>' : '');
+          feed.scrollTop = feed.scrollHeight;
+        }
+      };
+
+      const replyRaw = await callTitanMultimodalStream(parts, buildAskGuruSystemPrompt(), priorTurns, paintStreamPreview);
       let imgQuery = '';
       const qMatch = String(replyRaw || '').match(/\[\[IMG_Q:\s*([^\]]+)\]\]/i);
       if (qMatch && qMatch[1]) imgQuery = qMatch[1].trim();
@@ -11498,33 +11622,37 @@ IRONCLAD SCRIPT & LANGUAGE LAW (100% MANDATORY — ZERO WORD SWAPPING):
         .replace(/\[\[IMG_Q:[^\]]*\]\]/gi, '')
         .trim();
 
-      let fetchedImgs = [];
-      if (wantImages) {
-        const skipImg = !imgQuery || /^(none|skip|na|n\/a|null|false)$/i.test(imgQuery);
-        if (skipImg) {
-          imgQuery = '';
-        } else {
-          try {
-            fetchedImgs = await fetchRelatedVisualImages(imgQuery);
-            if (!fetchedImgs || !fetchedImgs.length) imgQuery = '';
-          } catch (imgErr) {
-            fetchedImgs = [];
-            imgQuery = '';
-          }
-        }
-      }
+      const skipImg = !wantImages || !imgQuery || /^(none|skip|na|n\/a|null|false)$/i.test(imgQuery);
+      const cleanImgQuery = skipImg ? '' : imgQuery;
 
+      // Render & save IMMEDIATELY without blocking on Wikipedia image downloads!
       const updated = loadChatHistory();
+      const msgStamp = Date.now();
       updated.push({
         role: 'model',
         text: reply,
-        images: fetchedImgs,
-        imgQuery: imgQuery,
+        images: [],
+        imgQuery: cleanImgQuery,
         visualSvg: visualSvg,
-        sourceQid: activeGuruMcqId
+        sourceQid: activeGuruMcqId,
+        _ts: msgStamp
       });
       saveChatHistory(updated);
       renderChatFeed();
+
+      // Fetch Wikipedia photos asynchronously in the background & patch card seamlessly!
+      if (cleanImgQuery) {
+        fetchRelatedVisualImages(cleanImgQuery).then((fetchedImgs) => {
+          if (!Array.isArray(fetchedImgs) || !fetchedImgs.length) return;
+          const histNow = loadChatHistory();
+          const target = histNow.find(m => m && m._ts === msgStamp);
+          if (target) {
+            target.images = fetchedImgs;
+            saveChatHistory(histNow);
+            renderChatFeed();
+          }
+        }).catch(() => {});
+      }
     } catch (err) {
       const errMsg = (err && err.message) ? String(err.message) : 'Reply failed';
       if (errMsg === 'NO_API_KEY') {
@@ -12490,6 +12618,8 @@ function getActiveRecallLadderKey(qid) {
   if (rec.verifyStep === 0 || (rec.dueAtMs && rec.dueAtMs > 0)) return '10m';
   if (rec.verifyStep === 2) return '3d';
   if (rec.verifyStep === 3) return '7d';
+  if (rec.verifyStep === 4) return '15d';
+  if (rec.verifyStep === 5) return '30d';
   return '1d';
 }
 
@@ -12503,6 +12633,8 @@ function buildRecallLadderBarHtml(qid) {
     { k: '1d', lbl: '1d', cls: '' },
     { k: '3d', lbl: '3d', cls: '' },
     { k: '7d', lbl: '7d', cls: '' },
+    { k: '15d', lbl: '15d', cls: '' },
+    { k: '30d', lbl: '30d', cls: '' },
     { k: 'done', lbl: '🏆', cls: ' is-trophy' }
   ];
   return `<div class="recall-ladder-bar" id="rl-bar-${qid}" data-qid="${qid}">${pills.map(p =>
@@ -12520,7 +12652,7 @@ function applyRecallLadderSelection(qid, rlKey) {
   if (rlKey === 'done') {
     appState.leitnerMeta[qid] = {
       stage: 6, dueDate: null, dueAtMs: null, lastReviewed: now,
-      reviews: reviews + 1, lapses, mastered: true, verifyOnly: false, verifyStep: 4, exportedToAnki: false
+      reviews: reviews + 1, lapses, mastered: true, verifyOnly: false, verifyStep: 6, exportedToAnki: false
     };
   } else if (rlKey === '10m') {
     appState.leitnerMeta[qid] = {
@@ -12528,7 +12660,7 @@ function applyRecallLadderSelection(qid, rlKey) {
       reviews, lapses, mastered: false, verifyOnly: true, verifyStep: 0, exportedToAnki: false
     };
   } else {
-    const map = { '1d': [1, 1], '3d': [2, 3], '7d': [3, 7] };
+    const map = { '1d': [1, 1], '3d': [2, 3], '7d': [3, 7], '15d': [4, 15], '30d': [5, 30] };
     const [vStep, addDays] = map[rlKey] || [1, 1];
     appState.leitnerMeta[qid] = {
       stage: 1, dueDate: getLocalDateStr(addDays), dueAtMs: null, lastReviewed: now,
