@@ -1046,18 +1046,18 @@ sub { bottom: -0.24em; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.fb-status { font-weight: 700; font-size: 0.92em; margin-bottom: 10px; }
+.fb-status { font-weight: 700; font-size: 0.95em; line-height: 1.45; margin-bottom: 12px; letter-spacing: -0.005em; }
 .fb-status.is-ok { color: var(--ok-ink); }
 .fb-status.is-bad { color: var(--bad-ink); }
 
-.one-liner-fact { font-size: 0.95em; line-height: 1.72; margin-bottom: 11px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.fc-node { display: inline-block; background: var(--fc-node-bg); border: 1px solid var(--fc-node-bd); border-radius: 7px; padding: 2px 8px; font-weight: 600; }
+.one-liner-fact { font-size: 0.98em; line-height: 1.74; margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 7px; }
+.fc-node { display: inline-block; background: var(--fc-node-bg); border: 1px solid var(--fc-node-bd); border-radius: 8px; padding: 3px 10px; font-weight: 600; }
 .fc-arrow { font-weight: 800; color: var(--accent); }
-.fc-ans { display: inline-block; background: var(--fc-ans-bg); color: var(--fc-ans-ink); border: 1px solid var(--ok-bd); border-radius: 7px; padding: 2px 9px; font-weight: 800; }
-.fc-sub { display: inline-block; background: var(--fc-sub-bg); color: var(--fc-sub-ink); border-radius: 7px; padding: 2px 9px; font-size: 0.86em; font-weight: 600; }
+.fc-ans { display: inline-block; background: var(--fc-ans-bg); color: var(--fc-ans-ink); border: 1px solid var(--ok-bd); border-radius: 8px; padding: 3px 10px; font-weight: 800; }
+.fc-sub { display: inline-block; background: var(--fc-sub-bg); color: var(--fc-sub-ink); border-radius: 8px; padding: 3px 9px; font-size: 0.88em; font-weight: 600; }
 .svg-wrap { width: 100%; margin-top: 6px; }
 .svg-wrap svg { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); background: var(--opt-bg); padding: 4px; }
-.memory-hook { background: var(--hook-bg); border: 1px solid var(--hook-bd); border-radius: 11px; padding: 12px 15px; font-size: 0.95em; line-height: 1.66; }
+.memory-hook { background: var(--hook-bg); border: 1px solid var(--hook-bd); border-radius: 12px; padding: 14px 16px; font-size: 1.00em; line-height: 1.72; letter-spacing: 0.004em; color: var(--ink); }
 
 /* Batch Complete Celebration Card */
 .batch-complete-card {
@@ -1094,10 +1094,11 @@ sub { bottom: -0.24em; }
 .skip-gate-btn:hover { color: var(--ink); }
 .opt-note {
   display: block;
-  font-size: 0.78em;
+  font-size: 0.88em;
+  line-height: 1.5;
   font-weight: 500;
   color: var(--muted);
-  margin-top: 3px;
+  margin-top: 5px;
 }
 .confetti-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .confetti-piece { position: absolute; width: 8px; height: 14px; top: -16px; border-radius: 2px; animation: confettiFall 1.6s ease-out forwards; }
