@@ -1783,6 +1783,52 @@ body.genie-speaker-open .guru-live-dock #guru-text-input {
   0%, 100% { height: 5px; opacity: 0.55; }
   50% { height: 20px; opacity: 1; }
 }
+/* Luminous Breathing "▶ Start" Button when Titan Guru is waiting for speech or tap */
+.guru-dock-btn.is-awaiting-start {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.92), rgba(139, 92, 246, 0.92)) !important;
+  border-color: rgba(196, 181, 253, 0.85) !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.65), 0 0 14px rgba(96, 165, 250, 0.55) !important;
+  animation: guruStartGlow 1.7s ease-in-out infinite !important;
+}
+@keyframes guruStartGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.62), 0 0 12px rgba(96, 165, 250, 0.45); transform: scale(1); }
+  50%      { box-shadow: 0 0 0 6px rgba(139, 92, 246, 0), 0 0 20px rgba(167, 139, 250, 0.78); transform: scale(1.04); }
+}
+
+/* Creature Natural Trail Impressions (Paw Prints, Slither Spiral, Water Ripples, Hooves, Wing Sparkles) */
+.cr-trail-mark {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform-origin: center center;
+  animation: crTrailStamp 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.cr-trail-mark.is-ripple {
+  animation: crTrailRipple 1.25s ease-out forwards;
+}
+.cr-trail-mark.is-swirl {
+  animation: crTrailSwirl 1.35s ease-out forwards;
+}
+@keyframes crTrailStamp {
+  0%   { opacity: 0; transform: scale(0.45) rotate(var(--tr-rot, 0deg)); }
+  18%  { opacity: 0.92; transform: scale(1.05) rotate(var(--tr-rot, 0deg)); }
+  70%  { opacity: 0.62; transform: scale(0.98) rotate(var(--tr-rot, 0deg)); }
+  100% { opacity: 0; transform: scale(0.86) translateY(-2px) rotate(var(--tr-rot, 0deg)); }
+}
+@keyframes crTrailRipple {
+  0%   { opacity: 0; transform: scale(0.35); }
+  22%  { opacity: 0.88; transform: scale(1.0); }
+  100% { opacity: 0; transform: scale(1.75) translateY(-6px); }
+}
+@keyframes crTrailSwirl {
+  0%   { opacity: 0; transform: scale(0.4) translateY(3px) rotate(0deg); }
+  24%  { opacity: 0.92; transform: scale(1.05) translateY(-3px) rotate(var(--tr-rot, 16deg)); }
+  100% { opacity: 0; transform: scale(0.7) translateY(-14px) rotate(calc(var(--tr-rot, 16deg) * 2.2)); }
+}
+
 .guru-live-dock.is-listening .guru-waves span {
   background: linear-gradient(180deg, #4ade80, #10b981);
 }
@@ -3356,6 +3402,19 @@ body.theme-night .sticky-creature-bar[data-biome="starry"] {
 body.theme-night .sticky-creature-bar.is-visible.is-zen-dim {
   opacity: 0.26;
 }
+/* iPad / Tablet / Desktop (>=768px): Spacious viewport — keep Sticky Safari Bar calmly visible (no fade-out!) */
+@media (min-width: 768px) {
+  .sticky-creature-bar.is-visible.is-zen-dim,
+  body.theme-night .sticky-creature-bar.is-visible.is-zen-dim {
+    opacity: 0.94;
+  }
+  .sticky-creature-bar.is-visible.is-zen-dim .sticky-ambient-layer {
+    opacity: 0.92;
+  }
+  .sticky-creature-bar {
+    height: 56px;
+  }
+}
 .sticky-creature-bar.is-visible.is-zen-dim .sticky-ambient-layer {
   opacity: 0.32;
   transition: opacity 0.75s ease;
@@ -3963,7 +4022,71 @@ body.theme-stage .genie-lamp-svg {
   filter: drop-shadow(0 5px 8px rgba(30, 38, 18, 0.28)) drop-shadow(0 0 5px rgba(217, 119, 6, 0.20));
 }
 body.theme-night .genie-lamp-svg {
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.58)) drop-shadow(0 0 6px rgba(217, 119, 6, 0.22));
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.62)) drop-shadow(0 0 12px rgba(251, 191, 36, 0.52)) drop-shadow(0 0 22px rgba(245, 158, 11, 0.26));
+}
+/* Soft Magical Backlight Halo behind Golden Magic Lamp & Left Royal Scroll Rod (especially crisp in Night Mode!) */
+.genie-lamp-btn::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.24) 0%, rgba(245, 158, 11, 0.08) 52%, rgba(245, 158, 11, 0) 76%);
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+body.theme-night .genie-lamp-btn {
+  opacity: 0.94;
+}
+body.theme-night .genie-lamp-btn::before {
+  inset: -12px;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.34) 0%, rgba(245, 158, 11, 0.14) 50%, rgba(168, 85, 247, 0.06) 72%, rgba(0, 0, 0, 0) 86%);
+}
+.royal-scroll-rod-btn::before {
+  content: '';
+  position: absolute;
+  inset: -6px -5px;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.05) 58%, rgba(0, 0, 0, 0) 80%);
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+body.theme-night .royal-scroll-rod-btn {
+  opacity: 0.94;
+}
+body.theme-night .royal-scroll-rod-btn::before {
+  inset: -8px -7px;
+  background: radial-gradient(ellipse at center, rgba(251, 191, 36, 0.30) 0%, rgba(245, 158, 11, 0.12) 54%, rgba(0, 0, 0, 0) 82%);
+}
+body.theme-night .royal-scroll-rod-btn svg {
+  filter: drop-shadow(0 3px 9px rgba(0, 0, 0, 0.62)) drop-shadow(0 0 9px rgba(251, 191, 36, 0.45));
+}
+@media (min-width: 768px) {
+  .genie-lamp-dock {
+    right: 14px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .genie-lamp-btn {
+    width: 68px;
+    height: 54px;
+    opacity: 0.92;
+  }
+  .genie-lamp-svg {
+    width: 64px;
+    height: 48px;
+  }
+  .royal-scroll-rod-btn {
+    left: 10px;
+    bottom: calc(13px + env(safe-area-inset-bottom, 0px));
+    width: 30px;
+    height: 60px;
+    opacity: 0.90;
+  }
+  .royal-scroll-rod-btn svg {
+    width: 28px;
+    height: 60px;
+  }
 }
 .genie-lamp-btn[aria-expanded="true"] .genie-lamp-svg {
   filter: drop-shadow(0 6px 10px rgba(28, 36, 48, 0.34)) drop-shadow(0 0 11px rgba(245, 158, 11, 0.56));
@@ -7744,15 +7867,250 @@ function playCreatureCelebrationSound(creatureId, isMini) {
   } catch (e) {}
 }
 
+/* Creature-Specific Natural Locomotion Sounds (Slither, Paw Patter, Hop, Water Splash, Wing Flutter, Stomp) — Web Audio + iOS WAV */
+function getCreatureLocomotionType(creatureId) {
+  const id = String(creatureId || '').toLowerCase();
+  if (id === 'snail' || id === 'worm') return 'slither';
+  if (id === 'octopus' || id === 'dolphin') return 'swim';
+  if (id === 'butterfly' || id === 'bee' || id === 'owl') return 'flutter';
+  if (id === 'unicorn') return 'gallop';
+  if (id === 'frog' || id === 'bunny' || id === 'chick') return 'hop';
+  if (id === 'dino' || id === 'elephant') return 'stomp';
+  if (id === 'turtle' || id === 'penguin') return 'waddle';
+  return 'paw'; // fox, puppy, kitty, lion, panda
+}
+
+window.playCreatureMoveSound = function(creatureId) {
+  if (!appState.soundOn) return;
+  const loco = getCreatureLocomotionType(creatureId);
+  if (IS_IOS_WEBKIT) {
+    try {
+      const key = 'sfx_move_' + loco;
+      if (!wavAudioCache[key]) {
+        const sr = 22050;
+        const totalSec = 1.45;
+        const len = Math.floor(sr * totalSec);
+        const pcm = new Int16Array(len);
+        const addPulse = (start, dur, f1, f2, vol, noiseAmt) => {
+          const s0 = Math.floor(start * sr);
+          const n = Math.floor(dur * sr);
+          let ph = 0, lp = 0;
+          for (let i = 0; i < n && (s0 + i) < len; i++) {
+            const p = i / n;
+            const freq = f1 + (f2 - f1) * p;
+            ph += (2 * Math.PI * freq) / sr;
+            const rawN = Math.random() * 2 - 1;
+            lp += 0.25 * (rawN - lp);
+            const env = (p < 0.12 ? p / 0.12 : Math.pow(1 - p, 2.0));
+            const sig = (Math.sin(ph) * (1 - noiseAmt) + lp * noiseAmt) * env * vol;
+            const m = pcm[s0 + i] + Math.round(sig * 32767);
+            pcm[s0 + i] = Math.max(-32768, Math.min(32767, m));
+          }
+        };
+        if (loco === 'slither') {
+          for (let k = 0; k < 5; k++) addPulse(k * 0.24, 0.21, 240, 380, 0.16, 0.85);
+        } else if (loco === 'swim') {
+          for (let k = 0; k < 6; k++) addPulse(k * 0.20, 0.12, 320 + k * 45, 760 + k * 40, 0.18, 0.35);
+        } else if (loco === 'flutter') {
+          for (let k = 0; k < 8; k++) addPulse(k * 0.15, 0.11, 520 + (k % 2) * 180, 980, 0.15, 0.65);
+        } else if (loco === 'gallop') {
+          [0, 0.14, 0.36, 0.50, 0.72, 0.86, 1.08, 1.22].forEach((t, i) => addPulse(t, 0.06, i % 2 ? 420 : 280, 190, 0.24, 0.5));
+          addPulse(0.15, 0.22, 880, 1568, 0.10, 0.05);
+        } else if (loco === 'hop') {
+          for (let k = 0; k < 5; k++) addPulse(k * 0.26, 0.13, 260, 620, 0.22, 0.15);
+        } else if (loco === 'stomp') {
+          for (let k = 0; k < 5; k++) addPulse(k * 0.27, 0.14, 135, 62, 0.34, 0.35);
+        } else if (loco === 'waddle') {
+          for (let k = 0; k < 7; k++) addPulse(k * 0.18, 0.07, 210 + (k % 2) * 50, 140, 0.22, 0.55);
+        } else {
+          // paw patter
+          for (let k = 0; k < 9; k++) addPulse(k * 0.14, 0.055, 290 + (k % 2) * 65, 160, 0.22, 0.62);
+        }
+        const buf = new ArrayBuffer(44 + pcm.length * 2);
+        const v = new DataView(buf);
+        const wS = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+        wS(0, 'RIFF'); v.setUint32(4, 36 + pcm.length * 2, true); wS(8, 'WAVE');
+        wS(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+        v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+        wS(36, 'data'); v.setUint32(40, pcm.length * 2, true);
+        for (let i = 0; i < pcm.length; i++) v.setInt16(44 + i * 2, pcm[i], true);
+        const bytes = new Uint8Array(buf);
+        let bin = '';
+        for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+        const aud = new Audio('data:audio/wav;base64,' + btoa(bin));
+        aud.preload = 'auto';
+        aud.setAttribute('playsinline', '');
+        wavAudioCache[key] = aud;
+      }
+      const a = wavAudioCache[key];
+      try { if (a.readyState >= 1) { a.pause(); a.currentTime = 0; } } catch (se) {}
+      const pr = a.play();
+      if (pr && typeof pr.catch === 'function') pr.catch(() => {});
+    } catch (e) {}
+    return;
+  }
+  const run = (ctx) => {
+    try {
+      const now = ctx.currentTime;
+      const noiseBurst = (t, dur, freq, q, vol) => {
+        const len = Math.max(64, Math.floor(ctx.sampleRate * dur));
+        const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) {
+          const p = i / len;
+          data[i] = (Math.random() * 2 - 1) * (p < 0.15 ? p / 0.15 : Math.pow(1 - p, 2.2));
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        const flt = ctx.createBiquadFilter();
+        flt.type = 'bandpass';
+        flt.frequency.setValueAtTime(freq, t);
+        flt.Q.setValueAtTime(q, t);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(vol, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        src.connect(flt); flt.connect(g); g.connect(ctx.destination);
+        src.start(t);
+      };
+      const toneStep = (t, dur, f1, f2, vol, wave) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = wave || 'sine';
+        osc.frequency.setValueAtTime(f1, t);
+        if (f2 && f2 !== f1) osc.frequency.exponentialRampToValueAtTime(f2, t + dur);
+        g.gain.setValueAtTime(0.001, t);
+        g.gain.linearRampToValueAtTime(vol, t + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(g); g.connect(ctx.destination);
+        osc.start(t); osc.stop(t + dur + 0.02);
+      };
+      if (loco === 'slither') {
+        for (let k = 0; k < 5; k++) noiseBurst(now + k * 0.25, 0.22, 950 + (k % 2) * 280, 2.4, 0.065);
+      } else if (loco === 'swim') {
+        for (let k = 0; k < 6; k++) {
+          toneStep(now + k * 0.20, 0.11, 340 + k * 40, 820 + k * 35, 0.055, 'sine');
+          noiseBurst(now + k * 0.20, 0.12, 1200, 1.4, 0.045);
+        }
+      } else if (loco === 'flutter') {
+        for (let k = 0; k < 8; k++) {
+          noiseBurst(now + k * 0.15, 0.10, 1650 + (k % 2) * 350, 2.0, 0.048);
+          if (k % 2 === 0) toneStep(now + k * 0.15, 0.12, 1175 + k * 60, 1568, 0.028, 'sine');
+        }
+      } else if (loco === 'gallop') {
+        [0, 0.13, 0.34, 0.47, 0.68, 0.81, 1.02, 1.15].forEach((dt, i) => {
+          noiseBurst(now + dt, 0.055, i % 2 ? 780 : 520, 2.2, 0.085);
+          toneStep(now + dt, 0.055, i % 2 ? 320 : 210, 120, 0.055, 'triangle');
+        });
+        toneStep(now + 0.20, 0.28, 1046, 1760, 0.032, 'sine');
+      } else if (loco === 'hop') {
+        for (let k = 0; k < 5; k++) {
+          toneStep(now + k * 0.26, 0.12, 240, 610, 0.062, 'sine');
+          noiseBurst(now + k * 0.26 + 0.10, 0.045, 680, 1.8, 0.05);
+        }
+      } else if (loco === 'stomp') {
+        for (let k = 0; k < 5; k++) {
+          toneStep(now + k * 0.27, 0.13, 130, 52, 0.11, 'triangle');
+          noiseBurst(now + k * 0.27, 0.08, 320, 1.2, 0.065);
+        }
+      } else if (loco === 'waddle') {
+        for (let k = 0; k < 7; k++) {
+          noiseBurst(now + k * 0.18, 0.06, 620 + (k % 2) * 140, 1.8, 0.065);
+          toneStep(now + k * 0.18, 0.05, 190 + (k % 2) * 35, 130, 0.045, 'sine');
+        }
+      } else {
+        // Quick cute paw pitter-patter
+        for (let k = 0; k < 9; k++) {
+          noiseBurst(now + k * 0.14, 0.05, 860 + (k % 2) * 220, 2.1, 0.072);
+          toneStep(now + k * 0.14, 0.045, 250 + (k % 2) * 45, 150, 0.042, 'triangle');
+        }
+      }
+    } catch (e) {}
+  };
+  try {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') ctx.resume().then(() => run(ctx)).catch(() => {});
+    else run(ctx);
+  } catch (e) {}
+};
+
 /* Soft Ear-Pleasing Magic & Study Micro-SFX (Genie Claps, Carpet, Star, 50-50, Theme, Tick, Streak Milestone) */
 window.playMagicSfx = function(kind) {
   if (!appState.soundOn) return;
   if (IS_IOS_WEBKIT) {
-    if (kind === 'carpet-open') playIosOfflineNotes('sfx_copen', [[523, 0, 0.07, 0.14], [659, 0.05, 0.08, 0.15], [784, 0.10, 0.10, 0.15]]);
+    if (kind === 'genie-clap') {
+      try {
+        if (!wavAudioCache['sfx_gclap']) {
+          const sr = 22050;
+          const totalSec = 1.32;
+          const len = Math.floor(sr * totalSec);
+          const pcm = new Int16Array(len);
+          const addTone = (f1, f2, start, dur, vol) => {
+            const s0 = Math.floor(start * sr);
+            const n = Math.floor(dur * sr);
+            let ph = 0;
+            for (let i = 0; i < n && (s0 + i) < len; i++) {
+              const p = i / n;
+              const freq = f1 + (f2 - f1) * p;
+              ph += (2 * Math.PI * freq) / sr;
+              const env = (p < 0.08 ? p / 0.08 : Math.pow(1 - p, 1.8));
+              const m = pcm[s0 + i] + Math.round(Math.sin(ph) * env * vol * 32767);
+              pcm[s0 + i] = Math.max(-32768, Math.min(32767, m));
+            }
+          };
+          const addClap = (start, vol) => {
+            const s0 = Math.floor(start * sr);
+            const n = Math.floor(0.062 * sr);
+            let lp = 0, hp = 0, prev = 0;
+            for (let i = 0; i < n && (s0 + i) < len; i++) {
+              const p = i / n;
+              const raw = (Math.random() * 2 - 1);
+              lp += 0.36 * (raw - lp);
+              hp = 0.72 * (hp + lp - prev);
+              prev = lp;
+              const env = Math.pow(1 - p, 2.4) * (1 + 0.35 * Math.sin(p * 28));
+              const m = pcm[s0 + i] + Math.round(hp * env * vol * 32767);
+              pcm[s0 + i] = Math.max(-32768, Math.min(32767, m));
+            }
+            addTone(1568, 1760, start, 0.065, vol * 0.24);
+          };
+          addTone(698, 1175, 0.03, 0.14, 0.14);
+          addClap(0.32, 0.42);
+          addClap(0.68, 0.38);
+          addClap(1.04, 0.35);
+          const buf = new ArrayBuffer(44 + pcm.length * 2);
+          const v = new DataView(buf);
+          const wS = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+          wS(0, 'RIFF'); v.setUint32(4, 36 + pcm.length * 2, true); wS(8, 'WAVE');
+          wS(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+          v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+          wS(36, 'data'); v.setUint32(40, pcm.length * 2, true);
+          for (let i = 0; i < pcm.length; i++) v.setInt16(44 + i * 2, pcm[i], true);
+          const bytes = new Uint8Array(buf);
+          let bin = '';
+          for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+          const aud = new Audio('data:audio/wav;base64,' + btoa(bin));
+          aud.preload = 'auto';
+          aud.setAttribute('playsinline', '');
+          wavAudioCache['sfx_gclap'] = aud;
+        }
+        const a = wavAudioCache['sfx_gclap'];
+        try { if (a.readyState >= 1) { a.pause(); a.currentTime = 0; } } catch (se) {}
+        const pr = a.play();
+        if (pr && typeof pr.catch === 'function') pr.catch(() => {});
+      } catch (e) {}
+    }
+    else if (kind === 'genie-absorb') playIosOfflineNotes('sfx_gabs', [[1046, 0, 0.08, 0.11], [784, 0.06, 0.10, 0.10], [523, 0.12, 0.12, 0.09]]);
+    else if (kind === 'genie-summon') playIosOfflineNotes('sfx_gsum', [[523, 0, 0.07, 0.12], [784, 0.05, 0.09, 0.13], [1175, 0.10, 0.12, 0.13]]);
+    else if (kind === 'genie-dismiss') playIosOfflineNotes('sfx_gdis', [[880, 0, 0.07, 0.11], [587, 0.06, 0.10, 0.10]]);
+    else if (kind === 'carpet-open') playIosOfflineNotes('sfx_copen', [[523, 0, 0.07, 0.14], [659, 0.05, 0.08, 0.15], [784, 0.10, 0.10, 0.15]]);
     else if (kind === 'carpet-close') playIosOfflineNotes('sfx_cclose', [[659, 0, 0.07, 0.13], [494, 0.06, 0.09, 0.13]]);
     else if (kind === 'star') playIosOfflineNotes('sfx_star', [[988, 0, 0.07, 0.14], [1318, 0.06, 0.10, 0.15]]);
     else if (kind === 'lifeline') playIosOfflineNotes('sfx_life', [[587, 0, 0.07, 0.14], [880, 0.06, 0.10, 0.15]]);
+    else if (kind === 'theme') playIosOfflineNotes('sfx_theme', [[440, 0, 0.06, 0.11], [622, 0.05, 0.08, 0.11]]);
+    else if (kind === 'tick') playIosOfflineNotes('sfx_tick', [[520, 0, 0.04, 0.10]]);
     else if (kind === 'streak-milestone') playIosOfflineNotes('sfx_sm', [[523, 0, 0.07, 0.15], [659, 0.06, 0.07, 0.15], [784, 0.12, 0.08, 0.16], [1046, 0.18, 0.14, 0.17]]);
+    else if (kind === 'turbo-fart') playIosOfflineNotes('sfx_tfart', [[140, 0, 0.10, 0.18], [95, 0.08, 0.14, 0.18], [72, 0.18, 0.16, 0.16], [620, 0.34, 0.12, 0.14]]);
     return;
   }
   const run = (ctx) => {
@@ -9463,11 +9821,216 @@ function setGuruCaption(text) {
 }
 
 let guruLivePcmCarryByte = null;
+let guruLiveLastSample = 0;
+let guruLiveAwaitingStart = false;
+let guruPendingKickoff = null;
+let guruWorkletNode = null;
+let guruWorkletReady = false;
+let guruWorkletInitPromise = null;
+let guruWorkletSpeaking = false;
+let guruWorkletPending = [];
+let guruFallbackCoalBuf = [];
+let guruFallbackCoalLen = 0;
+let guruFallbackCoalTimer = null;
+
+const TITAN_PCM_WORKLET_CODE = `
+class TitanPcmStreamProcessor extends AudioWorkletProcessor {
+  constructor(options) {
+    super();
+    const opts = (options && options.processorOptions) || {};
+    this.cap = Math.max(65536, opts.capacity || 262144);
+    this.ring = new Float32Array(this.cap);
+    this.rIdx = 0;
+    this.wIdx = 0;
+    this.avail = 0;
+    this.prebuf = Math.max(1024, opts.prebuffer || 4800);
+    this.started = false;
+    this.wasSpeaking = false;
+    this.fadeGain = 0;
+    this.fadeStep = 1 / Math.max(64, Math.floor((opts.sampleRate || 48000) * 0.005));
+    this.lastOut = 0;
+    this.port.onmessage = (e) => {
+      const msg = e.data;
+      if (!msg) return;
+      if (msg.type === 'flush') {
+        this.rIdx = 0; this.wIdx = 0; this.avail = 0;
+        this.started = false; this.fadeGain = 0;
+        if (this.wasSpeaking) { this.wasSpeaking = false; this.port.postMessage({ speaking: false }); }
+        return;
+      }
+      if (msg.type === 'push' && msg.samples) {
+        const arr = msg.samples;
+        const n = arr.length;
+        if (n >= this.cap) {
+          this.rIdx = 0; this.wIdx = 0; this.avail = 0;
+        } else if (this.avail + n > this.cap) {
+          const drop = (this.avail + n) - this.cap;
+          this.rIdx = (this.rIdx + drop) % this.cap;
+          this.avail -= drop;
+        }
+        let w = this.wIdx;
+        const cap = this.cap;
+        for (let i = 0; i < n; i++) {
+          this.ring[w] = arr[i];
+          w++;
+          if (w >= cap) w = 0;
+        }
+        this.wIdx = w;
+        this.avail += n;
+      }
+    };
+  }
+  process(inputs, outputs) {
+    const out = outputs[0] && outputs[0][0];
+    if (!out) return true;
+    const len = out.length;
+    if (!this.started) {
+      if (this.avail < this.prebuf) {
+        out.fill(0);
+        return true;
+      }
+      this.started = true;
+      this.fadeGain = 0;
+      if (!this.wasSpeaking) { this.wasSpeaking = true; this.port.postMessage({ speaking: true }); }
+    }
+    if (this.avail === 0) {
+      // Smooth 2ms decay to zero on underrun — zero pop/click!
+      let v = this.lastOut;
+      for (let i = 0; i < len; i++) { v *= 0.86; out[i] = v; }
+      this.lastOut = Math.abs(v) < 1e-5 ? 0 : v;
+      this.started = false;
+      this.fadeGain = 0;
+      if (this.wasSpeaking) { this.wasSpeaking = false; this.port.postMessage({ speaking: false }); }
+      return true;
+    }
+    const cap = this.cap;
+    let r = this.rIdx;
+    let av = this.avail;
+    let fg = this.fadeGain;
+    const fs = this.fadeStep;
+    let last = this.lastOut;
+    for (let i = 0; i < len; i++) {
+      if (av > 0) {
+        let s = this.ring[r];
+        r++;
+        if (r >= cap) r = 0;
+        av--;
+        if (fg < 1) { fg = Math.min(1, fg + fs); s *= fg; }
+        out[i] = s;
+        last = s;
+      } else {
+        last *= 0.86;
+        out[i] = last;
+      }
+    }
+    this.rIdx = r;
+    this.avail = av;
+    this.fadeGain = fg;
+    this.lastOut = last;
+    if (av === 0 && this.started) {
+      this.started = false;
+      this.fadeGain = 0;
+      if (this.wasSpeaking) { this.wasSpeaking = false; this.port.postMessage({ speaking: false }); }
+    }
+    return true;
+  }
+}
+registerProcessor('titan-pcm-stream-player', TitanPcmStreamProcessor);
+`;
+
+function resampleContiguousLinear(input, inRate, outRate, prevSample) {
+  if (!outRate || inRate === outRate || input.length < 1) {
+    return { out: input, last: input.length ? input[input.length - 1] : prevSample };
+  }
+  const ratio = inRate / outRate;
+  const outLen = Math.max(1, Math.round(input.length / ratio));
+  const out = new Float32Array(outLen);
+  for (let i = 0; i < outLen; i++) {
+    const pos = i * ratio;
+    const idx = Math.floor(pos);
+    const frac = pos - idx;
+    const s0 = idx < 0 ? prevSample : (idx < input.length ? input[idx] : input[input.length - 1]);
+    const s1 = (idx + 1 < input.length) ? input[idx + 1] : s0;
+    out[i] = s0 + (s1 - s0) * frac;
+  }
+  return { out, last: input[input.length - 1] };
+}
+
+function ensureLiveWorkletReady(ctx) {
+  if (!ctx || !ctx.audioWorklet || typeof Blob === 'undefined' || typeof URL === 'undefined') {
+    return Promise.resolve(false);
+  }
+  if (guruWorkletReady && guruWorkletNode && guruWorkletNode.context === ctx) {
+    return Promise.resolve(true);
+  }
+  if (guruWorkletInitPromise) return guruWorkletInitPromise;
+  guruWorkletInitPromise = (async () => {
+    try {
+      if (!ctx.__titanWorkletLoaded) {
+        const blob = new Blob([TITAN_PCM_WORKLET_CODE], { type: 'application/javascript' });
+        const url = URL.createObjectURL(blob);
+        await ctx.audioWorklet.addModule(url);
+        try { URL.revokeObjectURL(url); } catch (e) {}
+        ctx.__titanWorkletLoaded = true;
+      }
+      const sr = ctx.sampleRate || 48000;
+      const prebufSamples = Math.floor(sr * (IS_IOS_WEBKIT ? 0.19 : 0.075));
+      const node = new AudioWorkletNode(ctx, 'titan-pcm-stream-player', {
+        numberOfInputs: 0,
+        numberOfOutputs: 1,
+        outputChannelCount: [1],
+        processorOptions: { capacity: sr * 6, prebuffer: prebufSamples, sampleRate: sr }
+      });
+      node.port.onmessage = (ev) => {
+        const d = ev.data || {};
+        if (typeof d.speaking === 'boolean') {
+          guruWorkletSpeaking = d.speaking;
+          if (d.speaking) {
+            if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
+          } else {
+            if (typeof window.setLiveLampGenieMode === 'function') {
+              window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
+            }
+            if (guruLiveConnected) {
+              updateGuruDockState(guruMicMuted ? 'Mic Muted · Tap to unmute' : 'Listening · Instant Live', !guruMicMuted);
+              updateGuruMicBtn();
+            }
+          }
+        }
+      };
+      node.connect(getCleanAudioBus(ctx));
+      guruWorkletNode = node;
+      guruWorkletReady = true;
+      if (guruWorkletPending.length) {
+        const queued = guruWorkletPending.splice(0);
+        queued.forEach(arr => {
+          try { node.port.postMessage({ type: 'push', samples: arr }, [arr.buffer]); } catch (e) {}
+        });
+      }
+      return true;
+    } catch (e) {
+      guruWorkletReady = false;
+      guruWorkletNode = null;
+      guruWorkletInitPromise = null;
+      return false;
+    }
+  })();
+  return guruWorkletInitPromise;
+}
 
 function flushLiveAudioQueue() {
+  if (guruFallbackCoalTimer) { clearTimeout(guruFallbackCoalTimer); guruFallbackCoalTimer = null; }
+  guruFallbackCoalBuf = [];
+  guruFallbackCoalLen = 0;
+  guruWorkletPending = [];
+  guruWorkletSpeaking = false;
+  if (guruWorkletNode) {
+    try { guruWorkletNode.port.postMessage({ type: 'flush' }); } catch (e) {}
+  }
   guruLiveSources.forEach(src => { try { src.onended = null; src.stop(); } catch (e) {} });
   guruLiveSources = [];
   guruLivePcmCarryByte = null;
+  guruLiveLastSample = 0;
   if (guruLivePlayCtx) guruLiveNextTime = guruLivePlayCtx.currentTime;
   if (activeSpeakingQid !== null && typeof window.setLiveLampGenieMode === 'function') {
     window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
@@ -9479,15 +10042,20 @@ function getCleanAudioBus(ctx) {
   if (!ctx.__titanBus) {
     try {
       const gain = ctx.createGain();
-      gain.gain.value = 0.84;
-      const comp = ctx.createDynamicsCompressor();
-      comp.threshold.value = -8;
-      comp.knee.value = 14;
-      comp.ratio.value = 4;
-      comp.attack.value = 0.004;
-      comp.release.value = 0.12;
-      gain.connect(comp);
-      comp.connect(ctx.destination);
+      gain.gain.value = IS_IOS_WEBKIT ? 0.88 : 0.84;
+      if (IS_IOS_WEBKIT) {
+        // Bypass DynamicsCompressorNode on iOS/iPadOS WebKit to prevent play-and-record pumping & buzzing!
+        gain.connect(ctx.destination);
+      } else {
+        const comp = ctx.createDynamicsCompressor();
+        comp.threshold.value = -8;
+        comp.knee.value = 14;
+        comp.ratio.value = 4;
+        comp.attack.value = 0.004;
+        comp.release.value = 0.12;
+        gain.connect(comp);
+        comp.connect(ctx.destination);
+      }
       ctx.__titanBus = gain;
     } catch (e) {
       ctx.__titanBus = ctx.destination;
@@ -9496,9 +10064,52 @@ function getCleanAudioBus(ctx) {
   return ctx.__titanBus;
 }
 
+function scheduleFallbackCoalescedBuffer(ctx) {
+  if (!guruFallbackCoalLen || !ctx || ctx.state === 'closed') return;
+  const merged = new Float32Array(guruFallbackCoalLen);
+  let off = 0;
+  for (const part of guruFallbackCoalBuf) { merged.set(part, off); off += part.length; }
+  guruFallbackCoalBuf = [];
+  guruFallbackCoalLen = 0;
+  const now = ctx.currentTime;
+  const lead = IS_IOS_WEBKIT ? 0.22 : 0.09;
+  const isContiguous = (guruLiveNextTime > now + 0.006);
+  const startAt = isContiguous ? guruLiveNextTime : (now + lead);
+  if (!isContiguous) {
+    const fade = Math.min(96, Math.floor(merged.length / 8));
+    for (let i = 0; i < fade; i++) merged[i] *= (i / fade);
+  }
+  const buffer = ctx.createBuffer(1, merged.length, ctx.sampleRate || 48000);
+  buffer.getChannelData(0).set(merged);
+  const src = ctx.createBufferSource();
+  src.buffer = buffer;
+  src.connect(getCleanAudioBus(ctx));
+  src.start(startAt);
+  guruLiveNextTime = startAt + buffer.duration;
+  guruLiveSources.push(src);
+  if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
+  src.onended = () => {
+    guruLiveSources = guruLiveSources.filter(s => s !== src);
+    if (guruLiveSources.length === 0) {
+      if (typeof window.setLiveLampGenieMode === 'function') {
+        window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
+      }
+      if (guruLiveConnected) {
+        updateGuruDockState(guruMicMuted ? 'Mic Muted · Tap to unmute' : 'Listening · Instant Live', !guruMicMuted);
+        updateGuruMicBtn();
+      }
+    }
+  };
+}
+
 function playLivePcm24k(base64Pcm, mimeType) {
   if (!guruLivePlayCtx || guruLivePlayCtx.state === 'closed') {
-    guruLivePlayCtx = createSafeAudioCtx(); // Native 48kHz hardware rate prevents Android/iPad earphone crackling!
+    guruLivePlayCtx = (IS_IOS_WEBKIT && guruSharedCtx && guruSharedCtx.state !== 'closed')
+      ? guruSharedCtx
+      : createSafeAudioCtx();
+    guruWorkletReady = false;
+    guruWorkletNode = null;
+    guruWorkletInitPromise = null;
   }
   if (guruLivePlayCtx.state === 'suspended') guruLivePlayCtx.resume().catch(() => {});
   const bin = atob(base64Pcm);
@@ -9523,43 +10134,49 @@ function playLivePcm24k(base64Pcm, mimeType) {
   const dv = new DataView(u8.buffer);
   const float32 = new Float32Array(len);
   for (let i = 0; i < len; i++) {
-    float32[i] = Math.max(-0.98, Math.min(0.98, dv.getInt16(i * 2, true) / 32768));
-  }
-  const now = guruLivePlayCtx.currentTime;
-  const isContiguous = (guruLiveNextTime > now + 0.004);
-  const startAt = isContiguous ? guruLiveNextTime : (now + 0.085);
-  // Apply 2ms fade-in ONLY on fresh starts/after gaps so contiguous speech has zero mid-stream flutter!
-  if (!isContiguous) {
-    const fade = Math.min(48, Math.floor(len / 8));
-    for (let i = 0; i < fade; i++) {
-      float32[i] *= (i / fade);
-    }
+    float32[i] = Math.max(-0.96, Math.min(0.96, dv.getInt16(i * 2, true) / 32768));
   }
   const rateMatch = mimeType ? String(mimeType).match(/rate=(\d+)/i) : null;
   const pcmRate = rateMatch ? Math.max(8000, Math.min(48000, Number(rateMatch[1]))) : 24000;
   const targetRate = guruLivePlayCtx.sampleRate || pcmRate;
-  const nativeFloat = resampleFloat32Linear(float32, pcmRate, targetRate);
-  const buffer = guruLivePlayCtx.createBuffer(1, nativeFloat.length, targetRate);
-  buffer.getChannelData(0).set(nativeFloat);
-  const src = guruLivePlayCtx.createBufferSource();
-  src.buffer = buffer;
-  src.connect(getCleanAudioBus(guruLivePlayCtx));
-  src.start(startAt);
-  guruLiveNextTime = startAt + buffer.duration;
-  guruLiveSources.push(src);
-  if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
-  src.onended = () => {
-    guruLiveSources = guruLiveSources.filter(s => s !== src);
-    if (guruLiveSources.length === 0) {
-      if (typeof window.setLiveLampGenieMode === 'function') {
-        window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
-      }
-      if (guruLiveConnected) {
-        updateGuruDockState(guruMicMuted ? 'Mic Muted · Tap to unmute' : 'Listening · Instant Live', !guruMicMuted);
-        updateGuruMicBtn();
-      }
+  const resampled = resampleContiguousLinear(float32, pcmRate, targetRate, guruLiveLastSample);
+  guruLiveLastSample = resampled.last;
+  const nativeFloat = resampled.out;
+
+  // PRIMARY ENGINE: Real-time AudioWorklet Ring-Buffer (Zero chunk-boundary clicks/pops on iPad Safari!)
+  if (guruLivePlayCtx.audioWorklet) {
+    if (guruWorkletReady && guruWorkletNode && guruWorkletNode.context === guruLivePlayCtx) {
+      try {
+        guruWorkletNode.port.postMessage({ type: 'push', samples: nativeFloat }, [nativeFloat.buffer]);
+        if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
+        return;
+      } catch (e) {}
+    } else {
+      guruWorkletPending.push(nativeFloat);
+      ensureLiveWorkletReady(guruLivePlayCtx).then(ok => {
+        if (!ok && guruWorkletPending.length) {
+          const left = guruWorkletPending.splice(0);
+          left.forEach(a => { guruFallbackCoalBuf.push(a); guruFallbackCoalLen += a.length; });
+          scheduleFallbackCoalescedBuffer(guruLivePlayCtx);
+        }
+      });
+      return;
     }
-  };
+  }
+
+  // FALLBACK ENGINE (if AudioWorklet unavailable): Coalesced >=160ms chunk scheduling
+  guruFallbackCoalBuf.push(nativeFloat);
+  guruFallbackCoalLen += nativeFloat.length;
+  const minSamples = Math.floor(targetRate * (IS_IOS_WEBKIT ? 0.16 : 0.06));
+  if (guruFallbackCoalTimer) { clearTimeout(guruFallbackCoalTimer); guruFallbackCoalTimer = null; }
+  if (guruFallbackCoalLen >= minSamples) {
+    scheduleFallbackCoalescedBuffer(guruLivePlayCtx);
+  } else {
+    guruFallbackCoalTimer = setTimeout(() => {
+      guruFallbackCoalTimer = null;
+      scheduleFallbackCoalescedBuffer(guruLivePlayCtx);
+    }, 55);
+  }
 }
 
 function stopGuruAudioOnly() {
@@ -9605,11 +10222,32 @@ function stopGuruMicOnly() {
 function updateGuruMicBtn() {
   const mb = document.getElementById('btn-guru-mute');
   if (!mb) return;
-  if (guruMicMuted) { mb.textContent = '🔇 Muted'; }
-  else if (guruAudioEl || guruStudioWebSrc || __titanUtteranceLock || guruLiveSources.length > 0) { mb.textContent = '✋ Interrupt'; }
+  const showStart = guruLiveAwaitingStart && !guruMicMuted && !(guruAudioEl || guruStudioWebSrc || __titanUtteranceLock || guruWorkletSpeaking || guruLiveSources.length > 0);
+  mb.classList.toggle('is-awaiting-start', showStart);
+  if (showStart) { mb.textContent = '▶ Start'; mb.title = 'Tap to let Titan Guru start explaining, or just speak!'; }
+  else if (guruMicMuted) { mb.textContent = '🔇 Muted'; mb.title = 'Tap to unmute mic'; }
+  else if (guruAudioEl || guruStudioWebSrc || __titanUtteranceLock || guruWorkletSpeaking || guruLiveSources.length > 0) { mb.textContent = '✋ Interrupt'; mb.title = 'Tap to interrupt'; }
   else if (guruIsRecording) { mb.textContent = '🔴 Hearing...'; }
   else if (guruLiveConnected || guruMicStream) { mb.textContent = '🎙️ Live'; }
   else { mb.textContent = '🎙️ Mic'; }
+}
+
+function triggerPendingGuruKickoff() {
+  if (!guruLiveAwaitingStart) return false;
+  const promptText = guruPendingKickoff || 'इस सवाल को 3 आसान देसी हिंदी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।';
+  guruLiveAwaitingStart = false;
+  guruPendingKickoff = null;
+  updateGuruMicBtn();
+  if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('thinking');
+  updateGuruDockState('⚡ Explaining...', false);
+  if (guruLiveConnected && guruLiveWs && guruLiveWs.readyState === WebSocket.OPEN) {
+    guruLiveWs.send(JSON.stringify({
+      clientContent: { turns: [{ role: 'user', parts: [{ text: promptText }] }], turnComplete: true }
+    }));
+  } else {
+    sendGuruTurn(promptText);
+  }
+  return true;
 }
 
 function stopActiveVoicePlayback() {
@@ -9617,11 +10255,18 @@ function stopActiveVoicePlayback() {
   stopGuruAudioOnly();
   stopGuruMicOnly();
   if (guruLiveWs) { try { guruLiveWs.onclose = null; guruLiveWs.onerror = null; guruLiveWs.close(); } catch (e) {} guruLiveWs = null; }
-  if (guruLivePlayCtx) { try { guruLivePlayCtx.close(); } catch (e) {} guruLivePlayCtx = null; }
+  if (guruWorkletNode) { try { guruWorkletNode.disconnect(); } catch (e) {} guruWorkletNode = null; }
+  guruWorkletReady = false;
+  guruWorkletInitPromise = null;
+  guruWorkletSpeaking = false;
+  if (guruLivePlayCtx && guruLivePlayCtx !== guruSharedCtx) { try { guruLivePlayCtx.close(); } catch (e) {} }
+  guruLivePlayCtx = null;
   guruLiveConnected = false;
   guruChatHistory = [];
   guruActiveQ = null;
   guruMicMuted = false;
+  guruLiveAwaitingStart = false;
+  guruPendingKickoff = null;
   const dock = document.getElementById('guru-live-dock');
   if (dock) dock.style.display = 'none';
   setGuruCaption('');
@@ -9829,6 +10474,10 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
           if (msg.setupComplete) {
             clearTimeout(timeoutId);
             guruLiveConnected = true;
+            if (!guruLivePlayCtx || guruLivePlayCtx.state === 'closed') {
+              guruLivePlayCtx = (IS_IOS_WEBKIT && guruSharedCtx && guruSharedCtx.state !== 'closed') ? guruSharedCtx : createSafeAudioCtx();
+            }
+            if (guruLivePlayCtx && guruLivePlayCtx.audioWorklet) ensureLiveWorkletReady(guruLivePlayCtx);
             if (btnEl) { btnEl.classList.remove('is-loading'); btnEl.classList.add('is-speaking'); btnEl.textContent = '✨'; }
             updateGuruDockState('⚡ Instant Live · Speaking', false);
             updateGuruMicBtn();
@@ -9847,9 +10496,9 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               guruLiveMicCtx = guruSharedCtx;
               if (guruLiveMicCtx.state === 'suspended') guruLiveMicCtx.resume().catch(() => {});
               const src = guruLiveMicCtx.createMediaStreamSource(guruMicStream);
-              const proc = guruLiveMicCtx.createScriptProcessor(2048, 1, 1);
+              const proc = guruLiveMicCtx.createScriptProcessor(IS_IOS_WEBKIT ? 4096 : 2048, 1, 1);
               const silentGain = guruLiveMicCtx.createGain();
-              silentGain.gain.value = 0; // Prevents speaker feedback echo on Android!
+              silentGain.gain.value = 0; // Prevents speaker feedback echo on Android & iPad!
               proc.onaudioprocess = (e) => {
                 if (!guruLiveWs || guruLiveWs.readyState !== WebSocket.OPEN || guruMicMuted) return;
                 const ch = e.inputBuffer.getChannelData(0);
@@ -9857,7 +10506,7 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
                 let sum = 0;
                 for (let i = 0; i < ch.length; i += 4) sum += ch[i] * ch[i];
                 const rms = Math.sqrt(sum / (ch.length / 4));
-                if (guruLiveSources.length === 0) updateLiveWaveMeter(rms);
+                if (!guruWorkletSpeaking && guruLiveSources.length === 0) updateLiveWaveMeter(rms);
                 const b64 = float32ToBase64Pcm16(ch, guruLiveMicCtx.sampleRate);
                 guruLiveWs.send(JSON.stringify({
                   realtimeInput: { audio: { mimeType: 'audio/pcm;rate=16000', data: b64 } }
@@ -9876,9 +10525,20 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               : (guruSessionMode === 'quiz'
                 ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
                 : 'इस सवाल को 3 आसान देसी हिंदी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।');
-            guruLiveWs.send(JSON.stringify({
-              clientContent: { turns: [{ role: 'user', parts: [{ text: kickoff }] }], turnComplete: true }
-            }));
+            if (qidTag === 'test') {
+              guruLiveAwaitingStart = false;
+              guruPendingKickoff = null;
+              guruLiveWs.send(JSON.stringify({
+                clientContent: { turns: [{ role: 'user', parts: [{ text: kickoff }] }], turnComplete: true }
+              }));
+            } else {
+              // Wait silently until user speaks OR taps glowing "▶ Start" button!
+              guruLiveAwaitingStart = true;
+              guruPendingKickoff = kickoff;
+              if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('listening');
+              updateGuruDockState('Ready', true);
+              updateGuruMicBtn();
+            }
             finish(true);
             return;
           }
@@ -9906,6 +10566,8 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
           if (msg.serverContent && msg.serverContent.modelTurn && Array.isArray(msg.serverContent.modelTurn.parts)) {
             msg.serverContent.modelTurn.parts.forEach(p => {
               if (p.inlineData && p.inlineData.data) {
+                guruLiveAwaitingStart = false;
+                guruPendingKickoff = null;
                 resetWaveBarsCss(); updateGuruDockState('⚡ Instant Live · Speak to interrupt', false);
                 updateGuruMicBtn();
                 playLivePcm24k(p.inlineData.data, p.inlineData.mimeType);
@@ -10302,7 +10964,7 @@ async function startGuruVoiceListen(isAutoLoop = false) {
 
     let speechStartAt = 0, lastVoiceAt = 0;
     const threshold = cfg.scope === 'high_sens' ? 0.020 : 0.032;
-    updateGuruDockState('Listening · Speak naturally', true);
+    updateGuruDockState(guruLiveAwaitingStart ? 'Ready' : 'Listening · Speak naturally', true);
     updateGuruMicBtn();
 
     const beginClip = () => {
@@ -10360,6 +11022,11 @@ async function startGuruVoiceListen(isAutoLoop = false) {
 }
 
 async function sendGuruTurn(userInput) {
+  if (guruLiveAwaitingStart) {
+    guruLiveAwaitingStart = false;
+    guruPendingKickoff = null;
+    updateGuruMicBtn();
+  }
   const cfg = getVoiceConfig();
   if (!cfg.apiKey) return;
   // If Instant Live WebSocket is active and user typed text, send straight over Live WS!
@@ -10560,7 +11227,18 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
     : (guruSessionMode === 'quiz'
       ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
       : 'इस सवाल को एकदम तसल्ली से, आराम-आराम से, बिल्कुल आसान देसी हिंदी और असली ज़िंदगी के उदाहरण से पूरा समझाओ कि सवाल क्या पूछ रहा है, इसके पीछे का असली concept क्या है, और फिर प्यार से पूछो कि कोई और doubt या cross-question हो तो खुलकर पूछो।');
-  await sendGuruTurn(kickoff);
+  if (qidTag === 'test') {
+    guruLiveAwaitingStart = false;
+    guruPendingKickoff = null;
+    await sendGuruTurn(kickoff);
+  } else {
+    guruLiveAwaitingStart = true;
+    guruPendingKickoff = kickoff;
+    if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('listening');
+    updateGuruDockState('Ready', true);
+    updateGuruMicBtn();
+    startGuruVoiceListen(true);
+  }
 }
 
 function speakQuestionCard(qid) {
@@ -11475,6 +12153,60 @@ function spawnTurboPuffTrail(startLeftPct) {
   });
 }
 
+function createCreatureTrailMarkSvg(loco) {
+  if (loco === 'slither') {
+    return '<svg width="26" height="12" viewBox="0 0 26 12" fill="none"><path d="M2 8 Q7 2 13 6 T24 5" stroke="rgba(167,243,208,0.88)" stroke-width="2.6" stroke-linecap="round"/><circle cx="21" cy="4" r="1.6" fill="#ECFDF5" opacity="0.9"/></svg>';
+  }
+  if (loco === 'swim') {
+    return '<svg width="22" height="16" viewBox="0 0 22 16" fill="none"><ellipse cx="11" cy="10" rx="8" ry="3.5" stroke="rgba(125,211,252,0.85)" stroke-width="1.6"/><circle cx="15" cy="4" r="2.2" fill="rgba(224,242,254,0.85)"/><circle cx="8" cy="6" r="1.4" fill="rgba(186,230,253,0.8)"/></svg>';
+  }
+  if (loco === 'flutter') {
+    return '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2 L11.8 7.8 L17.5 10 L11.8 12.2 L10 18 L8.2 12.2 L2.5 10 L8.2 7.8 Z" fill="rgba(253,224,71,0.9)"/><path d="M3 15 Q9 13 15 16" stroke="rgba(196,181,253,0.75)" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  }
+  if (loco === 'gallop') {
+    return '<svg width="20" height="16" viewBox="0 0 20 16" fill="none"><path d="M5 12 C5 5, 13 5, 13 12" stroke="rgba(253,224,71,0.92)" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="5" r="2" fill="#FDE047" opacity="0.9"/></svg>';
+  }
+  if (loco === 'hop') {
+    return '<svg width="22" height="14" viewBox="0 0 22 14" fill="none"><ellipse cx="11" cy="9" rx="7.5" ry="3" stroke="rgba(134,239,172,0.88)" stroke-width="1.8" stroke-dasharray="3 2"/><circle cx="6" cy="5" r="1.5" fill="rgba(254,240,138,0.85)"/></svg>';
+  }
+  if (loco === 'stomp') {
+    return '<svg width="22" height="15" viewBox="0 0 22 15" fill="none"><ellipse cx="11" cy="9" rx="7.5" ry="4.2" fill="rgba(251,191,36,0.34)" stroke="rgba(217,119,6,0.72)" stroke-width="1.5"/><circle cx="6" cy="4" r="1.8" fill="rgba(217,119,6,0.68)"/><circle cx="11" cy="3" r="2" fill="rgba(217,119,6,0.68)"/><circle cx="16" cy="4" r="1.8" fill="rgba(217,119,6,0.68)"/></svg>';
+  }
+  if (loco === 'waddle') {
+    return '<svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M9 12 L4 5 L9 7 L14 5 Z" fill="rgba(148,163,184,0.65)" stroke="rgba(226,232,240,0.82)" stroke-width="1.2" stroke-linejoin="round"/></svg>';
+  }
+  // Default: cute paw print (puppy, kitty, fox, lion, panda)
+  return '<svg width="18" height="16" viewBox="0 0 18 16" fill="none"><ellipse cx="9" cy="11" rx="4.2" ry="3.2" fill="rgba(251,191,36,0.72)"/><circle cx="4.5" cy="6.2" r="1.7" fill="rgba(251,191,36,0.72)"/><circle cx="8" cy="4.4" r="1.7" fill="rgba(251,191,36,0.72)"/><circle cx="11.8" cy="4.8" r="1.7" fill="rgba(251,191,36,0.72)"/><circle cx="14.5" cy="7.2" r="1.5" fill="rgba(251,191,36,0.72)"/></svg>';
+}
+
+function spawnCreatureNaturalTrail(creatureId, startPct, endPct, durationMs) {
+  const puffLayer = document.getElementById('trans-puff-layer');
+  if (!puffLayer) return;
+  puffLayer.innerHTML = '';
+  const loco = getCreatureLocomotionType(creatureId);
+  const count = (loco === 'stomp' || loco === 'hop') ? 6 : 9;
+  const markSvg = createCreatureTrailMarkSvg(loco);
+  const modeCls = loco === 'swim' ? 'is-ripple' : (loco === 'flutter' ? 'is-swirl' : '');
+  for (let i = 0; i < count; i++) {
+    const tFrac = i / Math.max(1, count - 1);
+    const delay = Math.round(tFrac * (durationMs * 0.86));
+    const leftPct = startPct + (endPct - startPct) * tFrac;
+    const altBottom = (loco === 'flutter')
+      ? (34 + (i % 2 ? 12 : -4))
+      : (loco === 'swim' ? (20 + (i % 2 ? 7 : 0)) : (15 + (i % 2 ? 6 : 0)));
+    const rot = (i % 2 ? 12 : -10);
+    __turboCutsceneTimers.push(setTimeout(() => {
+      const el = document.createElement('span');
+      el.className = 'cr-trail-mark' + (modeCls ? ' ' + modeCls : '');
+      el.style.left = Math.max(4, Math.min(84, leftPct)) + '%';
+      el.style.bottom = altBottom + 'px';
+      el.style.setProperty('--tr-rot', rot + 'deg');
+      el.innerHTML = markSvg;
+      puffLayer.appendChild(el);
+    }, delay));
+  }
+}
+
 function unlockNextBatchWithAnimation() {
   if (isTransitioningBatch) return;
   const totalBatches = Math.max(1, Math.ceil(appState.activeRoundPool.length / BATCH_SIZE));
@@ -11501,12 +12233,11 @@ function unlockNextBatchWithAnimation() {
   const runner = document.getElementById('trans-runner');
   const pFill = document.getElementById('trans-progress-fill');
   const puffLayer = document.getElementById('trans-puff-layer');
-  const isTurbo = shouldRunTurboPuffCutscene();
-
   applyDynamicBiomeTransition(currComp.id, nextComp.id);
   if (puffLayer) puffLayer.innerHTML = '';
 
   playCreatureCelebrationSound(currComp.id);
+  if (typeof window.playCreatureMoveSound === 'function') window.playCreatureMoveSound(currComp.id);
   document.getElementById('trans-eyebrow').textContent = `🏆 BATCH ${currIdx + 1} COMPLETED!`;
   document.getElementById('trans-title').textContent = `${currComp.label} Claimed the Trophy! 🎉`;
   document.getElementById('trans-subtitle').textContent = `Up Next • Batch ${nextIdx + 1} (Q${nextStart}–Q${nextEnd}): ${nextComp.label}`;
@@ -11523,68 +12254,22 @@ function unlockNextBatchWithAnimation() {
   overlay.classList.add('open');
   if (typeof window.syncStickyBarLifecycle === 'function') window.syncStickyBarLifecycle();
 
-  if (isTurbo) {
-    // Beat 1: Cute trot to 25%, then Pixar squash-and-shiver anticipation!
+  spawnCreatureNaturalTrail(currComp.id, 10, 82, 1420);
+  requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        runner.style.transition = 'left 0.38s ease-out';
-        runner.style.left = '25%';
-        pFill.style.transition = 'width 2.35s linear';
-        pFill.style.width = '100%';
-      });
-    });
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.add('turbo-squeeze');
-      const sw = document.createElement('span');
-      sw.className = 'turbo-sweat-drop';
-      sw.innerHTML = createSweatDropSvg();
-      runner.appendChild(sw);
-    }, 360));
-    // Beat 2: Pixar 3D Volumetric Puff Launch + Airborne Arc across finish line!
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.remove('turbo-squeeze');
-      const sw = runner.querySelector('.turbo-sweat-drop');
-      if (sw) sw.remove();
-      runner.classList.add('turbo-dash');
-      if (typeof window.playMagicSfx === 'function') window.playMagicSfx('turbo-fart');
-      spawnTurboPuffTrail(24);
-      document.getElementById('trans-subtitle').textContent = `🚀 Turbo-Puff Rocket Boost! ${currComp.label} zoomed straight to the Trophy!`;
-      runner.style.transition = 'left 0.56s cubic-bezier(0.16, 1, 0.3, 1)';
+      runner.style.transition = 'left 1.55s cubic-bezier(0.25, 0.55, 0.35, 1)';
       runner.style.left = '88%';
-    }, 810));
-    // Beat 3: Rubber-Hose Skid-Stop Landing!
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.remove('turbo-dash');
-      runner.classList.add('turbo-land');
+      pFill.style.transition = 'width 1.85s linear';
+      pFill.style.width = '100%';
+    });
+  });
+  __turboCutsceneTimers.push(setTimeout(() => {
+    if (overlay.classList.contains('open')) {
+      runner.classList.add('victory-dance');
       if (sparks) sparks.classList.add('burst');
       playFeedbackSound('fanfare');
-    }, 1390));
-    // Beat 4: Happy Victory Bounce at the Trophy!
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.remove('turbo-land');
-      runner.classList.add('victory-dance');
-    }, 1730));
-  } else {
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (overlay.classList.contains('open')) {
-        runner.classList.add('victory-dance');
-        if (sparks) sparks.classList.add('burst');
-        playFeedbackSound('fanfare');
-      }
-    }, 950));
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        runner.style.transition = 'left 1.55s cubic-bezier(0.25, 0.55, 0.35, 1)';
-        runner.style.left = '88%';
-        pFill.style.transition = 'width 1.6s linear';
-        pFill.style.width = '100%';
-      });
-    });
-  }
+    }
+  }, 1320));
 
   const finishTransition = () => {
     clearTimeout(transitionTimer);
@@ -11599,7 +12284,7 @@ function unlockNextBatchWithAnimation() {
 
   document.getElementById('btn-skip-transition').onclick = finishTransition;
   clearTimeout(transitionTimer);
-  transitionTimer = setTimeout(finishTransition, isTurbo ? 2450 : 1700);
+  transitionTimer = setTimeout(finishTransition, 1950);
 }
 
 function triggerGrandVictoryCutscene() {
@@ -11610,12 +12295,11 @@ function triggerGrandVictoryCutscene() {
   const runner = document.getElementById('trans-runner');
   const pFill = document.getElementById('trans-progress-fill');
   const puffLayer = document.getElementById('trans-puff-layer');
-  const isTurbo = shouldRunTurboPuffCutscene();
-
   applyDynamicBiomeTransition(comp.id, 'starry');
   if (puffLayer) puffLayer.innerHTML = '';
 
   playCreatureCelebrationSound(comp.id);
+  if (typeof window.playCreatureMoveSound === 'function') window.playCreatureMoveSound(comp.id);
   document.getElementById('trans-eyebrow').textContent = '🏆 100% GRAND VICTORY UNLOCKED 🏆';
   document.getElementById('trans-title').textContent = `Mission Accomplished! ${getRoundLabel()} Conquered!`;
   document.getElementById('trans-subtitle').textContent = `${comp.label} is celebrating at the Trophy — opening Grand Revision Hub...`;
@@ -11631,64 +12315,22 @@ function triggerGrandVictoryCutscene() {
   overlay.classList.add('open');
   if (typeof window.syncStickyBarLifecycle === 'function') window.syncStickyBarLifecycle();
 
-  if (isTurbo) {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        runner.style.transition = 'left 0.42s ease-out';
-        runner.style.left = '25%';
-        pFill.style.transition = 'width 2.95s linear';
-        pFill.style.width = '100%';
-      });
-    });
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.add('turbo-squeeze');
-      const sw = document.createElement('span');
-      sw.className = 'turbo-sweat-drop';
-      sw.innerHTML = createSweatDropSvg();
-      runner.appendChild(sw);
-    }, 410));
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.remove('turbo-squeeze');
-      const sw = runner.querySelector('.turbo-sweat-drop');
-      if (sw) sw.remove();
-      runner.classList.add('turbo-dash');
-      if (typeof window.playMagicSfx === 'function') window.playMagicSfx('turbo-fart');
-      spawnTurboPuffTrail(24);
-      document.getElementById('trans-subtitle').textContent = `🚀 Grand Turbo-Puff Boost! ${comp.label} soared to 100% Victory!`;
-      runner.style.transition = 'left 0.60s cubic-bezier(0.16, 1, 0.3, 1)';
-      runner.style.left = '86%';
-    }, 880));
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.remove('turbo-dash');
-      runner.classList.add('turbo-land');
+  spawnCreatureNaturalTrail(comp.id, 12, 82, 2300);
+  __turboCutsceneTimers.push(setTimeout(() => {
+    if (overlay.classList.contains('open')) {
+      runner.classList.add('victory-dance');
       if (sparks) sparks.classList.add('burst');
       playFeedbackSound('fanfare');
-    }, 1500));
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (!overlay.classList.contains('open')) return;
-      runner.classList.remove('turbo-land');
-      runner.classList.add('victory-dance');
-    }, 1860));
-  } else {
-    __turboCutsceneTimers.push(setTimeout(() => {
-      if (overlay.classList.contains('open')) {
-        runner.classList.add('victory-dance');
-        if (sparks) sparks.classList.add('burst');
-        playFeedbackSound('fanfare');
-      }
-    }, 1900));
+    }
+  }, 1950));
+  requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        runner.style.transition = 'left 2.95s cubic-bezier(0.22, 1, 0.36, 1)';
-        runner.style.left = '86%';
-        pFill.style.transition = 'width 3.05s linear';
-        pFill.style.width = '100%';
-      });
+      runner.style.transition = 'left 2.55s cubic-bezier(0.22, 1, 0.36, 1)';
+      runner.style.left = '86%';
+      pFill.style.transition = 'width 2.95s linear';
+      pFill.style.width = '100%';
     });
-  }
+  });
 
   const finishVictory = () => {
     clearTimeout(transitionTimer);
@@ -12863,7 +13505,11 @@ function bindEvents() {
   });
   document.getElementById('btn-guru-stop').addEventListener('click', stopActiveVoicePlayback);
   document.getElementById('btn-guru-mute').addEventListener('click', () => {
-    if (guruAudioEl || guruStudioWebSrc || __titanUtteranceLock || guruLiveSources.length > 0) {
+    if (guruLiveAwaitingStart) {
+      triggerPendingGuruKickoff();
+      return;
+    }
+    if (guruAudioEl || guruStudioWebSrc || __titanUtteranceLock || guruWorkletSpeaking || guruLiveSources.length > 0) {
       guruMicMuted = false;
       startGuruVoiceListen(false);
       return;
@@ -12893,6 +13539,9 @@ function bindEvents() {
     const txt = (inp && inp.value || '').trim();
     if (!txt) return;
     inp.value = '';
+    guruLiveAwaitingStart = false;
+    guruPendingKickoff = null;
+    updateGuruMicBtn();
     sendGuruTurn(txt);
   });
   document.getElementById('guru-text-input').addEventListener('keydown', (e) => {
