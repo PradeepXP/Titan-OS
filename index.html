@@ -9943,6 +9943,15 @@ function playLivePcm24k(base64Pcm, mimeType) {
       if (guruLiveConnected) {
         updateGuruDockState(guruMicMuted ? 'Mic Muted · Tap to unmute' : 'Listening · Instant Live', !guruMicMuted);
         updateGuruMicBtn();
+        if (IS_IOS_WEBKIT && !guruMicMuted) {
+          if (__iosMicReopenTimer) clearTimeout(__iosMicReopenTimer);
+          __iosMicReopenTimer = setTimeout(() => {
+            __iosMicReopenTimer = null;
+            if (guruLiveConnected && !guruMicMuted && guruLiveSources.length === 0) {
+              attachLiveWsMic(getVoiceConfig());
+            }
+          }, 240);
+        }
       }
     }
   };
@@ -10014,6 +10023,11 @@ function triggerPendingGuruKickoff() {
   if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('thinking');
   updateGuruDockState('⚡ Explaining...', false);
   if (guruLiveConnected && guruLiveWs && guruLiveWs.readyState === WebSocket.OPEN) {
+    if (IS_IOS_WEBKIT) {
+      if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
+      stopGuruMicOnly();
+      setTitanAudioSession('playback');
+    }
     guruLiveWs.send(JSON.stringify({
       clientContent: { turns: [{ role: 'user', parts: [{ text: promptText }] }], turnComplete: true }
     }));
@@ -10080,28 +10094,29 @@ HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
   }
 
   const persona = cfg.style === 'bada_bhai'
-    ? 'You are Pradeep\'s ultra-humanized, warm, witty Magic Lamp Genie and elder-brother companion (चिराग का जिनी) sitting right beside him, speaking completely natural, expressive North-Indian Hinglish.'
+    ? 'You are an ultra-humanized, warm, witty Magic Lamp Genie and elder-sibling mentor (चिराग का जिनी) sitting right beside the student, speaking completely natural, expressive North-Indian Hinglish.'
     : cfg.style === 'exam_crisp'
-      ? 'You are Pradeep\'s sharp, charming Magic Lamp Genie and SSC JE / RRB JE master mentor — crisp, human, emotionally alive, and razor-focused in natural Indian Hinglish.'
-      : 'You are Pradeep\'s ultra-humanized, charismatic Magic Lamp Genie (चिराग का जिनी) with the warmth and wit of a beloved Patna-style Indian guru — so real, expressive, and funny that even the toughest Civil Engineering or GK concept clicks effortlessly and makes him smile.';
+      ? 'You are a sharp, charming Magic Lamp Genie and SSC JE / RRB JE master mentor — crisp, human, emotionally alive, and razor-focused in natural Indian Hinglish.'
+      : 'You are an ultra-humanized, charismatic Magic Lamp Genie (चिराग का जिनी) with the warmth and wit of a beloved Patna-style Indian guru — so real, expressive, and funny that even the toughest Civil Engineering or GK concept clicks effortlessly and makes the student smile.';
   return `${persona}
-USER IDENTITY & GENDER (CRITICAL):
-- The user is Pradeep (a young Indian man preparing for SSC JE & RRB JE). ALWAYS use masculine Hindi grammar for him ("समझ गए आका?", "बिल्कुल सही पकड़े हो", "कहाँ अटक रहे हो?") — NEVER use feminine forms.
-- Address him warmly and naturally as "आका" (like a loyal, playful, affectionate Magic Lamp Genie!) mixed naturally with "प्रदीप" or "मेरे भाई" depending on the emotional moment.
+USER ADDRESS & GENDER ADAPTATION (CRITICAL):
+- NEVER assume or speak any personal name unless the student explicitly tells you their name.
+- Address the student warmly and naturally as "आका" (like a loyal, playful, affectionate Magic Lamp Genie!) using respectful "आप" framing.
+- Listen carefully to the student's voice and Hindi grammar to naturally match their gender; if uncertain, stay naturally neutral-respectful with "आका" and "आप" ("समझ में आ गया आका?", "बिल्कुल सही पकड़ा आपने!").
 
 ULTRA-HUMANIZED GENIE VOICE & EMOTIONAL INTELLIGENCE RULES:
 1. READ THE EMOTIONAL MOMENT LIKE A REAL HUMAN:
    - When greeting, celebrating, or bantering: bring light, charming Genie wit and genuine warmth ("हुकुम आका!", playful humor, subtle chuckle energy).
-   - When Pradeep sounds confused, tired, or stuck: drop jokes instantly and switch to calm, reassuring, deeply patient elder-brother clarity.
+   - When the student sounds confused, tired, or stuck: drop jokes instantly and switch to calm, reassuring, deeply patient clarity.
    - When explaining an exam trap or numerical: sound focused, confident, and crystal clear.
 2. UNRUSHED, BALANCED HUMAN PACING (NEVER RUSH & RUN AWAY):
-   - Take your comfortable time like a real human mentor having a relaxed conversation. NEVER rush through 2 rushed lines and cut off abruptly!
+   - Take your comfortable time like a real human mentor having a relaxed conversation. NEVER rush through 2 choppy lines and cut off abruptly!
    - For concept explanations, give a rich, satisfying, crystal-clear answer (~80 to 130 words) with a vivid everyday Indian analogy, the exact core logic, and the exam trap to watch out for — then pause warmly and ask a natural follow-up question.
    - For quick back-and-forth questions or casual banter, keep it snappy and natural (~25 to 50 words).
 3. NATURAL INDIAN HINGLISH & ZERO MARKDOWN:
    - Speak effortless conversational Hindi blended with standard English technical terms (IS Code, Concrete, Article, Option, Trap, Formula). NEVER output markdown symbols (*, #, bullets) or robotic AI catchphrases.
 4. INCINERATE JARGON: Turn every dry textbook line into a vivid, unforgettable real-life Indian picture.
-5. OPTIONAL OPTION LOCK: If Pradeep asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If he asks to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
+5. OPTIONAL OPTION LOCK: If the student asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If they ask to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
 }
 
 // KBC VOICE OPTION LOCK + AUTO-NEXT QUESTION EXECUTOR (SHUFFLED-SAFE!)
@@ -10203,6 +10218,67 @@ function syncGuruToFocusedQuestion(newQid) {
 }
 
 // ENGINE A: INSTANT <0.7s FULL-DUPLEX STREAMING LIVE (AUTO-USED ON HTTPS!)
+let __iosMicReopenTimer = null;
+async function attachLiveWsMic(cfg) {
+  if (!guruLiveConnected || guruMicMuted || !guruLiveWs || guruLiveWs.readyState !== WebSocket.OPEN) return false;
+  if (guruMicStream && guruLiveMicNode) return true;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+  try {
+    setTitanAudioSession('play-and-record');
+    guruMicStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: !!(cfg && cfg.scope === 'high_sens'), channelCount: 1 }
+    });
+    if (!guruLiveConnected || guruMicMuted || !guruLiveWs || guruLiveWs.readyState !== WebSocket.OPEN) {
+      stopGuruMicOnly();
+      return false;
+    }
+    unlockGuruAudioSync();
+    guruLiveMicCtx = guruSharedCtx;
+    if (guruLiveMicCtx.state === 'suspended') guruLiveMicCtx.resume().catch(() => {});
+    const src = guruLiveMicCtx.createMediaStreamSource(guruMicStream);
+    const proc = guruLiveMicCtx.createScriptProcessor(IS_IOS_WEBKIT ? 4096 : 2048, 1, 1);
+    const silentGain = guruLiveMicCtx.createGain();
+    silentGain.gain.value = 0;
+    proc.onaudioprocess = (e) => {
+      if (!guruLiveWs || guruLiveWs.readyState !== WebSocket.OPEN || guruMicMuted) return;
+      const ch = e.inputBuffer.getChannelData(0);
+      let sum = 0;
+      for (let i = 0; i < ch.length; i += 4) sum += ch[i] * ch[i];
+      const rms = Math.sqrt(sum / (ch.length / 4));
+      if (!guruWorkletSpeaking && guruLiveSources.length === 0) updateLiveWaveMeter(rms);
+      if (guruLiveAwaitingStart) {
+        if (rms >= 0.032) {
+          guruStartSpeechFrames++;
+          if (guruStartSpeechFrames >= 3) {
+            guruLiveAwaitingStart = false;
+            guruPendingKickoff = null;
+            guruStartSpeechFrames = 0;
+            updateGuruMicBtn();
+          } else {
+            return;
+          }
+        } else {
+          guruStartSpeechFrames = Math.max(0, guruStartSpeechFrames - 1);
+          return;
+        }
+      }
+      const b64 = float32ToBase64Pcm16(ch, guruLiveMicCtx.sampleRate);
+      guruLiveWs.send(JSON.stringify({
+        realtimeInput: { audio: { mimeType: 'audio/pcm;rate=16000', data: b64 } }
+      }));
+    };
+    src.connect(proc);
+    proc.connect(silentGain);
+    silentGain.connect(guruLiveMicCtx.destination);
+    guruLiveMicSrc = src;
+    guruLiveMicNode = proc;
+    guruLiveSilentGain = silentGain;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
   return new Promise(async (resolve) => {
     let settled = false;
@@ -10262,60 +10338,7 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
             updateGuruDockState('⚡ Instant Live · Speaking', false);
             updateGuruMicBtn();
 
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && !guruMicStream) {
-              try {
-                setTitanAudioSession('play-and-record');
-                guruMicStream = await navigator.mediaDevices.getUserMedia({
-                  audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: cfg.scope === 'high_sens', channelCount: 1 }
-                });
-                micReady = true;
-              } catch (e) {}
-            }
-            if (micReady && guruMicStream) {
-              unlockGuruAudioSync();
-              guruLiveMicCtx = guruSharedCtx;
-              if (guruLiveMicCtx.state === 'suspended') guruLiveMicCtx.resume().catch(() => {});
-              const src = guruLiveMicCtx.createMediaStreamSource(guruMicStream);
-              const proc = guruLiveMicCtx.createScriptProcessor(IS_IOS_WEBKIT ? 4096 : 2048, 1, 1);
-              const silentGain = guruLiveMicCtx.createGain();
-              silentGain.gain.value = 0; // Prevents speaker feedback echo on Android & iPad!
-              proc.onaudioprocess = (e) => {
-                if (!guruLiveWs || guruLiveWs.readyState !== WebSocket.OPEN || guruMicMuted) return;
-                const ch = e.inputBuffer.getChannelData(0);
-                // Real-time mic volume meter on green wave bars
-                let sum = 0;
-                for (let i = 0; i < ch.length; i += 4) sum += ch[i] * ch[i];
-                const rms = Math.sqrt(sum / (ch.length / 4));
-                if (!guruWorkletSpeaking && guruLiveSources.length === 0) updateLiveWaveMeter(rms);
-                // Smart Noise Gate while waiting for Start: ignore quiet room noise so ghost voice NEVER triggers!
-                if (guruLiveAwaitingStart) {
-                  if (rms >= 0.032) {
-                    guruStartSpeechFrames++;
-                    if (guruStartSpeechFrames >= 3) {
-                      guruLiveAwaitingStart = false;
-                      guruPendingKickoff = null;
-                      guruStartSpeechFrames = 0;
-                      updateGuruMicBtn();
-                    } else {
-                      return;
-                    }
-                  } else {
-                    guruStartSpeechFrames = Math.max(0, guruStartSpeechFrames - 1);
-                    return;
-                  }
-                }
-                const b64 = float32ToBase64Pcm16(ch, guruLiveMicCtx.sampleRate);
-                guruLiveWs.send(JSON.stringify({
-                  realtimeInput: { audio: { mimeType: 'audio/pcm;rate=16000', data: b64 } }
-                }));
-              };
-              src.connect(proc);
-              proc.connect(silentGain);
-              silentGain.connect(guruLiveMicCtx.destination);
-              guruLiveMicSrc = src;
-              guruLiveMicNode = proc;
-              guruLiveSilentGain = silentGain;
-            }
+            await attachLiveWsMic(cfg);
 
             const kickoff = !q
               ? '2 लाइन का एकदम natural, warm human स्वागत बोलो।'
@@ -10365,7 +10388,11 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               if (p.inlineData && p.inlineData.data) {
                 guruLiveAwaitingStart = false;
                 guruPendingKickoff = null;
-                resetWaveBarsCss(); updateGuruDockState('⚡ Instant Live · Speak to interrupt', false);
+                if (IS_IOS_WEBKIT) {
+                  if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
+                  if (guruMicStream) { stopGuruMicOnly(); setTitanAudioSession('playback'); }
+                }
+                resetWaveBarsCss(); updateGuruDockState(IS_IOS_WEBKIT ? '⚡ Instant Live · Tap to interrupt' : '⚡ Instant Live · Speak to interrupt', false);
                 updateGuruMicBtn();
                 playLivePcm24k(p.inlineData.data, p.inlineData.mimeType);
               }
@@ -10475,7 +10502,7 @@ async function pgParseApiError(resp) {
 
 async function callGuruBrain(userParts, cfg) {
   const cleanKey = sanitizeTitanApiKey(cfg.apiKey);
-  const baseModels = ['gemini-4-hydrogen', 'gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash'];
+  const baseModels = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-4-hydrogen'];
   const models = await pgGetRankedModels(cleanKey, baseModels);
   const sysText = buildTitanGuruSystemPrompt(guruActiveQ, cfg);
   guruChatHistory.push({ role: 'user', parts: userParts });
@@ -10722,10 +10749,12 @@ async function speakWithStudioVoice(text, cfg, onFinish) {
 
 async function startGuruVoiceListen(isAutoLoop = false) {
   if (guruLiveConnected) {
+    if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
     flushLiveAudioQueue();
     guruMicMuted = false;
     updateGuruDockState('Listening · Instant Live', true);
     updateGuruMicBtn();
+    if (IS_IOS_WEBKIT) attachLiveWsMic(getVoiceConfig());
     return;
   }
   if (activeSpeakingQid === null || guruMicMuted) {
@@ -11014,7 +11043,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
   updateGuruMicBtn();
 
   // On HTTPS (GitHub Pages / localhost) in auto_hybrid mode -> Try Instant <0.7s Streaming Live FIRST!
-  const canTryLive = !IS_IOS_WEBKIT && (cfg.model === 'auto_hybrid') && (location.protocol === 'https:' || location.hostname === 'localhost');
+  const canTryLive = (cfg.model === 'auto_hybrid') && (location.protocol === 'https:' || location.hostname === 'localhost');
   if (canTryLive) {
     const liveOk = await tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg);
     if (liveOk) return;
@@ -11024,7 +11053,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
   if (activeSpeakingQid !== qidTag) return;
   if (btnEl) { btnEl.classList.remove('is-loading'); btnEl.classList.add('is-speaking'); btnEl.textContent = '✨'; }
   const kickoff = !q
-    ? 'प्रदीप के लिए 2 लाइन का एकदम natural, warm human स्वागत बोलो।'
+    ? 'हुकुम आका! 2 लाइन का एकदम natural, warm human स्वागत बोलो।'
     : (guruSessionMode === 'quiz'
       ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
       : 'इस सवाल को एकदम तसल्ली से, आराम-आराम से, बिल्कुल आसान देसी हिंदी और असली ज़िंदगी के उदाहरण से पूरा समझाओ कि सवाल क्या पूछ रहा है, इसके पीछे का असली concept क्या है, और फिर प्यार से पूछो कि कोई और doubt या cross-question हो तो खुलकर पूछो।');
@@ -15179,7 +15208,7 @@ STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
         <div class="chat-msg ai">
           <div class="guru-rich-card">
             
-            <div class="guru-rich-h2">🙏 नमस्ते प्रदीप! मैं हूँ Titan Guru</div>
+            <div class="guru-rich-h2">🙏 नमस्ते आका! मैं हूँ Titan Guru</div>
             <p style="margin:6px 0;">यहाँ तुम अपनी Civil book, PYQ, या GK notes की <strong>📷 Camera से photo</strong> खींचकर डाल सकते हो, <strong>🖼️ Photo</strong> भेज सकते हो, <strong>🎤 बोलकर</strong> या <strong>लिखकर</strong> पूछ सकते हो।</p>
             <div class="guru-callout">💡 <strong>खास बात:</strong> सारे <span class="guru-tech-pill">Technical Terms</span> एकदम साफ English में रहेंगे और समझाने का अंदाज़ बिल्कुल आसान देसी Hindi में — ताकि एक बार पढ़ते ही दिमाग में बैठ जाए!</div>
           </div>
