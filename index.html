@@ -1255,17 +1255,53 @@ sub { bottom: -0.24em; }
 /* =====================================================================
    TITAN SRS (SPACED REPETITION COMMAND DECK & LIVE REVIEW PLAYER)
    ===================================================================== */
-#btn-open-srs.has-due {
-  background: linear-gradient(135deg, #f59e0b, #ea580c);
-  color: #fff !important;
-  border-color: #d97706 !important;
-  font-weight: 800;
-  box-shadow: 0 2px 10px rgba(234, 88, 12, 0.32);
-  animation: srsPulse 2.4s ease-in-out infinite;
+#btn-open-srs.has-due,
+.srs-cta-live {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(120deg, #f59e0b, #ea580c, #e11d48, #7c3aed, #ea580c) !important;
+  background-size: 260% 260% !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.015em;
+  box-shadow: 0 4px 16px rgba(234, 88, 12, 0.34);
+  animation: srsGradientFlow 5.5s ease infinite, srsPulse 2.8s ease-in-out infinite;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+#btn-open-srs.has-due::after,
+.srs-cta-live::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.32) 50%, transparent 80%);
+  transform: skewX(-20deg);
+  animation: srsGlassSheen 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.srs-cta-live:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(225, 29, 72, 0.42);
+}
+@keyframes srsGradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes srsGlassSheen {
+  0%, 62% { left: -130%; }
+  100% { left: 165%; }
 }
 @keyframes srsPulse {
-  0%, 100% { box-shadow: 0 2px 10px rgba(234, 88, 12, 0.28); }
-  50% { box-shadow: 0 2px 16px rgba(234, 88, 12, 0.58); }
+  0%, 100% { box-shadow: 0 4px 14px rgba(234, 88, 12, 0.30); }
+  50% { box-shadow: 0 6px 22px rgba(225, 29, 72, 0.50); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #btn-open-srs.has-due, .srs-cta-live,
+  #btn-open-srs.has-due::after, .srs-cta-live::after { animation: none !important; }
 }
 .srs-modal-box {
   max-width: 740px !important;
@@ -3028,7 +3064,7 @@ body.theme-night .v45-unpin-btn {
   <div class="mcq-only-el due-banner no-print" id="due-banner">
     <span id="due-banner-text">⏰ 0 सवाल आज Revision के लिए Due हैं!</span>
     <div style="display:flex; gap:6px;">
-      <button type="button" class="ctrl-btn btn-warn" id="btn-start-due">🔥 Start Due Revision</button>
+      <button type="button" class="ctrl-btn btn-warn srs-cta-live" id="btn-start-due">⚡ Today's Due Review</button>
       <button type="button" class="ctrl-btn" id="btn-dismiss-due">✕</button>
     </div>
   </div>
@@ -3624,8 +3660,8 @@ body.theme-night .v45-unpin-btn {
   <div class="modal-box srs-modal-box">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:6px;">
       <div>
-        <div style="font-size:1.12rem; font-weight:900; color:var(--text);">🧠 Titan SRS — Built-in Anki Memory Engine</div>
-        <div style="font-size:0.76rem; color:var(--muted);" id="srs-subtitle-line">Ebbinghaus Curve: Day 1 ➔ 3 ➔ 7 ➔ 15 ➔ 30 ➔ 🏆 Mastered (Midnight Auto-Unlock)</div>
+        <div style="font-size:1.12rem; font-weight:900; color:var(--text);">🧠 Today's Due Review</div>
+        <div style="font-size:0.76rem; color:var(--muted);" id="srs-subtitle-line">Smart Spaced Recall · Auto-Unlocks Daily</div>
       </div>
       <button type="button" class="ctrl-btn" id="btn-close-srs" style="padding:5px 11px;">✕</button>
     </div>
@@ -3685,7 +3721,7 @@ body.theme-night .v45-unpin-btn {
       </div>
 
       <div class="srs-ladder-wrap">
-        <div class="srs-ladder-title">Retention Ladder Breakdown (Wrong + 50-50 + ⭐ Starred Only — Zero Burnout)</div>
+        <div class="srs-ladder-title">Recall Progress</div>
         <div class="srs-ladder-pills" id="srs-ladder-pills">
           <div class="srs-stage-pill"><span class="st-num" id="srs-st-1">0</span><span class="st-tag">Day 1</span></div>
           <div class="srs-stage-pill"><span class="st-num" id="srs-st-2">0</span><span class="st-tag">Day 3</span></div>
@@ -3697,7 +3733,7 @@ body.theme-night .v45-unpin-btn {
       </div>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <button type="button" class="ctrl-btn btn-warn" id="btn-srs-launch" style="flex:1; padding:12px 16px; font-size:0.95rem; font-weight:800;">🚀 Start Today's Due Review (0 Qs · Shuffled)</button>
+        <button type="button" class="ctrl-btn btn-warn" id="btn-srs-launch" style="flex:1; padding:13px 18px; font-size:0.98rem; font-weight:800; border-radius:12px;">⚡ Today's Due Review</button>
       </div>
       <div class="srs-migrate-bar" id="srs-pull-today-bar" style="display:none; border-color:rgba(234,88,12,0.45); background:rgba(234,88,12,0.08);">
         <span id="srs-pull-today-text">⚡ 0 पुराने Wrong/50-50/Starred सवाल future dates में अटके हैं।</span>
@@ -6029,12 +6065,14 @@ function renderSrsDashboard() {
   if (stats.dueIds.length > 0) {
     launchBtn.disabled = false;
     launchBtn.style.opacity = '1';
-    launchBtn.textContent = `🚀 Start Today's Due Review (${stats.dueIds.length} Qs · Full Native List)`;
+    launchBtn.classList.add('srs-cta-live');
+    launchBtn.textContent = `⚡ Today's Due Review · ${stats.dueIds.length}`;
     emptyMsg.style.display = 'none';
   } else {
     launchBtn.disabled = true;
-    launchBtn.style.opacity = '0.55';
-    launchBtn.textContent = `✅ Today's Due Queue Empty (0 Qs)`;
+    launchBtn.style.opacity = '0.6';
+    launchBtn.classList.remove('srs-cta-live');
+    launchBtn.textContent = `✓ All Caught Up`;
     emptyMsg.style.display = 'block';
   }
 
