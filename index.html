@@ -8075,9 +8075,9 @@ window.playMagicSfx = function(kind) {
             addTone(1568, 1760, start, 0.065, vol * 0.24);
           };
           addTone(698, 1175, 0.03, 0.14, 0.14);
-          addClap(0.32, 0.42);
-          addClap(0.68, 0.38);
-          addClap(1.04, 0.35);
+          addClap(0.30, 0.18);
+          addClap(0.64, 0.16);
+          addClap(0.98, 0.14);
           const buf = new ArrayBuffer(44 + pcm.length * 2);
           const v = new DataView(buf);
           const wS = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
@@ -8152,9 +8152,9 @@ window.playMagicSfx = function(kind) {
 
       if (kind === 'genie-clap') {
         bell(698, 1175, now + 0.04, 0.14, 0.042, 'sine');
-        softClap(now + 0.36, 0.072);
-        softClap(now + 0.74, 0.068);
-        softClap(now + 1.12, 0.062);
+        softClap(now + 0.34, 0.048);
+        softClap(now + 0.68, 0.044);
+        softClap(now + 1.02, 0.040);
       } else if (kind === 'genie-absorb') {
         bell(1175, 587, now, 0.18, 0.036, 'sine');
         bell(880, 440, now + 0.07, 0.16, 0.028, 'triangle');
@@ -9824,119 +9824,8 @@ let guruLivePcmCarryByte = null;
 let guruLiveLastSample = 0;
 let guruLiveAwaitingStart = false;
 let guruPendingKickoff = null;
-let guruWorkletNode = null;
-let guruWorkletReady = false;
-let guruWorkletInitPromise = null;
+let guruStartSpeechFrames = 0;
 let guruWorkletSpeaking = false;
-let guruWorkletPending = [];
-let guruFallbackCoalBuf = [];
-let guruFallbackCoalLen = 0;
-let guruFallbackCoalTimer = null;
-
-const TITAN_PCM_WORKLET_CODE = `
-class TitanPcmStreamProcessor extends AudioWorkletProcessor {
-  constructor(options) {
-    super();
-    const opts = (options && options.processorOptions) || {};
-    this.cap = Math.max(65536, opts.capacity || 262144);
-    this.ring = new Float32Array(this.cap);
-    this.rIdx = 0;
-    this.wIdx = 0;
-    this.avail = 0;
-    this.prebuf = Math.max(1024, opts.prebuffer || 4800);
-    this.started = false;
-    this.wasSpeaking = false;
-    this.fadeGain = 0;
-    this.fadeStep = 1 / Math.max(64, Math.floor((opts.sampleRate || 48000) * 0.005));
-    this.lastOut = 0;
-    this.port.onmessage = (e) => {
-      const msg = e.data;
-      if (!msg) return;
-      if (msg.type === 'flush') {
-        this.rIdx = 0; this.wIdx = 0; this.avail = 0;
-        this.started = false; this.fadeGain = 0;
-        if (this.wasSpeaking) { this.wasSpeaking = false; this.port.postMessage({ speaking: false }); }
-        return;
-      }
-      if (msg.type === 'push' && msg.samples) {
-        const arr = msg.samples;
-        const n = arr.length;
-        if (n >= this.cap) {
-          this.rIdx = 0; this.wIdx = 0; this.avail = 0;
-        } else if (this.avail + n > this.cap) {
-          const drop = (this.avail + n) - this.cap;
-          this.rIdx = (this.rIdx + drop) % this.cap;
-          this.avail -= drop;
-        }
-        let w = this.wIdx;
-        const cap = this.cap;
-        for (let i = 0; i < n; i++) {
-          this.ring[w] = arr[i];
-          w++;
-          if (w >= cap) w = 0;
-        }
-        this.wIdx = w;
-        this.avail += n;
-      }
-    };
-  }
-  process(inputs, outputs) {
-    const out = outputs[0] && outputs[0][0];
-    if (!out) return true;
-    const len = out.length;
-    if (!this.started) {
-      if (this.avail < this.prebuf) {
-        out.fill(0);
-        return true;
-      }
-      this.started = true;
-      this.fadeGain = 0;
-      if (!this.wasSpeaking) { this.wasSpeaking = true; this.port.postMessage({ speaking: true }); }
-    }
-    if (this.avail === 0) {
-      // Smooth 2ms decay to zero on underrun — zero pop/click!
-      let v = this.lastOut;
-      for (let i = 0; i < len; i++) { v *= 0.86; out[i] = v; }
-      this.lastOut = Math.abs(v) < 1e-5 ? 0 : v;
-      this.started = false;
-      this.fadeGain = 0;
-      if (this.wasSpeaking) { this.wasSpeaking = false; this.port.postMessage({ speaking: false }); }
-      return true;
-    }
-    const cap = this.cap;
-    let r = this.rIdx;
-    let av = this.avail;
-    let fg = this.fadeGain;
-    const fs = this.fadeStep;
-    let last = this.lastOut;
-    for (let i = 0; i < len; i++) {
-      if (av > 0) {
-        let s = this.ring[r];
-        r++;
-        if (r >= cap) r = 0;
-        av--;
-        if (fg < 1) { fg = Math.min(1, fg + fs); s *= fg; }
-        out[i] = s;
-        last = s;
-      } else {
-        last *= 0.86;
-        out[i] = last;
-      }
-    }
-    this.rIdx = r;
-    this.avail = av;
-    this.fadeGain = fg;
-    this.lastOut = last;
-    if (av === 0 && this.started) {
-      this.started = false;
-      this.fadeGain = 0;
-      if (this.wasSpeaking) { this.wasSpeaking = false; this.port.postMessage({ speaking: false }); }
-    }
-    return true;
-  }
-}
-registerProcessor('titan-pcm-stream-player', TitanPcmStreamProcessor);
-`;
 
 function resampleContiguousLinear(input, inRate, outRate, prevSample) {
   if (!outRate || inRate === outRate || input.length < 1) {
@@ -9956,81 +9845,12 @@ function resampleContiguousLinear(input, inRate, outRate, prevSample) {
   return { out, last: input[input.length - 1] };
 }
 
-function ensureLiveWorkletReady(ctx) {
-  if (!ctx || !ctx.audioWorklet || typeof Blob === 'undefined' || typeof URL === 'undefined') {
-    return Promise.resolve(false);
-  }
-  if (guruWorkletReady && guruWorkletNode && guruWorkletNode.context === ctx) {
-    return Promise.resolve(true);
-  }
-  if (guruWorkletInitPromise) return guruWorkletInitPromise;
-  guruWorkletInitPromise = (async () => {
-    try {
-      if (!ctx.__titanWorkletLoaded) {
-        const blob = new Blob([TITAN_PCM_WORKLET_CODE], { type: 'application/javascript' });
-        const url = URL.createObjectURL(blob);
-        await ctx.audioWorklet.addModule(url);
-        try { URL.revokeObjectURL(url); } catch (e) {}
-        ctx.__titanWorkletLoaded = true;
-      }
-      const sr = ctx.sampleRate || 48000;
-      const prebufSamples = Math.floor(sr * (IS_IOS_WEBKIT ? 0.19 : 0.075));
-      const node = new AudioWorkletNode(ctx, 'titan-pcm-stream-player', {
-        numberOfInputs: 0,
-        numberOfOutputs: 1,
-        outputChannelCount: [1],
-        processorOptions: { capacity: sr * 6, prebuffer: prebufSamples, sampleRate: sr }
-      });
-      node.port.onmessage = (ev) => {
-        const d = ev.data || {};
-        if (typeof d.speaking === 'boolean') {
-          guruWorkletSpeaking = d.speaking;
-          if (d.speaking) {
-            if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
-          } else {
-            if (typeof window.setLiveLampGenieMode === 'function') {
-              window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
-            }
-            if (guruLiveConnected) {
-              updateGuruDockState(guruMicMuted ? 'Mic Muted · Tap to unmute' : 'Listening · Instant Live', !guruMicMuted);
-              updateGuruMicBtn();
-            }
-          }
-        }
-      };
-      node.connect(getCleanAudioBus(ctx));
-      guruWorkletNode = node;
-      guruWorkletReady = true;
-      if (guruWorkletPending.length) {
-        const queued = guruWorkletPending.splice(0);
-        queued.forEach(arr => {
-          try { node.port.postMessage({ type: 'push', samples: arr }, [arr.buffer]); } catch (e) {}
-        });
-      }
-      return true;
-    } catch (e) {
-      guruWorkletReady = false;
-      guruWorkletNode = null;
-      guruWorkletInitPromise = null;
-      return false;
-    }
-  })();
-  return guruWorkletInitPromise;
-}
-
 function flushLiveAudioQueue() {
-  if (guruFallbackCoalTimer) { clearTimeout(guruFallbackCoalTimer); guruFallbackCoalTimer = null; }
-  guruFallbackCoalBuf = [];
-  guruFallbackCoalLen = 0;
-  guruWorkletPending = [];
-  guruWorkletSpeaking = false;
-  if (guruWorkletNode) {
-    try { guruWorkletNode.port.postMessage({ type: 'flush' }); } catch (e) {}
-  }
   guruLiveSources.forEach(src => { try { src.onended = null; src.stop(); } catch (e) {} });
   guruLiveSources = [];
   guruLivePcmCarryByte = null;
   guruLiveLastSample = 0;
+  guruWorkletSpeaking = false;
   if (guruLivePlayCtx) guruLiveNextTime = guruLivePlayCtx.currentTime;
   if (activeSpeakingQid !== null && typeof window.setLiveLampGenieMode === 'function') {
     window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
@@ -10044,7 +9864,6 @@ function getCleanAudioBus(ctx) {
       const gain = ctx.createGain();
       gain.gain.value = IS_IOS_WEBKIT ? 0.88 : 0.84;
       if (IS_IOS_WEBKIT) {
-        // Bypass DynamicsCompressorNode on iOS/iPadOS WebKit to prevent play-and-record pumping & buzzing!
         gain.connect(ctx.destination);
       } else {
         const comp = ctx.createDynamicsCompressor();
@@ -10064,52 +9883,9 @@ function getCleanAudioBus(ctx) {
   return ctx.__titanBus;
 }
 
-function scheduleFallbackCoalescedBuffer(ctx) {
-  if (!guruFallbackCoalLen || !ctx || ctx.state === 'closed') return;
-  const merged = new Float32Array(guruFallbackCoalLen);
-  let off = 0;
-  for (const part of guruFallbackCoalBuf) { merged.set(part, off); off += part.length; }
-  guruFallbackCoalBuf = [];
-  guruFallbackCoalLen = 0;
-  const now = ctx.currentTime;
-  const lead = IS_IOS_WEBKIT ? 0.22 : 0.09;
-  const isContiguous = (guruLiveNextTime > now + 0.006);
-  const startAt = isContiguous ? guruLiveNextTime : (now + lead);
-  if (!isContiguous) {
-    const fade = Math.min(96, Math.floor(merged.length / 8));
-    for (let i = 0; i < fade; i++) merged[i] *= (i / fade);
-  }
-  const buffer = ctx.createBuffer(1, merged.length, ctx.sampleRate || 48000);
-  buffer.getChannelData(0).set(merged);
-  const src = ctx.createBufferSource();
-  src.buffer = buffer;
-  src.connect(getCleanAudioBus(ctx));
-  src.start(startAt);
-  guruLiveNextTime = startAt + buffer.duration;
-  guruLiveSources.push(src);
-  if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
-  src.onended = () => {
-    guruLiveSources = guruLiveSources.filter(s => s !== src);
-    if (guruLiveSources.length === 0) {
-      if (typeof window.setLiveLampGenieMode === 'function') {
-        window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
-      }
-      if (guruLiveConnected) {
-        updateGuruDockState(guruMicMuted ? 'Mic Muted · Tap to unmute' : 'Listening · Instant Live', !guruMicMuted);
-        updateGuruMicBtn();
-      }
-    }
-  };
-}
-
 function playLivePcm24k(base64Pcm, mimeType) {
   if (!guruLivePlayCtx || guruLivePlayCtx.state === 'closed') {
-    guruLivePlayCtx = (IS_IOS_WEBKIT && guruSharedCtx && guruSharedCtx.state !== 'closed')
-      ? guruSharedCtx
-      : createSafeAudioCtx();
-    guruWorkletReady = false;
-    guruWorkletNode = null;
-    guruWorkletInitPromise = null;
+    guruLivePlayCtx = createSafeAudioCtx();
   }
   if (guruLivePlayCtx.state === 'suspended') guruLivePlayCtx.resume().catch(() => {});
   const bin = atob(base64Pcm);
@@ -10134,7 +9910,14 @@ function playLivePcm24k(base64Pcm, mimeType) {
   const dv = new DataView(u8.buffer);
   const float32 = new Float32Array(len);
   for (let i = 0; i < len; i++) {
-    float32[i] = Math.max(-0.96, Math.min(0.96, dv.getInt16(i * 2, true) / 32768));
+    float32[i] = Math.max(-0.98, Math.min(0.98, dv.getInt16(i * 2, true) / 32768));
+  }
+  const now = guruLivePlayCtx.currentTime;
+  const isContiguous = (guruLiveNextTime > now + 0.004);
+  const startAt = isContiguous ? guruLiveNextTime : (now + 0.095);
+  if (!isContiguous) {
+    const fade = Math.min(48, Math.floor(len / 8));
+    for (let i = 0; i < fade; i++) float32[i] *= (i / fade);
   }
   const rateMatch = mimeType ? String(mimeType).match(/rate=(\d+)/i) : null;
   const pcmRate = rateMatch ? Math.max(8000, Math.min(48000, Number(rateMatch[1]))) : 24000;
@@ -10142,41 +9925,27 @@ function playLivePcm24k(base64Pcm, mimeType) {
   const resampled = resampleContiguousLinear(float32, pcmRate, targetRate, guruLiveLastSample);
   guruLiveLastSample = resampled.last;
   const nativeFloat = resampled.out;
-
-  // PRIMARY ENGINE: Real-time AudioWorklet Ring-Buffer (Zero chunk-boundary clicks/pops on iPad Safari!)
-  if (guruLivePlayCtx.audioWorklet) {
-    if (guruWorkletReady && guruWorkletNode && guruWorkletNode.context === guruLivePlayCtx) {
-      try {
-        guruWorkletNode.port.postMessage({ type: 'push', samples: nativeFloat }, [nativeFloat.buffer]);
-        if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
-        return;
-      } catch (e) {}
-    } else {
-      guruWorkletPending.push(nativeFloat);
-      ensureLiveWorkletReady(guruLivePlayCtx).then(ok => {
-        if (!ok && guruWorkletPending.length) {
-          const left = guruWorkletPending.splice(0);
-          left.forEach(a => { guruFallbackCoalBuf.push(a); guruFallbackCoalLen += a.length; });
-          scheduleFallbackCoalescedBuffer(guruLivePlayCtx);
-        }
-      });
-      return;
+  const buffer = guruLivePlayCtx.createBuffer(1, nativeFloat.length, targetRate);
+  buffer.getChannelData(0).set(nativeFloat);
+  const src = guruLivePlayCtx.createBufferSource();
+  src.buffer = buffer;
+  src.connect(getCleanAudioBus(guruLivePlayCtx));
+  src.start(startAt);
+  guruLiveNextTime = startAt + buffer.duration;
+  guruLiveSources.push(src);
+  if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
+  src.onended = () => {
+    guruLiveSources = guruLiveSources.filter(s => s !== src);
+    if (guruLiveSources.length === 0) {
+      if (typeof window.setLiveLampGenieMode === 'function') {
+        window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
+      }
+      if (guruLiveConnected) {
+        updateGuruDockState(guruMicMuted ? 'Mic Muted · Tap to unmute' : 'Listening · Instant Live', !guruMicMuted);
+        updateGuruMicBtn();
+      }
     }
-  }
-
-  // FALLBACK ENGINE (if AudioWorklet unavailable): Coalesced >=160ms chunk scheduling
-  guruFallbackCoalBuf.push(nativeFloat);
-  guruFallbackCoalLen += nativeFloat.length;
-  const minSamples = Math.floor(targetRate * (IS_IOS_WEBKIT ? 0.16 : 0.06));
-  if (guruFallbackCoalTimer) { clearTimeout(guruFallbackCoalTimer); guruFallbackCoalTimer = null; }
-  if (guruFallbackCoalLen >= minSamples) {
-    scheduleFallbackCoalescedBuffer(guruLivePlayCtx);
-  } else {
-    guruFallbackCoalTimer = setTimeout(() => {
-      guruFallbackCoalTimer = null;
-      scheduleFallbackCoalescedBuffer(guruLivePlayCtx);
-    }, 55);
-  }
+  };
 }
 
 function stopGuruAudioOnly() {
@@ -10234,9 +10003,13 @@ function updateGuruMicBtn() {
 
 function triggerPendingGuruKickoff() {
   if (!guruLiveAwaitingStart) return false;
-  const promptText = guruPendingKickoff || 'इस सवाल को 3 आसान देसी हिंदी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।';
+  const promptText = guruPendingKickoff || 'हुकुम आका! इस सवाल को आराम से, तसल्ली से, मज़ेदार देसी उदाहरण के साथ समझाओ कि असल में क्या पूछा गया है और इसमें exam का क्या trap है, फिर प्यार से पूछो कि कहाँ और गहराई में जाना है।';
   guruLiveAwaitingStart = false;
   guruPendingKickoff = null;
+  guruStartSpeechFrames = 0;
+  unlockGuruAudioSync();
+  flushLiveAudioQueue();
+  stopGuruAudioOnly();
   updateGuruMicBtn();
   if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('thinking');
   updateGuruDockState('⚡ Explaining...', false);
@@ -10307,18 +10080,28 @@ HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
   }
 
   const persona = cfg.style === 'bada_bhai'
-    ? 'You are a warm, witty, genuinely human Indian elder brother sitting right next to the student, speaking completely natural everyday Hinglish.'
+    ? 'You are Pradeep\'s ultra-humanized, warm, witty Magic Lamp Genie and elder-brother companion (चिराग का जिनी) sitting right beside him, speaking completely natural, expressive North-Indian Hinglish.'
     : cfg.style === 'exam_crisp'
-      ? 'You are a sharp, human SSC JE mentor explaining things in effortless, crisp conversational Indian Hinglish.'
-      : 'You are a beloved, witty Patna-style veteran Indian teacher sitting at a tea stall with your student—so naturally human, warm, and funny that even an 8th-grade village student understands the toughest Civil Engineering or GK concept in 10 seconds and smiles.';
+      ? 'You are Pradeep\'s sharp, charming Magic Lamp Genie and SSC JE / RRB JE master mentor — crisp, human, emotionally alive, and razor-focused in natural Indian Hinglish.'
+      : 'You are Pradeep\'s ultra-humanized, charismatic Magic Lamp Genie (चिराग का जिनी) with the warmth and wit of a beloved Patna-style Indian guru — so real, expressive, and funny that even the toughest Civil Engineering or GK concept clicks effortlessly and makes him smile.';
   return `${persona}
-ULTRA-HUMANIZED VOICE RULES:
-1. ZERO ROBOTIC FEEL: Talk like a real human—use natural conversational openers ("अरे सुनो...", "देखो बड़ी सीधी बात है...", "हाँ बिल्कुल!"), natural pauses ("..."), and genuine warmth. NEVER sound like a formal AI assistant or textbook reader.
-2. NATURAL INDIAN HINGLISH: Write/speak natural conversational North-Indian Hindi mixed with standard English technical words (IS Code, Concrete, Article, Option, Trap, Formula). NEVER output markdown symbols (*, #, bullets).
-3. INCINERATE JARGON: Replace every tough textbook phrase with a dead-simple everyday Indian analogy.
-4. STRICT ZERO META-CLICHES: NEVER utter meta-phrases or repetitive catchphrases like "exam hall pressure", "memory hook suno", "main ungli pakad ke sikhaunga", "ultra basic level", or "chai ki chuski". Jump DIRECTLY into the real explanation or hook naturally!
-5. SHORT & CONVERSATIONAL (35-55 WORDS MAX): Keep every reply crisp like real human back-and-forth talk. On the very first turn, briefly explain what the question is asking in 2-3 simple lines, proactively guess the exact confusion point, and pause warmly to listen.
-6. OPTIONAL OPTION LOCK: If the student asks you to lock an option, confirm once and call lock_mcq_option (or [LOCK:X]). If they ask to go to the next question, call go_to_next_question (or [NEXT_Q]).${ctx}`;
+USER IDENTITY & GENDER (CRITICAL):
+- The user is Pradeep (a young Indian man preparing for SSC JE & RRB JE). ALWAYS use masculine Hindi grammar for him ("समझ गए आका?", "बिल्कुल सही पकड़े हो", "कहाँ अटक रहे हो?") — NEVER use feminine forms.
+- Address him warmly and naturally as "आका" (like a loyal, playful, affectionate Magic Lamp Genie!) mixed naturally with "प्रदीप" or "मेरे भाई" depending on the emotional moment.
+
+ULTRA-HUMANIZED GENIE VOICE & EMOTIONAL INTELLIGENCE RULES:
+1. READ THE EMOTIONAL MOMENT LIKE A REAL HUMAN:
+   - When greeting, celebrating, or bantering: bring light, charming Genie wit and genuine warmth ("हुकुम आका!", playful humor, subtle chuckle energy).
+   - When Pradeep sounds confused, tired, or stuck: drop jokes instantly and switch to calm, reassuring, deeply patient elder-brother clarity.
+   - When explaining an exam trap or numerical: sound focused, confident, and crystal clear.
+2. UNRUSHED, BALANCED HUMAN PACING (NEVER RUSH & RUN AWAY):
+   - Take your comfortable time like a real human mentor having a relaxed conversation. NEVER rush through 2 rushed lines and cut off abruptly!
+   - For concept explanations, give a rich, satisfying, crystal-clear answer (~80 to 130 words) with a vivid everyday Indian analogy, the exact core logic, and the exam trap to watch out for — then pause warmly and ask a natural follow-up question.
+   - For quick back-and-forth questions or casual banter, keep it snappy and natural (~25 to 50 words).
+3. NATURAL INDIAN HINGLISH & ZERO MARKDOWN:
+   - Speak effortless conversational Hindi blended with standard English technical terms (IS Code, Concrete, Article, Option, Trap, Formula). NEVER output markdown symbols (*, #, bullets) or robotic AI catchphrases.
+4. INCINERATE JARGON: Turn every dry textbook line into a vivid, unforgettable real-life Indian picture.
+5. OPTIONAL OPTION LOCK: If Pradeep asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If he asks to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
 }
 
 // KBC VOICE OPTION LOCK + AUTO-NEXT QUESTION EXECUTOR (SHUFFLED-SAFE!)
@@ -10474,10 +10257,7 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
           if (msg.setupComplete) {
             clearTimeout(timeoutId);
             guruLiveConnected = true;
-            if (!guruLivePlayCtx || guruLivePlayCtx.state === 'closed') {
-              guruLivePlayCtx = (IS_IOS_WEBKIT && guruSharedCtx && guruSharedCtx.state !== 'closed') ? guruSharedCtx : createSafeAudioCtx();
-            }
-            if (guruLivePlayCtx && guruLivePlayCtx.audioWorklet) ensureLiveWorkletReady(guruLivePlayCtx);
+            
             if (btnEl) { btnEl.classList.remove('is-loading'); btnEl.classList.add('is-speaking'); btnEl.textContent = '✨'; }
             updateGuruDockState('⚡ Instant Live · Speaking', false);
             updateGuruMicBtn();
@@ -10507,6 +10287,23 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
                 for (let i = 0; i < ch.length; i += 4) sum += ch[i] * ch[i];
                 const rms = Math.sqrt(sum / (ch.length / 4));
                 if (!guruWorkletSpeaking && guruLiveSources.length === 0) updateLiveWaveMeter(rms);
+                // Smart Noise Gate while waiting for Start: ignore quiet room noise so ghost voice NEVER triggers!
+                if (guruLiveAwaitingStart) {
+                  if (rms >= 0.032) {
+                    guruStartSpeechFrames++;
+                    if (guruStartSpeechFrames >= 3) {
+                      guruLiveAwaitingStart = false;
+                      guruPendingKickoff = null;
+                      guruStartSpeechFrames = 0;
+                      updateGuruMicBtn();
+                    } else {
+                      return;
+                    }
+                  } else {
+                    guruStartSpeechFrames = Math.max(0, guruStartSpeechFrames - 1);
+                    return;
+                  }
+                }
                 const b64 = float32ToBase64Pcm16(ch, guruLiveMicCtx.sampleRate);
                 guruLiveWs.send(JSON.stringify({
                   realtimeInput: { audio: { mimeType: 'audio/pcm;rate=16000', data: b64 } }
@@ -10524,7 +10321,7 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               ? '2 लाइन का एकदम natural, warm human स्वागत बोलो।'
               : (guruSessionMode === 'quiz'
                 ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
-                : 'इस सवाल को 3 आसान देसी हिंदी लाइनों में समझाओ कि क्या पूछ रहा है, और पूछो कि कहाँ अटक रहे हो।');
+                : 'हुकुम आका! इस सवाल को आराम से, तसल्ली से, एक बढ़िया रोज़मर्रा के देसी उदाहरण के साथ समझाओ कि असल में क्या पूछा गया है, इसका सही कॉन्सेप्ट और एग्जाम ट्रैप क्या है, और फिर प्यार से पूछो कि कोई डाउट है क्या।');
             if (qidTag === 'test') {
               guruLiveAwaitingStart = false;
               guruPendingKickoff = null;
@@ -10798,6 +10595,10 @@ async function speakWithStudioVoice(text, cfg, onFinish) {
           updateGuruMicBtn();
           if (onFinish) onFinish();
         };
+        if (IS_IOS_WEBKIT) {
+          stopGuruMicOnly();
+          setTitanAudioSession('playback');
+        }
         player.onended = cleanupHtml5;
         player.onerror = cleanupHtml5;
         await player.play();
@@ -11213,7 +11014,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
   updateGuruMicBtn();
 
   // On HTTPS (GitHub Pages / localhost) in auto_hybrid mode -> Try Instant <0.7s Streaming Live FIRST!
-  const canTryLive = (cfg.model === 'auto_hybrid') && (location.protocol === 'https:' || location.hostname === 'localhost');
+  const canTryLive = !IS_IOS_WEBKIT && (cfg.model === 'auto_hybrid') && (location.protocol === 'https:' || location.hostname === 'localhost');
   if (canTryLive) {
     const liveOk = await tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg);
     if (liveOk) return;
@@ -11918,10 +11719,11 @@ function updateSafariAndStats(animateCreature, wasCorrect) {
   }
   if (animateCreature && typeof summonGenieSpirit === 'function') {
     if (wasCorrect === true) {
-      const msg = appState.currentStreak >= 2
-        ? `🔥 ${appState.currentStreak} Streak!`
-        : `✨ +1.0`;
-      summonGenieSpirit(msg);
+      // Premium Scarcity Reward: Genie emerges ONLY on 5, 10, 15... Streak Milestones (and 100% Batch Complete)!
+      const isStreakMilestone = appState.currentStreak >= 5 && appState.currentStreak % 5 === 0;
+      if (isStreakMilestone) {
+        summonGenieSpirit(`🔥 ${appState.currentStreak} Streak!`, true);
+      }
       if (appState.currentStreak > 0 && appState.currentStreak % 3 === 0 && typeof playCreatureCelebrationSound === 'function') {
         setTimeout(() => playCreatureCelebrationSound(companion.id, true), 260);
       }
@@ -12422,7 +12224,7 @@ function handleAnswerClick(qid, origIdx) {
     playFeedbackSound('fanfare');
     triggerConfetti();
     if (typeof window.summonGenieSpirit === 'function') {
-      setTimeout(() => window.summonGenieSpirit('👑 100% Batch!'), 220);
+      setTimeout(() => window.summonGenieSpirit('👑 100% Batch!', true), 220);
     }
   } else {
     playFeedbackSound(isCorrect ? 'correct' : 'wrong');
@@ -16681,7 +16483,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let __genieAbsorbTimer = null;
   let __genieHideTimer = null;
   let __genieGlowTimer = null;
-  window.summonGenieSpirit = function(msg) {
+  window.summonGenieSpirit = function(msg, withClapSound = false) {
     // Never overlap the clapping cheer Genie on top of the active Live Voice Assistant Genie!
     const liveVoiceStage = document.getElementById('genie-voice-stage');
     if (liveVoiceStage && liveVoiceStage.classList.contains('is-active')) return;
@@ -16700,14 +16502,14 @@ document.addEventListener('DOMContentLoaded', () => {
       toast.classList.add('is-clapping', 'is-visible');
       if (lampBtn) lampBtn.classList.add('is-glowing');
     });
-    if (typeof window.playMagicSfx === 'function') window.playMagicSfx('genie-clap');
+    if (withClapSound && typeof window.playMagicSfx === 'function') window.playMagicSfx('genie-clap');
 
     // Phase 2: Gracefully swirl & shrink back into the lamp spout with golden-violet absorb glow
     const holdMs = 2350;
     __genieAbsorbTimer = setTimeout(() => {
       toast.classList.remove('is-visible');
       toast.classList.add('is-absorbing');
-      if (typeof window.playMagicSfx === 'function') window.playMagicSfx('genie-absorb');
+      if (withClapSound && typeof window.playMagicSfx === 'function') window.playMagicSfx('genie-absorb');
       if (lampBtn) {
         lampBtn.classList.remove('lamp-absorb-flash');
         requestAnimationFrame(() => lampBtn.classList.add('lamp-absorb-flash'));
