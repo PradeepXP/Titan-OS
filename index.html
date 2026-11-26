@@ -9915,7 +9915,7 @@ function playLivePcm24k(base64Pcm, mimeType) {
   }
   const now = guruLivePlayCtx.currentTime;
   const isContiguous = (guruLiveSources.length > 0 && guruLiveNextTime > now + 0.004);
-  const startAt = isContiguous ? guruLiveNextTime : (now + 0.095);
+  const startAt = isContiguous ? guruLiveNextTime : (now + (IS_IOS_WEBKIT ? 0.38 : 0.095));
   if (!isContiguous) {
     const fade = Math.min(48, Math.floor(len / 8));
     for (let i = 0; i < fade; i++) float32[i] *= (i / fade);
