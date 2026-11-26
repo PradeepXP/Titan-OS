@@ -9825,6 +9825,7 @@ let guruLiveLastSample = 0;
 let guruLiveAwaitingStart = false;
 let guruPendingKickoff = null;
 let guruStartSpeechFrames = 0;
+let __iosMicReopenTimer = null;
 let guruWorkletSpeaking = false;
 
 function resampleContiguousLinear(input, inRate, outRate, prevSample) {
@@ -10039,6 +10040,7 @@ function triggerPendingGuruKickoff() {
 
 function stopActiveVoicePlayback() {
   if (guruSwitchDebounce) { clearTimeout(guruSwitchDebounce); guruSwitchDebounce = null; }
+  if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
   stopGuruAudioOnly();
   stopGuruMicOnly();
   if (guruLiveWs) { try { guruLiveWs.onclose = null; guruLiveWs.onerror = null; guruLiveWs.close(); } catch (e) {} guruLiveWs = null; }
@@ -10099,6 +10101,9 @@ HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
       ? 'You are a sharp, charming Magic Lamp Genie and SSC JE / RRB JE master mentor — crisp, human, emotionally alive, and razor-focused in natural Indian Hinglish.'
       : 'You are an ultra-humanized, charismatic Magic Lamp Genie (चिराग का जिनी) with the warmth and wit of a beloved Patna-style Indian guru — so real, expressive, and funny that even the toughest Civil Engineering or GK concept clicks effortlessly and makes the student smile.';
   return `${persona}
+${/^(Kore|Aoede|Zephyr|Leda)$/i.test(String((cfg && cfg.voiceName) || 'Kore'))
+  ? 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm female voice — ALWAYS use natural feminine Hindi self-grammar ("मैं समझाती हूँ", "मैं बताती हूँ", "मैं हाज़िर हूँ आका!").'
+  : 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm male voice — ALWAYS use natural masculine Hindi self-grammar ("मैं समझाता हूँ", "मैं बताता हूँ", "मैं हाज़िर हूँ आका!").'}
 USER ADDRESS & GENDER ADAPTATION (CRITICAL):
 - NEVER assume or speak any personal name unless the student explicitly tells you their name.
 - Address the student warmly and naturally as "आका" (like a loyal, playful, affectionate Magic Lamp Genie!) using respectful "आप" framing.
@@ -10218,7 +10223,6 @@ function syncGuruToFocusedQuestion(newQid) {
 }
 
 // ENGINE A: INSTANT <0.7s FULL-DUPLEX STREAMING LIVE (AUTO-USED ON HTTPS!)
-let __iosMicReopenTimer = null;
 async function attachLiveWsMic(cfg) {
   if (!guruLiveConnected || guruMicMuted || !guruLiveWs || guruLiveWs.readyState !== WebSocket.OPEN) return false;
   if (guruMicStream && guruLiveMicNode) return true;
