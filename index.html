@@ -9886,7 +9886,7 @@ function getCleanAudioBus(ctx) {
 
 function playLivePcm24k(base64Pcm, mimeType) {
   if (!guruLivePlayCtx || guruLivePlayCtx.state === 'closed') {
-    guruLivePlayCtx = createSafeAudioCtx();
+    guruLivePlayCtx = (guruSharedCtx && guruSharedCtx.state !== 'closed') ? guruSharedCtx : createSafeAudioCtx();
   }
   if (guruLivePlayCtx.state === 'suspended') guruLivePlayCtx.resume().catch(() => {});
   const bin = atob(base64Pcm);
@@ -9949,7 +9949,11 @@ function playLivePcm24k(base64Pcm, mimeType) {
           __iosMicReopenTimer = setTimeout(() => {
             __iosMicReopenTimer = null;
             if (guruLiveConnected && !guruMicMuted && guruLiveSources.length === 0) {
-              attachLiveWsMic(getVoiceConfig());
+              attachLiveWsMic(getVoiceConfig()).then(ok => {
+                if (!ok && guruLiveConnected && !guruMicMuted && guruLiveSources.length === 0) {
+                  updateGuruDockState('Tap 🎙️ to speak', false);
+                }
+              });
             }
           }, 240);
         }
@@ -10044,9 +10048,6 @@ function stopActiveVoicePlayback() {
   stopGuruAudioOnly();
   stopGuruMicOnly();
   if (guruLiveWs) { try { guruLiveWs.onclose = null; guruLiveWs.onerror = null; guruLiveWs.close(); } catch (e) {} guruLiveWs = null; }
-  if (guruWorkletNode) { try { guruWorkletNode.disconnect(); } catch (e) {} guruWorkletNode = null; }
-  guruWorkletReady = false;
-  guruWorkletInitPromise = null;
   guruWorkletSpeaking = false;
   if (guruLivePlayCtx && guruLivePlayCtx !== guruSharedCtx) { try { guruLivePlayCtx.close(); } catch (e) {} }
   guruLivePlayCtx = null;
@@ -10251,9 +10252,9 @@ async function attachLiveWsMic(cfg) {
       const rms = Math.sqrt(sum / (ch.length / 4));
       if (!guruWorkletSpeaking && guruLiveSources.length === 0) updateLiveWaveMeter(rms);
       if (guruLiveAwaitingStart) {
-        if (rms >= 0.032) {
+        if (rms >= 0.011) {
           guruStartSpeechFrames++;
-          if (guruStartSpeechFrames >= 3) {
+          if (guruStartSpeechFrames >= 2) {
             guruLiveAwaitingStart = false;
             guruPendingKickoff = null;
             guruStartSpeechFrames = 0;
