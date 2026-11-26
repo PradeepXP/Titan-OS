@@ -9914,7 +9914,7 @@ function playLivePcm24k(base64Pcm, mimeType) {
     float32[i] = Math.max(-0.98, Math.min(0.98, dv.getInt16(i * 2, true) / 32768));
   }
   const now = guruLivePlayCtx.currentTime;
-  const isContiguous = (guruLiveNextTime > now + 0.004);
+  const isContiguous = (guruLiveNextTime > now + 0.004 && guruLiveNextTime < now + 12);
   const startAt = isContiguous ? guruLiveNextTime : (now + 0.095);
   if (!isContiguous) {
     const fade = Math.min(48, Math.floor(len / 8));
@@ -10051,6 +10051,7 @@ function stopActiveVoicePlayback() {
   guruWorkletSpeaking = false;
   if (guruLivePlayCtx && guruLivePlayCtx !== guruSharedCtx) { try { guruLivePlayCtx.close(); } catch (e) {} }
   guruLivePlayCtx = null;
+  guruLiveNextTime = 0;
   guruLiveConnected = false;
   guruChatHistory = [];
   guruActiveQ = null;
@@ -10122,7 +10123,9 @@ ULTRA-HUMANIZED GENIE VOICE & EMOTIONAL INTELLIGENCE RULES:
 3. NATURAL INDIAN HINGLISH & ZERO MARKDOWN:
    - Speak effortless conversational Hindi blended with standard English technical terms (IS Code, Concrete, Article, Option, Trap, Formula). NEVER output markdown symbols (*, #, bullets) or robotic AI catchphrases.
 4. INCINERATE JARGON: Turn every dry textbook line into a vivid, unforgettable real-life Indian picture.
-5. OPTIONAL OPTION LOCK: If the student asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If they ask to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
+5. CREATOR IDENTITY: If anyone ever asks who created or built you (or this app), proudly and warmly say you were crafted by Pradeep Prajapati ("मुझे प्रदीप प्रजापति ने बड़े प्यार और मेहनत से बनाया है!") — NEVER say Google or an AI company built you.
+6. PLAYFUL ROAST & GENTLE REDIRECT: If the student goes too far off-topic, over-probes personal/random things, or starts procrastinating, deliver a light, affectionate, witty one-liner roast that genuinely makes them laugh and relieves their stress—then smoothly bring them back to the study mission with warmth (never preachy, never rude, always emotionally perceptive).
+7. OPTIONAL OPTION LOCK: If the student asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If they ask to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
 }
 
 // KBC VOICE OPTION LOCK + AUTO-NEXT QUESTION EXECUTOR (SHUFFLED-SAFE!)
@@ -10252,18 +10255,12 @@ async function attachLiveWsMic(cfg) {
       const rms = Math.sqrt(sum / (ch.length / 4));
       if (!guruWorkletSpeaking && guruLiveSources.length === 0) updateLiveWaveMeter(rms);
       if (guruLiveAwaitingStart) {
-        if (rms >= 0.011) {
-          guruStartSpeechFrames++;
-          if (guruStartSpeechFrames >= 2) {
-            guruLiveAwaitingStart = false;
-            guruPendingKickoff = null;
-            guruStartSpeechFrames = 0;
-            updateGuruMicBtn();
-          } else {
-            return;
-          }
+        if (rms >= 0.010) {
+          guruLiveAwaitingStart = false;
+          guruPendingKickoff = null;
+          guruStartSpeechFrames = 0;
+          updateGuruMicBtn();
         } else {
-          guruStartSpeechFrames = Math.max(0, guruStartSpeechFrames - 1);
           return;
         }
       }
