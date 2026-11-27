@@ -4900,6 +4900,377 @@ body.theme-night .gv-actor svg {
   .gv-mouth-open,
   .gv-stardust { animation: none !important; }
 }
+
+/* =====================================================================
+   ASK GURU v5.3 — FULL-SCREEN GEMINI / CHATGPT-GRADE RESPONSIVE STUDIO
+   (Strictly scoped to body[data-universe="chat"] — 0% impact on PYQ/PDF!)
+   ===================================================================== */
+body[data-universe="chat"] {
+  padding: 0 !important;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+body[data-universe="chat"] .app-wrap {
+  max-width: 100% !important;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+body[data-universe="chat"] .top-header {
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  margin: 0 !important;
+  padding: calc(6px + env(safe-area-inset-top, 0px)) 10px 6px !important;
+  box-shadow: none !important;
+  flex-shrink: 0;
+  background: var(--card);
+}
+body[data-universe="chat"] .top-header .header-row-1 {
+  display: none !important;
+}
+body[data-universe="chat"] .pg-universe-bar {
+  margin: 0 auto !important;
+  max-width: 780px;
+  width: 100%;
+  padding: 3px !important;
+  gap: 5px !important;
+  border-radius: 12px !important;
+}
+body[data-universe="chat"] .pg-uni-btn {
+  padding: 7px 6px !important;
+  font-size: 0.78rem !important;
+  border-radius: 9px !important;
+}
+body[data-universe="chat"] #universe-chat-view.pg-uni-panel.active {
+  display: flex !important;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  margin: 0 !important;
+  overflow: hidden;
+}
+body[data-universe="chat"] .chat-shell {
+  flex: 1;
+  min-height: 0 !important;
+  height: 100%;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: var(--bg) !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* Sleek 44px Unified Top Sub-Bar (Subject Pills + Clear Icon) */
+.chat-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 7px 12px 6px;
+}
+.chat-topbar .chat-subject-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.chat-topbar .chat-subject-bar::-webkit-scrollbar { display: none; }
+.chat-topbar .chat-subj-pill {
+  padding: 5px 11px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  border-radius: 999px !important;
+  white-space: nowrap;
+  transition: all 0.16s ease;
+}
+.chat-icon-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.chat-icon-btn:hover { background: var(--opt-hover); color: var(--ink); border-color: var(--accent); }
+.chat-icon-btn:active { transform: scale(0.92); }
+.chat-icon-btn svg { width: 17px; height: 17px; display: block; }
+body.theme-night .chat-icon-btn { background: #1E293B; border-color: #334155; color: #CBD5E1; }
+body.theme-night .chat-icon-btn:hover { background: #26354D; color: #F8FAFC; border-color: #60A5FA; }
+
+/* Slim Floating MCQ Context Bar */
+body[data-universe="chat"] .guru-q-ctx-bar {
+  flex-shrink: 0;
+  width: calc(100% - 20px);
+  max-width: 760px;
+  margin: 0 auto 6px !important;
+  padding: 6px 8px 6px 10px !important;
+  border-radius: 12px !important;
+  gap: 8px !important;
+}
+body[data-universe="chat"] .guru-q-ctx-pill {
+  font-size: 0.7rem !important;
+  padding: 2.5px 8px !important;
+}
+body[data-universe="chat"] .guru-q-ctx-text {
+  font-size: 0.76rem !important;
+}
+body[data-universe="chat"] .guru-ctx-btn {
+  padding: 4px 9px !important;
+  font-size: 0.72rem !important;
+  white-space: nowrap;
+}
+
+/* Expansive Full-Height Editorial Chat Feed (~75% of screen!) */
+body[data-universe="chat"] .chat-feed {
+  flex: 1 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 14px 20px !important;
+  gap: 16px !important;
+  background: transparent !important;
+}
+body[data-universe="chat"] .chat-feed > .chat-msg {
+  width: 100%;
+  max-width: 760px !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+body[data-universe="chat"] .chat-msg.user {
+  width: auto !important;
+  max-width: min(82%, 620px) !important;
+  margin-left: auto !important;
+  margin-right: max(0px, calc((100% - 760px) / 2)) !important;
+  border-radius: 20px 20px 6px 20px !important;
+  padding: 10px 15px !important;
+  font-size: 0.94rem !important;
+  line-height: 1.52 !important;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.18);
+}
+body[data-universe="chat"] .chat-msg.ai {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px 2px 6px !important;
+  border-radius: 0 !important;
+}
+body[data-universe="chat"] .guru-rich-card {
+  font-size: 0.97rem !important;
+  line-height: 1.7 !important;
+}
+body[data-universe="chat"] .guru-rich-h2 {
+  display: block;
+  margin: 12px 0 8px !important;
+  padding: 7px 12px !important;
+  font-size: 1rem !important;
+  border-radius: 10px !important;
+}
+body[data-universe="chat"] .guru-card-actions {
+  border-top: none !important;
+  padding-top: 6px !important;
+  margin-top: 6px !important;
+  gap: 6px !important;
+}
+body[data-universe="chat"] .guru-card-actions .ctrl-btn {
+  padding: 5px 10px !important;
+  font-size: 0.74rem !important;
+  border-radius: 999px !important;
+  opacity: 0.88;
+}
+/* Minimalist Centered Empty Welcome State */
+.chat-welcome-hero {
+  margin: auto;
+  text-align: center;
+  max-width: 420px;
+  padding: 28px 16px;
+}
+.chat-welcome-orb {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28);
+}
+.chat-welcome-hero h3 {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.chat-welcome-hero p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* Bottom Dock: Compact Single-Row Chips + Gemini/ChatGPT Floating Pill Composer */
+.chat-bottom-dock {
+  flex-shrink: 0;
+  width: 100%;
+  background: var(--bg);
+  padding: 4px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+}
+.chat-bottom-inner {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+body[data-universe="chat"] .chat-quick-chips {
+  padding: 0 2px !important;
+  background: transparent !important;
+  border: none !important;
+  gap: 6px !important;
+  scrollbar-width: none;
+}
+body[data-universe="chat"] .chat-quick-chips::-webkit-scrollbar { display: none; }
+body[data-universe="chat"] .chat-img-toggle-pill,
+body[data-universe="chat"] .chat-vis-toggle-pill,
+body[data-universe="chat"] .chat-chip {
+  padding: 5px 10px !important;
+  font-size: 0.74rem !important;
+  border-radius: 999px !important;
+  white-space: nowrap;
+}
+body[data-universe="chat"] .chat-img-toggle-pill:not(.active),
+body[data-universe="chat"] .chat-vis-toggle-pill:not(.active) {
+  opacity: 0.50;
+  background: transparent !important;
+  border-color: var(--border) !important;
+  color: var(--muted) !important;
+}
+body[data-universe="chat"] .chat-img-preview-bar {
+  border-radius: 14px !important;
+  border: 1px solid var(--border) !important;
+  padding: 6px 10px !important;
+}
+body[data-universe="chat"] .chat-composer {
+  padding: 8px 10px 8px 14px !important;
+  gap: 6px !important;
+  border-radius: 24px !important;
+  border: 1.5px solid var(--border) !important;
+  background: var(--card) !important;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.07);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+body[data-universe="chat"] .chat-composer:focus-within {
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.16);
+}
+body.theme-night[data-universe="chat"] .chat-composer {
+  background: #162033 !important;
+  border-color: #2B3B58 !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+body.theme-night[data-universe="chat"] .chat-composer:focus-within {
+  border-color: #60A5FA !important;
+}
+body[data-universe="chat"] .chat-textarea {
+  min-height: 28px !important;
+  max-height: 120px !important;
+  padding: 4px 4px 2px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 0.96rem !important;
+  line-height: 1.45 !important;
+}
+body[data-universe="chat"] .chat-textarea:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
+body[data-universe="chat"] .chat-composer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+body[data-universe="chat"] .chat-composer-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap !important;
+}
+body[data-universe="chat"] .chat-tool-pill {
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  justify-content: center;
+  background: var(--bg) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--ink) !important;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.12s ease;
+}
+body[data-universe="chat"] .chat-tool-pill:hover {
+  background: var(--opt-hover) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+body[data-universe="chat"] .chat-tool-pill:active { transform: scale(0.92); }
+body[data-universe="chat"] .chat-tool-pill svg { width: 18px; height: 18px; display: block; }
+body[data-universe="chat"] .chat-tool-pill.recording {
+  background: #E11D48 !important;
+  color: #FFFFFF !important;
+  border-color: #E11D48 !important;
+}
+body.theme-night[data-universe="chat"] .chat-tool-pill {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+  color: #E2E8F0 !important;
+}
+body[data-universe="chat"] .chat-send-btn {
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 12px rgba(37, 99, 235, 0.34);
+  transition: transform 0.14s ease, filter 0.14s ease;
+}
+body[data-universe="chat"] .chat-send-btn svg { width: 18px; height: 18px; display: block; }
+body[data-universe="chat"] .chat-send-btn:active { transform: scale(0.92); }
+@media (min-width: 768px) {
+  body[data-universe="chat"] .chat-feed { padding: 18px 24px 24px !important; }
+  body[data-universe="chat"] .chat-bottom-dock { padding: 6px 20px 14px; }
+}
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
@@ -5370,18 +5741,15 @@ body.theme-night .gv-actor svg {
        ================================================================= -->
   <section class="pg-uni-panel no-print" id="universe-chat-view">
     <div class="chat-shell">
-      <div class="chat-header">
-        <div>
-          <h2>💬 Ask Titan Guru — Camera, Photo &amp; Doubt Tutor</h2>
-          <p>Camera से Photo खींचो, Gallery से डालो, बोलकर पूछो या लिखो — आसान Hindi + English Technical Terms में समझो</p>
+      <div class="chat-topbar">
+        <div class="chat-subject-bar" id="chat-subject-bar">
+          <button type="button" class="chat-subj-pill active" data-subj="SSC JE & RRB JE Civil Engineering + General Awareness">✨ All</button>
+          <button type="button" class="chat-subj-pill" data-subj="Civil Engineering Technical Subjects (BMC, Concrete, RCC, Soil, Fluid, Survey, SOM, Steel, Irrigation, Highway, Environment, Estimating)">🏗️ Civil</button>
+          <button type="button" class="chat-subj-pill" data-subj="General Awareness (Indian Polity, History, Geography, Economy, General Science & Static GK)">🌍 GK</button>
         </div>
-        <button type="button" class="ctrl-btn" id="btn-chat-clear" style="background:rgba(255,255,255,0.16); color:#FFF; border-color:rgba(255,255,255,0.3);">🗑️ Clear</button>
-      </div>
-
-      <div class="chat-subject-bar" id="chat-subject-bar">
-        <button type="button" class="chat-subj-pill active" data-subj="SSC JE & RRB JE Civil Engineering + General Awareness">✨ All</button>
-        <button type="button" class="chat-subj-pill" data-subj="Civil Engineering Technical Subjects (BMC, Concrete, RCC, Soil, Fluid, Survey, SOM, Steel, Irrigation, Highway, Environment, Estimating)">🏗️ Civil Engineering</button>
-        <button type="button" class="chat-subj-pill" data-subj="General Awareness (Indian Polity, History, Geography, Economy, General Science & Static GK)">🌍 General Awareness</button>
+        <button type="button" class="chat-icon-btn" id="btn-chat-clear" title="Clear chat" aria-label="Clear chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button>
       </div>
 
       <div class="guru-q-ctx-bar" id="guru-q-ctx-bar" style="display:none;">
@@ -5390,39 +5758,51 @@ body.theme-night .gv-actor svg {
           <span class="guru-q-ctx-text" id="guru-q-ctx-text"></span>
         </div>
         <div class="guru-q-ctx-btns">
-          <button type="button" class="guru-ctx-btn primary" id="btn-guru-back-mcq">↩ Back to Q</button>
-          <button type="button" class="guru-ctx-btn" id="btn-guru-clear-ctx" title="Dismiss Context">✕</button>
+          <button type="button" class="guru-ctx-btn primary" id="btn-guru-back-mcq">↩ Back</button>
+          <button type="button" class="guru-ctx-btn" id="btn-guru-clear-ctx" title="Dismiss Context" aria-label="Dismiss Context">✕</button>
         </div>
       </div>
 
       <div class="chat-feed" id="chat-feed"></div>
 
-      <div class="chat-quick-chips" id="chat-quick-chips">
-        <button type="button" class="chat-img-toggle-pill active" id="btn-toggle-img-search" aria-pressed="true" title="Smart Auto Real Photos when helpful">🖼️ Images: ON</button>
-        <button type="button" class="chat-vis-toggle-pill active" id="btn-toggle-visual-svg" aria-pressed="true" title="Auto-create Animated Visual Diagram when helpful">🎨 Visual: ON</button>
-        <button type="button" class="chat-chip" data-prompt="इसे एकदम आसान भाषा और देसी example से समझा दो">💡 आसान भाषा में समझाओ</button>
-        <button type="button" class="chat-chip" data-prompt="इसका Formula, Unit Trap और Exam Numerical step-by-step समझाओ">📐 Formula &amp; Trap</button>
-        <button type="button" class="chat-chip" data-prompt="इसमें Confusing Twins को एक साफ Comparison Table में समझा दो">📊 Comparison Table</button>
-        <button type="button" class="chat-chip" data-prompt="इसे याद रखने की सबसे मस्त Short Trick दे दो">⚡ Short Trick दो</button>
-      </div>
-
-      <div class="chat-img-preview-bar" id="chat-img-preview-bar">
-        <img id="chat-img-preview" src="" alt="Selected photo">
-        <div style="flex:1; font-size:0.8rem; font-weight:700; color:var(--ink);" id="chat-img-label">📷 Photo attached (Text लिखना optional है)</div>
-        <button type="button" class="ctrl-btn btn-warn" id="btn-chat-remove-img">✕ Remove</button>
-      </div>
-
-      <div class="chat-composer">
-        <textarea class="chat-textarea" id="chat-text-input" rows="2" placeholder="यहाँ अपना कोई भी Civil, GK या PYQ doubt आराम से लिखो (या नीचे से Photo/Camera/Mic भेजो)..."></textarea>
-        <div class="chat-composer-bar">
-          <div class="chat-composer-tools">
-            <button type="button" class="chat-tool-pill" id="btn-chat-camera" title="Take Photo with Camera">📷 Camera</button>
-            <input type="file" id="chat-camera-input" accept="image/*" capture="environment" style="display:none;">
-            <button type="button" class="chat-tool-pill" id="btn-chat-gallery" title="Upload from Gallery">🖼️ Photo</button>
-            <input type="file" id="chat-gallery-input" accept="image/*" style="display:none;">
-            <button type="button" class="chat-tool-pill" id="btn-chat-mic" title="Ask by Voice">🎤 Mic</button>
+      <div class="chat-bottom-dock">
+        <div class="chat-bottom-inner">
+          <div class="chat-quick-chips" id="chat-quick-chips">
+            <button type="button" class="chat-img-toggle-pill active" id="btn-toggle-img-search" aria-pressed="true" title="Smart Auto Real Photos">🖼️ Photos</button>
+            <button type="button" class="chat-vis-toggle-pill active" id="btn-toggle-visual-svg" aria-pressed="true" title="Animated Visual Diagrams">🎨 Visual</button>
+            <button type="button" class="chat-chip" data-prompt="इसे एकदम आसान भाषा और देसी example से समझा दो">💡 आसान भाषा</button>
+            <button type="button" class="chat-chip" data-prompt="इसका Formula, Unit Trap और Exam Numerical step-by-step समझाओ">📐 Formula</button>
+            <button type="button" class="chat-chip" data-prompt="इसमें Confusing Twins को एक साफ Comparison Table में समझा दो">📊 Table</button>
+            <button type="button" class="chat-chip" data-prompt="इसे याद रखने की सबसे मस्त Short Trick दे दो">⚡ Trick</button>
           </div>
-          <button type="button" class="chat-send-btn" id="btn-chat-send">Send ➤</button>
+
+          <div class="chat-img-preview-bar" id="chat-img-preview-bar">
+            <img id="chat-img-preview" src="" alt="Selected photo">
+            <div style="flex:1; font-size:0.78rem; font-weight:700; color:var(--ink);" id="chat-img-label">Photo ready</div>
+            <button type="button" class="ctrl-btn btn-warn" id="btn-chat-remove-img" style="padding:4px 8px; font-size:0.74rem;">✕</button>
+          </div>
+
+          <div class="chat-composer">
+            <textarea class="chat-textarea" id="chat-text-input" rows="1" placeholder="Ask Titan Guru..."></textarea>
+            <div class="chat-composer-bar">
+              <div class="chat-composer-tools">
+                <button type="button" class="chat-tool-pill" id="btn-chat-camera" title="Camera" aria-label="Camera">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </button>
+                <input type="file" id="chat-camera-input" accept="image/*" capture="environment" style="display:none;">
+                <button type="button" class="chat-tool-pill" id="btn-chat-gallery" title="Photo from Gallery" aria-label="Photo from Gallery">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" ry="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </button>
+                <input type="file" id="chat-gallery-input" accept="image/*" style="display:none;">
+                <button type="button" class="chat-tool-pill" id="btn-chat-mic" title="Voice Doubt" aria-label="Voice Doubt">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+              </div>
+              <button type="button" class="chat-send-btn" id="btn-chat-send" title="Send" aria-label="Send">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -7341,31 +7721,45 @@ function escapeHtml(s) {
    NATIVE OFFLINE LATEX MATH & CHEMISTRY RENDERER (100% VERIFIED!)
    Handles \frac{a}{b}, \sqrt{x}, sub/sup (_{}, ^{}, H_2O), Greek & ops
    ===================================================================== */
+const TITAN_LATEX_SYMS = [
+  ['\\alpha', 'α'], ['\\beta', 'β'], ['\\gamma', 'γ'], ['\\Gamma', 'Γ'],
+  ['\\delta', 'δ'], ['\\Delta', 'Δ'], ['\\varepsilon', 'ε'], ['\\epsilon', 'ε'],
+  ['\\eta', 'η'], ['\\theta', 'θ'], ['\\Theta', 'Θ'], ['\\lambda', 'λ'],
+  ['\\mu', 'μ'], ['\\nu', 'ν'], ['\\pi', 'π'], ['\\Pi', 'Π'],
+  ['\\rho', 'ρ'], ['\\sigma', 'σ'], ['\\Sigma', 'Σ'], ['\\tau', 'τ'],
+  ['\\phi', 'φ'], ['\\Phi', 'Φ'], ['\\psi', 'ψ'], ['\\omega', 'ω'], ['\\Omega', 'Ω'],
+  ['\\angle', '∠'], ['\\measuredangle', '∡'], ['\\triangle', '△'], ['\\perp', '⊥'], ['\\parallel', '∥'],
+  ['\\therefore', '∴'], ['\\because', '∵'], ['\\sim', '∼'], ['\\cong', '≅'],
+  ['\\sum', '∑'], ['\\int', '∫'],
+  ['\\times', '×'], ['\\cdot', '·'], ['\\pm', '±'], ['\\mp', '∓'], ['\\div', '÷'],
+  ['\\leq', '≤'], ['\\le', '≤'], ['\\geq', '≥'], ['\\ge', '≥'],
+  ['\\neq', '≠'], ['\\ne', '≠'], ['\\approx', '≈'], ['\\equiv', '≡'],
+  ['\\infty', '∞'], ['\\propto', '∝'],
+  ['\\Leftrightarrow', '⇔'], ['\\Rightarrow', '⇒'], ['\\Leftarrow', '⇐'],
+  ['\\leftrightarrow', '↔'], ['\\rightarrow', '→'], ['\\leftarrow', '←'], ['\\to', '→'],
+  ['\\degree', '°'], ['\\circ', '°'], ['\\partial', '∂'], ['\\nabla', '∇']
+];
+
+function replaceLatexSymbols(str) {
+  let s = String(str || '');
+  if (s.indexOf('\\') === -1) return s;
+  s = s.replace(/\\angle(?![a-zA-Z])\s*/g, '∠');
+  for (let i = 0; i < TITAN_LATEX_SYMS.length; i++) {
+    const cmd = TITAN_LATEX_SYMS[i][0];
+    const sym = TITAN_LATEX_SYMS[i][1];
+    const re = new RegExp(cmd.replace(/\\/g, '\\\\') + '(?![a-zA-Z])', 'g');
+    s = s.replace(re, sym);
+  }
+  return s;
+}
+
 function formatMathExpr(raw) {
   let s = String(raw || '');
   // 1. Replace LaTeX escaped punctuation & spacing commands first
   s = s.replace(/\\%/g, '%').replace(/\\&amp;/g, '&amp;').replace(/\\&/g, '&amp;').replace(/\\#/g, '#').replace(/\\\$/g, '$');
   s = s.replace(/\\(,|;|!|quad|qquad|\s)/g, ' ');
   // 2. Replace LaTeX symbols & Greek letters BEFORE unwrapping \text{...} (fixes \mu\text{m} & \circ\text{C}!)
-  const symMap = [
-    ['\\alpha', 'α'], ['\\beta', 'β'], ['\\gamma', 'γ'], ['\\Gamma', 'Γ'],
-    ['\\delta', 'δ'], ['\\Delta', 'Δ'], ['\\varepsilon', 'ε'], ['\\epsilon', 'ε'],
-    ['\\eta', 'η'], ['\\theta', 'θ'], ['\\Theta', 'Θ'], ['\\lambda', 'λ'],
-    ['\\mu', 'μ'], ['\\nu', 'ν'], ['\\pi', 'π'], ['\\Pi', 'Π'],
-    ['\\rho', 'ρ'], ['\\sigma', 'σ'], ['\\Sigma', 'Σ'], ['\\tau', 'τ'],
-    ['\\phi', 'φ'], ['\\Phi', 'Φ'], ['\\psi', 'ψ'], ['\\omega', 'ω'], ['\\Omega', 'Ω'],
-    ['\\times', '×'], ['\\cdot', '·'], ['\\pm', '±'], ['\\mp', '∓'], ['\\div', '÷'],
-    ['\\leq', '≤'], ['\\le', '≤'], ['\\geq', '≥'], ['\\ge', '≥'],
-    ['\\neq', '≠'], ['\\ne', '≠'], ['\\approx', '≈'], ['\\equiv', '≡'],
-    ['\\infty', '∞'], ['\\propto', '∝'], ['\\rightarrow', '→'], ['\\to', '→'],
-    ['\\degree', '°'], ['\\circ', '°'], ['\\partial', '∂'], ['\\nabla', '∇']
-  ];
-  for (let i = 0; i < symMap.length; i++) {
-    const cmd = symMap[i][0];
-    const sym = symMap[i][1];
-    const re = new RegExp(cmd.replace(/\\/g, '\\\\') + '(?![a-zA-Z])', 'g');
-    s = s.replace(re, sym);
-  }
+  s = replaceLatexSymbols(s);
   s = s.replace(/\\left\s*([\(\[\{|])/g, '$1').replace(/\\right\s*([\)\]\}\|])/g, '$1');
   // 3. Now safely unwrap \text{...}, \mathrm{...}, \mathbf{...} and normalize degree ^° -> °
   s = s.replace(/\\(?:text|mathrm|mathbf|mathit|operatorname)\{([^{}]*)\}/g, '$1');
@@ -7464,6 +7858,7 @@ function renderRichMath(rawText) {
   if (/\\(?:frac|dfrac|tfrac|sqrt|bar|overline|underline|boxed|hat|vec|tilde|dot|ddot|text|mathrm|mathbf|textbf|textit|ce)\{/.test(out)) {
     out = formatMathExpr(out);
   }
+  out = replaceLatexSymbols(out);
   return restoreSafeInlineTags(out);
 }
 
@@ -7473,6 +7868,7 @@ function renderRichFlowHtml(flowStr) {
        .replace(/\$([^\$\n]+?)\$/g, (_, m) => `<span class="m-math">${formatMathExpr(m)}</span>`)
        .replace(/\\\((.+?)\\\)/g, (_, m) => `<span class="m-math">${formatMathExpr(m)}</span>`);
   if (/\\(?:frac|dfrac|tfrac|sqrt|bar|overline|underline|boxed|hat|vec|tilde|dot|ddot|text|mathrm|mathbf|textbf|textit|ce)\{/.test(s)) s = formatMathExpr(s);
+  s = replaceLatexSymbols(s);
   return s.replace(/\\%/g, '%').replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>');
 }
 
@@ -14786,7 +15182,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       if (chatMicActive && chatMicRec) {
         chatMicActive = false;
         const cm = document.getElementById('btn-chat-mic');
-        if (cm) { cm.classList.remove('recording'); cm.textContent = '🎤 Mic'; }
+        if (cm) { cm.classList.remove('recording'); cm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>'; }
         try { chatMicRec.stop(); } catch (e) {}
       }
       const stBtn = document.getElementById('btn-pdf-stop-audio');
@@ -15337,13 +15733,12 @@ STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
     feed.innerHTML = '';
     if (hist.length === 0) {
       feed.innerHTML = `
-        <div class="chat-msg ai">
-          <div class="guru-rich-card">
-            
-            <div class="guru-rich-h2">🙏 नमस्ते आका! मैं हूँ Titan Guru</div>
-            <p style="margin:6px 0;">यहाँ तुम अपनी Civil book, PYQ, या GK notes की <strong>📷 Camera से photo</strong> खींचकर डाल सकते हो, <strong>🖼️ Photo</strong> भेज सकते हो, <strong>🎤 बोलकर</strong> या <strong>लिखकर</strong> पूछ सकते हो।</p>
-            <div class="guru-callout">💡 <strong>खास बात:</strong> सारे <span class="guru-tech-pill">Technical Terms</span> एकदम साफ English में रहेंगे और समझाने का अंदाज़ बिल्कुल आसान देसी Hindi में — ताकि एक बार पढ़ते ही दिमाग में बैठ जाए!</div>
+        <div class="chat-welcome-hero">
+          <div class="chat-welcome-orb" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
           </div>
+          <h3>Titan Guru</h3>
+          <p>कोई भी Civil, GK या PYQ doubt लिखो, बोलो, या photo भेजो — आसान Hindi और साफ English technical terms में तुरंत समझो।</p>
         </div>`;
       return;
     }
@@ -15607,7 +16002,7 @@ STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
   const btnChatMic = document.getElementById('btn-chat-mic');
   btnChatMic.addEventListener('click', async () => {
     if (chatMicActive && chatMicRec) {
-      chatMicActive = false; btnChatMic.classList.remove('recording'); btnChatMic.textContent = '🎤 Mic';
+      chatMicActive = false; btnChatMic.classList.remove('recording'); btnChatMic.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
       try { chatMicRec.stop(); } catch (e) {}
       return;
     }
@@ -15630,7 +16025,7 @@ STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
       chatMicRec.start();
       chatMicActive = true;
       btnChatMic.classList.add('recording');
-      btnChatMic.textContent = '⏹️ Stop';
+      btnChatMic.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>';
       showToast('🎤 बोलो... खत्म करके फिर से ⏹️ Stop दबाओ');
     } catch (err) { showToast('🎤 Mic permission allow करो (HTTPS पर)'); }
   });
@@ -15652,7 +16047,7 @@ STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
     const on = isGuruImageSearchOn();
     btn.classList.toggle('active', on);
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    btn.textContent = on ? '🖼️ Images: ON' : '🖼️ Images: OFF';
+    btn.textContent = on ? '🖼️ Photos' : '🖼️ Photos';
   }
   document.getElementById('btn-toggle-img-search')?.addEventListener('click', () => {
     const next = !isGuruImageSearchOn();
@@ -16869,7 +17264,7 @@ function updateVisualSvgToggleUi() {
   const on = isGuruVisualSvgOn();
   b.classList.toggle('active', on);
   b.setAttribute('aria-pressed', on ? 'true' : 'false');
-  b.textContent = on ? '🎨 Visual: ON' : '🎨 Visual: OFF';
+  b.textContent = on ? '🎨 Visual' : '🎨 Visual';
 }
 
 let __v45SvgUid = 0;
