@@ -3694,7 +3694,6 @@ body.theme-night .sticky-toggle-btn,
 /* =====================================================================
    TITAN OS v5.0 — LEFT-EDGE ROYAL MAHARAJA SCROLL + 3D GOLDEN LAMP VOICE GENIE
    ===================================================================== */
-body[data-universe="chat"] #genie-lamp-dock,
 body[data-universe="chat"] #floating-pill,
 body[data-universe="pdf"] #floating-pill,
 body[data-universe="chat"] #btn-royal-scroll,
@@ -5805,15 +5804,26 @@ body[data-universe="pdf"].doc-live-active #pdf-pointer-ball.is-spot-armed #pdf-s
   transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Zero-Overlap Genie Bar in Doc Studio (Sits Cleanly ABOVE Explain/Next + Freely Draggable!) */
-body[data-universe="pdf"].genie-speaker-open .guru-live-dock {
-  bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+/* Clean Corner Alignment for Chirag + Draggable Genie Bar in Doc Studio & Ask Guru (Zero Overlap!) */
+body[data-universe="chat"] #genie-lamp-dock {
+  bottom: calc(146px + env(safe-area-inset-bottom, 0px)) !important;
+  right: 12px !important;
+}
+body[data-universe="pdf"].genie-speaker-open .guru-live-dock,
+body[data-universe="chat"].genie-speaker-open .guru-live-dock {
   cursor: grab;
   touch-action: none;
   transform: translate3d(var(--dock-dx, 0px), var(--dock-dy, 0px), 0) !important;
   transition: box-shadow 0.16s ease !important;
 }
-body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock {
+body[data-universe="pdf"].genie-speaker-open .guru-live-dock {
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+}
+body[data-universe="chat"].genie-speaker-open .guru-live-dock {
+  bottom: calc(146px + env(safe-area-inset-bottom, 0px)) !important;
+}
+body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock,
+body[data-universe="chat"].genie-speaker-open .guru-live-dock.is-dragging-dock {
   cursor: grabbing;
   box-shadow: 0 16px 38px rgba(15, 23, 42, 0.36) !important;
 }
@@ -6623,7 +6633,7 @@ body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock {
           </div>
 
           <div class="chat-composer">
-            <textarea class="chat-textarea" id="chat-text-input" rows="1" placeholder="Ask Titan Guru..."></textarea>
+            <textarea class="chat-textarea" id="chat-text-input" rows="1" placeholder="Ask Guru..."></textarea>
             <div class="chat-composer-bar">
               <div class="chat-composer-tools">
                 <button type="button" class="chat-tool-pill" id="btn-chat-camera" title="Camera" aria-label="Camera">
@@ -11388,6 +11398,19 @@ function buildTitanGuruSystemPrompt(q, cfg) {
   const voiceGenderRule = /^(Kore|Aoede|Zephyr|Leda)$/i.test(String((cfg && cfg.voiceName) || 'Kore'))
     ? 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm female voice — ALWAYS use natural feminine Hindi self-grammar ("मैं समझाती हूँ", "मैं बताती हूँ", "मैं हाज़िर हूँ आका!").'
     : 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm male voice — ALWAYS use natural masculine Hindi self-grammar ("मैं समझाता हूँ", "मैं बताता हूँ", "मैं हाज़िर हूँ आका!").';
+  if (guruSessionMode === 'chat_live') {
+    const chatCtx = window.__guruChatLiveContext || '';
+    return `You are Ask Guru — an ultra-humanized, deeply patient, charismatic Magic Lamp Genie (चिराग का जिनी) sitting right beside the student in the Ask Guru study lounge.
+${langLock}
+${voiceGenderRule}
+USER ADDRESS: Address the student warmly as "आका" with respectful "आप" framing.
+ASK GURU LIVE CONVERSATION RULES:
+1. STRICT UNIVERSE BOUNDARY: You are in Ask Guru (open study doubt-solving & mentoring). NEVER mention MCQs, locking options, quiz questions, or PDF spotlights unless the student explicitly brings them up!
+2. ZERO RUSH — TEACH FROM ABSOLUTE GROUND ZERO: Explain every doubt with calm warmth, simple everyday Hindi, and crystal-clear English technical terms so a first-time learner smiles and understands effortlessly.
+3. UNFORGETTABLE DESI ANALOGY: Turn complex engineering, GK, or life concepts into vivid everyday Indian pictures that stick naturally in memory.
+4. NATURAL ENDING: Finish your answer warmly (~70 to 130 words for deep concepts, ~25 to 45 words for quick replies) and stop cleanly — NEVER output markdown symbols or robotic repetitive sign-offs.
+5. CREATOR IDENTITY: If asked who built you or this app, warmly say Pradeep Prajapati ("मुझे प्रदीप प्रजापति ने बड़े प्यार और मेहनत से बनाया है!").${chatCtx ? '\nRECENT ASK GURU CONTEXT:\n' + chatCtx : ''}`;
+  }
   if (guruSessionMode === 'doc_live') {
     return `You are an ultra-humanized, deeply patient, charismatic Magic Lamp Genie (चिराग का जिनी) sitting right beside the student while they read a PDF or Image document.
 ${langLock}
@@ -11625,32 +11648,34 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: cfg.voiceName } } }
             },
             systemInstruction: { parts: [{ text: buildTitanGuruSystemPrompt(q, cfg) }] },
-            tools: [{
-              functionDeclarations: guruSessionMode === 'doc_live'
-                ? [
-                    {
-                      name: 'advance_doc_spotlight',
-                      description: 'Moves the Document Reader Spotlight smoothly down to the next unread concept/section on the current PDF or Image page (or next PDF page) ONLY when the student explicitly asks to go next or move forward.',
-                      parameters: { type: 'OBJECT', properties: {} }
-                    }
-                  ]
-                : [
-                    {
-                      name: 'lock_mcq_option',
-                      description: 'Locks and submits the confirmed MCQ option (A, B, C, or D) ONLY AFTER the student explicitly confirms locking it.',
-                      parameters: {
-                        type: 'OBJECT',
-                        properties: { option_letter: { type: 'STRING', description: 'Displayed option letter: A, B, C, or D' } },
-                        required: ['option_letter']
+            ...(guruSessionMode === 'chat_live' ? {} : {
+              tools: [{
+                functionDeclarations: guruSessionMode === 'doc_live'
+                  ? [
+                      {
+                        name: 'advance_doc_spotlight',
+                        description: 'Moves the Document Reader Spotlight smoothly down to the next unread concept/section on the current PDF or Image page (or next PDF page) ONLY when the student explicitly asks to go next or move forward.',
+                        parameters: { type: 'OBJECT', properties: {} }
                       }
-                    },
-                    {
-                      name: 'go_to_next_question',
-                      description: 'Scrolls smoothly to the next unanswered question and switches focus to it when the student asks to move forward.',
-                      parameters: { type: 'OBJECT', properties: {} }
-                    }
-                  ]
-            }]
+                    ]
+                  : [
+                      {
+                        name: 'lock_mcq_option',
+                        description: 'Locks and submits the confirmed MCQ option (A, B, C, or D) ONLY AFTER the student explicitly confirms locking it.',
+                        parameters: {
+                          type: 'OBJECT',
+                          properties: { option_letter: { type: 'STRING', description: 'Displayed option letter: A, B, C, or D' } },
+                          required: ['option_letter']
+                        }
+                      },
+                      {
+                        name: 'go_to_next_question',
+                        description: 'Scrolls smoothly to the next unanswered question and switches focus to it when the student asks to move forward.',
+                        parameters: { type: 'OBJECT', properties: {} }
+                      }
+                    ]
+              }]
+            })
           }
         }));
       };
@@ -11705,7 +11730,9 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
             let triggerDocVoiceNext = false;
             const responses = msg.toolCall.functionCalls.map(fc => {
               let resObj = { ok: false };
-              if (guruSessionMode === 'doc_live') {
+              if (guruSessionMode === 'chat_live') {
+                resObj = { ok: false, error: 'No external tools in Ask Guru Live mode.' };
+              } else if (guruSessionMode === 'doc_live') {
                 if (fc.name === 'advance_doc_spotlight') {
                   triggerDocVoiceNext = true;
                   resObj = { ok: true, status: 'Spotlight moved to next section; fresh zoomed image incoming now.' };
@@ -12229,13 +12256,13 @@ async function sendGuruTurn(userInput) {
     const parts = Array.isArray(userInput) ? userInput : [{ text: String(userInput) }];
     let reply = await callGuruBrain(parts, cfg);
     const lockM = reply.match(/\[LOCK:([ABCD])\]/i);
-    if (lockM && guruSessionMode !== 'doc_live') {
+    if (lockM && guruSessionMode !== 'doc_live' && guruSessionMode !== 'chat_live') {
       executeGuruLockOption(lockM[1]);
       reply = reply.replace(/\[LOCK:[ABCD]\]/gi, '').trim();
     }
     const nextM = /\[NEXT_Q\]/i.test(reply);
     let movedNextInQuiz = false;
-    if (nextM && guruSessionMode !== 'doc_live') {
+    if (nextM && guruSessionMode !== 'doc_live' && guruSessionMode !== 'chat_live') {
       reply = reply.replace(/\[NEXT_Q\]/gi, '').trim();
       const mv = executeGuruGoNextQuestion();
       if (mv && mv.ok && guruSessionMode === 'quiz') movedNextInQuiz = true;
@@ -12362,8 +12389,13 @@ window.toggleLampVoiceAssistant = function() {
     stopActiveVoicePlayback();
     return;
   }
-  if ((document.body.getAttribute('data-universe') || 'mcq') === 'pdf') {
+  const activeUni = document.body.getAttribute('data-universe') || 'mcq';
+  if (activeUni === 'pdf') {
     if (typeof window.__startDocLiveFromLamp === 'function') window.__startDocLiveFromLamp();
+    return;
+  }
+  if (activeUni === 'chat') {
+    if (typeof window.__startChatLiveFromLamp === 'function') window.__startChatLiveFromLamp();
     return;
   }
   unlockGuruAudioSync();
@@ -12394,7 +12426,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
   if (btnEl) { btnEl.classList.add('is-loading'); btnEl.textContent = '⏳'; }
   const dock = document.getElementById('guru-live-dock');
   const titleEl = document.getElementById('guru-dock-title');
-  if (titleEl) titleEl.textContent = guruSessionMode === 'doc_live' ? '🧞 Doc Live Genie' : (q ? `${guruSessionMode === 'quiz' ? '🎯 Voice Quiz' : 'Titan Guru'} · Q#${q.id}` : 'Titan Guru · Live');
+  if (titleEl) titleEl.textContent = guruSessionMode === 'chat_live' ? '🧞 Ask Guru Live' : guruSessionMode === 'doc_live' ? '🧞 Doc Live Genie' : (q ? `${guruSessionMode === 'quiz' ? '🎯 Voice Quiz' : 'Titan Guru'} · Q#${q.id}` : 'Titan Guru · Live');
   if (dock) dock.style.display = 'flex';
   setGuruCaption('');
   if (typeof window.showLiveLampGenie === 'function') window.showLiveLampGenie('thinking');
@@ -17314,7 +17346,7 @@ ABSOLUTE NON-NEGOTIABLE RULES:
       dock.style.setProperty('--dock-dy', '0px');
     };
     dock.addEventListener('pointerdown', (e) => {
-      if ((document.body.getAttribute('data-universe') || '') !== 'pdf') return;
+      const _u = document.body.getAttribute('data-universe') || ''; if (_u !== 'pdf' && _u !== 'chat') return;
       if (e.target.closest('button, input, textarea, select, a')) return;
       dragging = true;
       startX = e.clientX; startY = e.clientY;
@@ -17349,6 +17381,25 @@ ABSOLUTE NON-NEGOTIABLE RULES:
   // UNIVERSE 3: ASK TITAN GURU MULTIMODAL CHAT
   // ===================================================================
   let chatPendingImg = null, chatActiveSubject = 'SSC JE & RRB JE Civil + GK/GS', chatBusy = false;
+
+  window.__startChatLiveFromLamp = function() {
+    __docStoryGen++;
+    stopActiveTitanAudio();
+    stopActiveVoicePlayback();
+    unlockGuruAudioSync();
+    let ctxLines = [`Active Subject: ${chatActiveSubject}`];
+    try {
+      const recent = (typeof loadChatHistory === 'function' ? loadChatHistory() : []).slice(-4);
+      for (const m of recent) {
+        const who = m.role === 'user' ? 'Student' : 'Ask Guru';
+        const txt = String(m.text || '').replace(/\s+/g, ' ').trim().slice(0, 220);
+        if (txt) ctxLines.push(`${who}: ${txt}`);
+      }
+    } catch (e) {}
+    window.__guruChatLiveContext = ctxLines.join('\n');
+    guruSessionMode = 'chat_live';
+    startTitanGuruLive(null, 'chat_live', null);
+  };
   let chatMicRec = null, chatMicChunks = [], chatMicActive = false;
 
   function buildAskGuruSystemPrompt() {
@@ -17398,9 +17449,14 @@ STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
       feed.innerHTML = `
         <div class="chat-welcome-hero">
           <div class="chat-welcome-orb" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>
+            <svg viewBox="0 0 28 28" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Unique Radiant Open Knowledge Book + Rising Wisdom Flame Emblem -->
+              <path d="M14 4.2 C15.8 6.4 16.4 7.8 15.6 9.3 C15.1 10.1 14 10.5 14 10.5 C14 10.5 12.9 10.1 12.4 9.3 C11.6 7.8 12.2 6.4 14 4.2 Z" fill="currentColor" fill-opacity="0.22"/>
+              <path d="M14 13.2 C11.5 11.4 7.6 11.2 4.5 12.3 L4.5 21.8 C7.6 20.7 11.5 20.9 14 22.8 C16.5 20.9 20.4 20.7 23.5 21.8 L23.5 12.3 C20.4 11.2 16.5 11.4 14 13.2 Z"/>
+              <line x1="14" y1="13.2" x2="14" y2="22.8"/>
+            </svg>
           </div>
-          <h3>Titan Guru</h3>
+          <h3>Ask Guru</h3>
           <p>कोई भी Civil, GK या PYQ doubt लिखो, बोलो, या photo भेजो — आसान Hindi और साफ English technical terms में तुरंत समझो।</p>
         </div>`;
       return;
