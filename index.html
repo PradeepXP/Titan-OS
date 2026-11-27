@@ -3695,7 +3695,6 @@ body.theme-night .sticky-toggle-btn,
    TITAN OS v5.0 — LEFT-EDGE ROYAL MAHARAJA SCROLL + 3D GOLDEN LAMP VOICE GENIE
    ===================================================================== */
 body[data-universe="chat"] #genie-lamp-dock,
-body[data-universe="pdf"] #genie-lamp-dock,
 body[data-universe="chat"] #floating-pill,
 body[data-universe="pdf"] #floating-pill,
 body[data-universe="chat"] #btn-royal-scroll,
@@ -5335,6 +5334,424 @@ body[data-universe="chat"] .chat-send-btn:active { transform: scale(0.92); }
   accent-color: var(--accent);
   cursor: pointer;
 }
+
+/* =====================================================================
+   ALL-IN-ONE DOCUMENT STUDIO v6.2 — 100% THEME-NATIVE EDITORIAL READER
+   (Adapts seamlessly to Warm Paper, Sage, Stage, and Night Mode!)
+   ===================================================================== */
+body[data-universe="pdf"] {
+  padding: 0 !important;
+}
+body[data-universe="pdf"] .top-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 960;
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  margin: 0 !important;
+  padding: calc(6px + env(safe-area-inset-top, 0px)) 10px 6px !important;
+  box-shadow: none !important;
+  background: var(--card);
+}
+body[data-universe="pdf"] .top-header .header-row-1 {
+  display: none !important;
+}
+body[data-universe="pdf"] .pg-universe-bar {
+  margin: 0 auto !important;
+  max-width: 780px;
+  width: 100%;
+  padding: 3px !important;
+  gap: 5px !important;
+  border-radius: 12px !important;
+}
+body[data-universe="pdf"] .pg-uni-btn {
+  padding: 7px 6px !important;
+  font-size: 0.78rem !important;
+  border-radius: 9px !important;
+}
+body[data-universe="pdf"] #universe-pdf-view.pg-uni-panel.active {
+  position: fixed !important;
+  top: calc(54px + env(safe-area-inset-top, 0px));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 950;
+  display: flex !important;
+  flex-direction: column;
+  margin: 0 !important;
+  overflow: hidden;
+  background: var(--bg);
+}
+body[data-universe="pdf"] .pdf-shell {
+  flex: 1;
+  min-height: 0 !important;
+  height: 100%;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  background: var(--bg) !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sleek 44px Theme-Native Sub-Bar */
+.doc-studio-bar {
+  flex-shrink: 0;
+  width: 100%;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.doc-studio-bar-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.doc-studio-bar-inner::-webkit-scrollbar { display: none; }
+.doc-studio-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.doc-icon-btn {
+  height: 32px;
+  min-width: 32px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--opt-bg);
+  color: var(--ink);
+  font-size: 0.77rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+}
+.doc-icon-btn:hover { background: var(--opt-hover); }
+.doc-icon-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+.doc-icon-btn:active { transform: scale(0.95); }
+.doc-icon-btn.is-primary {
+  background: var(--accent);
+  color: #FFFFFF;
+  border-color: transparent;
+}
+.doc-icon-btn.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.doc-icon-btn.is-danger {
+  background: var(--bad-bg);
+  color: var(--bad-ink);
+  border-color: var(--bad-bd);
+}
+.doc-studio-bar .pdf-select {
+  height: 32px;
+  padding: 0 9px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  max-width: 155px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--opt-bg);
+  color: var(--ink);
+}
+.doc-studio-bar .pdf-page-nav {
+  height: 32px;
+  padding: 0 4px;
+  gap: 2px;
+  font-size: 0.74rem;
+  border-radius: 10px;
+  background: var(--opt-bg);
+  border: 1px solid var(--border);
+}
+.doc-studio-bar .pdf-page-input {
+  width: 30px;
+  padding: 1px 2px;
+  font-size: 0.74rem;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+}
+
+/* Full-Screen Document Canvas Stage */
+body[data-universe="pdf"] .pdf-stage-outer {
+  flex: 1;
+  min-height: 0;
+  max-height: none !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 12px 10px 84px !important;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: auto;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+body[data-universe="pdf"] .pdf-canvas-wrap {
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+body[data-universe="pdf"] .pdf-empty-state {
+  margin: auto;
+  width: 100%;
+  max-width: 340px;
+  padding: 34px 26px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.doc-empty-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  border-radius: 16px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.doc-empty-icon svg { width: 28px; height: 28px; }
+body[data-universe="pdf"] .pdf-empty-state h3 {
+  margin: 0 0 4px;
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.doc-empty-sub {
+  margin: 0 0 20px;
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+/* Theme-Native Transparent Spotlight Pointer */
+#pdf-pointer-ball {
+  position: absolute;
+  width: 44px !important;
+  height: 44px !important;
+  margin-left: -22px !important;
+  margin-top: -22px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, transparent 48%, rgba(37, 99, 235, 0.14) 100%) !important;
+  border: 2px solid var(--accent) !important;
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 4px 14px rgba(15, 23, 42, 0.16) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: left 0.30s cubic-bezier(0.22, 1, 0.36, 1), top 0.30s cubic-bezier(0.22, 1, 0.36, 1), transform 0.14s ease;
+  cursor: grab;
+  touch-action: none;
+  z-index: 25;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#pdf-pointer-ball.visible { display: flex; }
+#pdf-pointer-ball::before,
+#pdf-pointer-ball::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  background: var(--accent);
+  opacity: 0.35;
+  pointer-events: none;
+}
+#pdf-pointer-ball::before { width: 1.5px; height: 100%; left: 50%; top: 0; transform: translateX(-50%); }
+#pdf-pointer-ball::after { height: 1.5px; width: 100%; top: 50%; left: 0; transform: translateY(-50%); }
+#pdf-pointer-ball .spotlight-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #F43F5E;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+#pdf-pointer-ball .spotlight-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(245, 158, 11, 0.80);
+  animation: spotlightSpin 10s linear infinite;
+  pointer-events: none;
+}
+@keyframes spotlightSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+#pdf-pointer-ball.dragging {
+  transition: none !important;
+  cursor: grabbing;
+  transform: scale(1.16);
+  border-color: #F43F5E !important;
+  box-shadow: 0 0 0 7px rgba(244, 63, 94, 0.18), 0 8px 20px rgba(244, 63, 94, 0.28) !important;
+}
+
+/* Finger-Proof Offset 2x Magnifier Loupe */
+#pdf-loupe {
+  position: fixed;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  border: 2.5px solid var(--accent);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.34), 0 0 0 3px var(--card);
+  background: #FFFFFF;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1200;
+  display: none;
+  transform: translate(-50%, -50%);
+}
+#pdf-loupe.active { display: block; }
+#pdf-loupe canvas { width: 100%; height: 100%; display: block; }
+#pdf-loupe::before,
+#pdf-loupe::after {
+  content: "";
+  position: absolute;
+  background: rgba(244, 63, 94, 0.72);
+  pointer-events: none;
+}
+#pdf-loupe::before { width: 1.5px; height: 22px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+#pdf-loupe::after { height: 1.5px; width: 22px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+
+/* Clean Edge-to-Edge Theme-Native Bottom Action Bar (ZERO awkward oval behind buttons!) */
+body[data-universe="pdf"] .pdf-action-dock {
+  flex-shrink: 0;
+  width: 100%;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-top: 1px solid var(--border) !important;
+  background: var(--glass) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: none !important;
+  padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+body[data-universe="pdf"] .pdf-action-dock.has-doc {
+  display: flex;
+}
+.doc-pill-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-size: 0.86rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.12s ease, background 0.15s ease, opacity 0.15s ease;
+}
+.doc-pill-btn svg { width: 16px; height: 16px; }
+.doc-pill-btn:active { transform: scale(0.96); }
+.doc-pill-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.doc-pill-btn.primary {
+  background: var(--accent);
+  color: #FFFFFF;
+  box-shadow: 0 3px 12px rgba(37, 99, 235, 0.22);
+}
+.doc-pill-btn.secondary {
+  background: var(--opt-bg);
+  color: var(--ink);
+  border-color: var(--border);
+}
+.doc-pill-btn.secondary:hover { background: var(--opt-hover); }
+.doc-pill-btn.danger {
+  background: var(--bad-bg);
+  color: var(--bad-ink);
+  border-color: var(--bad-bd);
+}
+body[data-universe="pdf"] #genie-lamp-dock {
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+  right: 12px !important;
+}
+
+/* Spacious Ask-Guru-Style Sliding Reading Sheet */
+body[data-universe="pdf"] .pdf-answer-box {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  margin: 0 !important;
+  max-height: 64dvh;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -14px 40px rgba(15, 23, 42, 0.20);
+  padding: 10px 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: none;
+}
+body[data-universe="pdf"] .pdf-answer-box::before {
+  content: "";
+  display: block;
+  width: 38px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  margin: 0 auto 10px;
+}
+body[data-universe="pdf"] .pdf-answer-box.show {
+  display: block !important;
+  animation: pgUniFade 0.20s ease-out;
+}
+body[data-universe="pdf"] .pdf-answer-box.is-expanded {
+  top: calc(54px + env(safe-area-inset-top, 0px)) !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  background: var(--bg) !important;
+  z-index: 2100 !important;
+}
+body[data-universe="pdf"] .pdf-answer-box.is-expanded::before { display: none; }
+body[data-universe="pdf"] #pdf-answer-content {
+  width: 100% !important;
+  max-width: 780px !important;
+  margin: 0 auto !important;
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  line-height: 1.74 !important;
+}
+body[data-universe="pdf"] #pdf-answer-content .guru-rich-card {
+  font-size: 0.98rem !important;
+  line-height: 1.75 !important;
+}
+body[data-universe="pdf"] #pdf-answer-content .guru-rich-h2 {
+  display: block;
+  margin: 10px 0 10px !important;
+  padding: 7px 12px !important;
+}
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
@@ -5371,7 +5788,7 @@ body[data-universe="chat"] .chat-send-btn:active { transform: scale(0.92); }
     <!-- 3-Universe Navigation Switcher -->
     <nav class="pg-universe-bar no-print" id="pg-universe-bar" aria-label="Study Universes">
       <button type="button" class="pg-uni-btn active" data-uni="mcq" id="btn-uni-mcq">🧪 PYQ Vault</button>
-      <button type="button" class="pg-uni-btn" data-uni="pdf" id="btn-uni-pdf">📄 PDF Pointer</button>
+      <button type="button" class="pg-uni-btn" data-uni="pdf" id="btn-uni-pdf">📄 Doc Reader</button>
       <button type="button" class="pg-uni-btn" data-uni="chat" id="btn-uni-chat">💬 Ask Guru</button>
     </nav>
 
@@ -5731,69 +6148,82 @@ body[data-universe="chat"] .chat-send-btn:active { transform: scale(0.92); }
   </section>
 
   <!-- =================================================================
-       UNIVERSE 2: PDF POINTER TUTOR (SSC JE / RRB JE ROYAL PDFs + BALL)
+       UNIVERSE 2: ALL-IN-ONE DOCUMENT STUDIO (SLEEK FULL-SCREEN READER)
        ================================================================= -->
   <section class="pg-uni-panel no-print" id="universe-pdf-view">
     <div class="pdf-shell">
-      <div class="pdf-hero-strip">
-        <h2>📄 PDF Magic Pointer Tutor</h2>
-        <button type="button" class="ctrl-btn" id="btn-pdf-voice-mode" style="padding:4px 10px; font-size:0.76rem; background:rgba(255,255,255,0.18); color:#FFF; border-color:rgba(255,255,255,0.35);">🔊 Voice: ON</button>
-      </div>
-
-      <div class="pdf-toolbar">
-        <div class="pdf-toolbar-group">
-          <button type="button" class="ctrl-btn btn-primary" id="btn-pdf-upload">📂 Load PDF</button>
-          <input type="file" id="pdf-file-input" accept="application/pdf" style="display:none;">
-          <button type="button" class="ctrl-btn" id="btn-pdf-demo-page" title="Try Pointer Ball on a built-in Civil IS 456 sheet">🧪 Demo Sheet</button>
-          <select class="pdf-select" id="pdf-library-select" title="Saved PDFs in Vault">
-            <option value="">-- Saved PDFs (0) --</option>
-          </select>
-          <button type="button" class="ctrl-btn btn-warn" id="btn-pdf-delete" title="Remove selected PDF" style="display:none;">🗑️</button>
-        </div>
-
-        <div class="pdf-toolbar-group">
-          <div class="pdf-page-nav">
-            <button type="button" class="ctrl-btn" id="btn-pdf-prev" style="padding:4px 8px;">◀</button>
-            <span>Pg</span>
-            <input type="number" class="pdf-page-input" id="pdf-page-input" min="1" value="1">
-            <span id="pdf-page-total">/ 0</span>
-            <button type="button" class="ctrl-btn" id="btn-pdf-next" style="padding:4px 8px;">▶</button>
+      <div class="doc-studio-bar">
+        <div class="doc-studio-bar-inner">
+          <div class="doc-studio-group">
+            <button type="button" class="doc-icon-btn is-primary" id="btn-pdf-upload" title="Open PDF or Image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              <span>Open</span>
+            </button>
+            <input type="file" id="pdf-file-input" accept="application/pdf,image/*,.pdf,.png,.jpg,.jpeg,.webp" style="display:none;">
+            <select class="pdf-select" id="pdf-library-select" title="Saved Documents" style="display:none;">
+              <option value="">Saved (0)</option>
+            </select>
+            <button type="button" class="doc-icon-btn is-danger" id="btn-pdf-delete" title="Remove Document" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+            </button>
           </div>
-          <button type="button" class="ctrl-btn" id="btn-pdf-zoom-out" title="Zoom Out">➖</button>
-          <button type="button" class="ctrl-btn" id="btn-pdf-zoom-in" title="Zoom In">➕</button>
-          <button type="button" class="ctrl-btn active" id="btn-pdf-pointer-toggle" title="Toggle Transparent Pointer Ball">🎯 Pointer: ON</button>
+
+          <div class="doc-studio-group" id="doc-viewer-tools" style="display:none;">
+            <div class="pdf-page-nav" id="pdf-page-nav-wrap" style="display:none;">
+              <button type="button" class="doc-icon-btn" id="btn-pdf-prev" style="height:26px; min-width:26px; padding:0; border:none;">◀</button>
+              <input type="number" class="pdf-page-input" id="pdf-page-input" min="1" value="1">
+              <span id="pdf-page-total">/ 1</span>
+              <button type="button" class="doc-icon-btn" id="btn-pdf-next" style="height:26px; min-width:26px; padding:0; border:none;">▶</button>
+            </div>
+            <button type="button" class="doc-icon-btn" id="btn-pdf-zoom-out" title="Zoom Out">−</button>
+            <button type="button" class="doc-icon-btn" id="btn-pdf-fit" title="Fit to Screen">Fit</button>
+            <button type="button" class="doc-icon-btn" id="btn-pdf-zoom-in" title="Zoom In">+</button>
+            <button type="button" class="doc-icon-btn is-active" id="btn-pdf-pointer-toggle" title="Toggle Spotlight">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/></svg>
+            </button>
+            <button type="button" class="doc-icon-btn is-active" id="btn-pdf-voice-mode" title="Voice Readout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="pdf-stage-outer" id="pdf-stage-outer">
         <div class="pdf-empty-state" id="pdf-empty-state">
-          <div style="font-size:2.4rem;">📄🎯</div>
-          <h3>अपना Royal Smart PDF या Notes यहाँ Load करो</h3>
-          <p style="font-size:0.86rem; line-height:1.55;">PDF load होते ही page पर एक <strong>Transparent Magic Pointer Ball</strong> आ जाएगी। उसे उंगली से किसी भी Formula, IS Code, Diagram या Line पर रखो और <strong>Explain Here</strong> या <strong>Mic</strong> दबाओ!</p>
-          <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
-            <button type="button" class="pdf-explain-btn" id="btn-pdf-empty-upload">📂 Choose PDF from Device</button>
-            <button type="button" class="ctrl-btn" id="btn-pdf-empty-demo" style="padding:10px 14px; font-weight:800;">🧪 Try Civil Demo Sheet</button>
+          <div class="doc-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
           </div>
+          <h3>Document Studio</h3>
+          <p class="doc-empty-sub">PDF, Book Photos &amp; Notes</p>
+          <button type="button" class="doc-pill-btn primary" id="btn-pdf-empty-upload" style="width:100%; justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Open PDF or Image</span>
+          </button>
         </div>
 
         <div class="pdf-canvas-wrap" id="pdf-canvas-wrap" style="display:none;">
           <canvas id="pdf-render-canvas"></canvas>
-          <div id="pdf-pointer-ball" class="visible" style="left:50%; top:42%;" title="Drag anywhere on page">
-            <span class="ball-tag">🎯 Titan Lens</span>
-            <span class="ball-dot"></span>
+          <div id="pdf-pointer-ball" class="visible" style="left:50%; top:18%;" title="Drag Spotlight">
+            <span class="spotlight-ring"></span>
+            <span class="spotlight-dot"></span>
           </div>
         </div>
       </div>
 
+      <div id="pdf-loupe"><canvas id="pdf-loupe-canvas" width="116" height="116"></canvas></div>
+
       <div class="pdf-action-dock" id="pdf-action-dock">
-        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-          <button type="button" class="pdf-explain-btn" id="btn-pdf-explain-here">🎙️ Explain Here</button>
-          <button type="button" class="pdf-mic-btn" id="btn-pdf-voice-ask">🎤 Ask by Voice</button>
-          <button type="button" class="ctrl-btn" id="btn-pdf-next-explain" title="Explain next point or turn page">⏭️ आगे समझाओ</button>
-          <button type="button" class="ctrl-btn" id="btn-pdf-stop-audio" style="display:none;">⏹️ Stop Voice</button>
-        </div>
-        <div class="pdf-status-pill" id="pdf-tutor-status">🎯 Ball को कहीं भी रखो और Explain दबाओ</div>
+        <button type="button" class="doc-pill-btn primary" id="btn-pdf-explain-here">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10.7l-5 3.6L16.9 20 12 16.5 7.1 20 9 14.3l-5-3.6 6.1-1.9L12 3z"/></svg>
+          <span>Explain</span>
+        </button>
+        <button type="button" class="doc-pill-btn secondary" id="btn-pdf-next-explain">
+          <span>Next</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
+        </button>
+        <button type="button" class="doc-pill-btn danger" id="btn-pdf-stop-audio" style="display:none;">Stop</button>
       </div>
+      <span id="pdf-tutor-status" style="display:none;"></span>
 
       <div class="pdf-answer-box" id="pdf-answer-box">
         <div class="chat-msg ai" id="pdf-answer-content"></div>
@@ -10286,7 +10716,7 @@ function updateGuruDockState(stateText, listeningMode) {
   if (st) st.textContent = stateText;
   if (dock) dock.classList.toggle('is-listening', !!listeningMode);
   if (activeSpeakingQid !== null && typeof window.setLiveLampGenieMode === 'function') {
-    const isActuallyPlayingAudio = !!(guruAudioEl || guruStudioWebSrc || __titanUtteranceLock || (guruLiveSources && guruLiveSources.length > 0));
+    const isActuallyPlayingAudio = !!(guruAudioEl || guruStudioWebSrc || __titanUtteranceLock || (__guruLiveAudioStarted && guruLiveSources && guruLiveSources.length > 0));
     if (isActuallyPlayingAudio) {
       window.setLiveLampGenieMode('speaking');
     } else if (listeningMode) {
@@ -10314,6 +10744,7 @@ let guruStartSpeechFrames = 0;
 let __iosMicReopenTimer = null;
 let __iosRouteSwitchAt = 0;
 let __genieLipSyncTimer = null;
+let __guruLiveAudioStarted = false;
 let guruWorkletSpeaking = false;
 
 function resampleContiguousLinear(input, inRate, outRate, prevSample) {
@@ -10340,6 +10771,7 @@ function flushLiveAudioQueue() {
   guruLivePcmCarryByte = null;
   guruLiveLastSample = 0;
   guruWorkletSpeaking = false;
+  __guruLiveAudioStarted = false;
   if (__genieLipSyncTimer) { clearTimeout(__genieLipSyncTimer); __genieLipSyncTimer = null; }
   if (guruLivePlayCtx) guruLiveNextTime = guruLivePlayCtx.currentTime;
   if (activeSpeakingQid !== null && typeof window.setLiveLampGenieMode === 'function') {
@@ -10428,20 +10860,24 @@ function playLivePcm24k(base64Pcm, mimeType) {
   if (typeof window.setLiveLampGenieMode === 'function') {
     const delayMs = Math.max(0, Math.round((startAt - now) * 1000));
     if (!isContiguous && delayMs > 40) {
+      __guruLiveAudioStarted = false;
       if (__genieLipSyncTimer) clearTimeout(__genieLipSyncTimer);
       __genieLipSyncTimer = setTimeout(() => {
         __genieLipSyncTimer = null;
-        if (guruLiveSources.length > 0 && typeof window.setLiveLampGenieMode === 'function') {
-          window.setLiveLampGenieMode('speaking');
+        if (guruLiveSources.length > 0) {
+          __guruLiveAudioStarted = true;
+          if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
         }
       }, delayMs);
-    } else {
+    } else if (__guruLiveAudioStarted || !isContiguous) {
+      __guruLiveAudioStarted = true;
       window.setLiveLampGenieMode('speaking');
     }
   }
   src.onended = () => {
     guruLiveSources = guruLiveSources.filter(s => s !== src);
     if (guruLiveSources.length === 0) {
+      __guruLiveAudioStarted = false;
       if (typeof window.setLiveLampGenieMode === 'function') {
         window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
       }
@@ -10600,9 +11036,26 @@ function formatQuestionContextSnippet(q) {
 }
 
 function buildTitanGuruSystemPrompt(q, cfg) {
+  const langLock = `LANGUAGE LOCK (ABSOLUTE — NEVER VIOLATE): You MUST ALWAYS speak ONLY in warm, natural North-Indian conversational Hindi (Hinglish: Hindi sentences with standard English technical terms like IS Code, Concrete, Article, Formula, Diagram). NEVER drift into pure English, and NEVER switch to any other language (such as Marathi, Bengali, Tamil, Telugu, Urdu, or foreign languages), even if background noise or audio sounds unclear. If the student's audio is unclear or noisy, politely say in Hindi: "आका, आवाज़ थोड़ा साफ नहीं आई — एक बार फिर से बोलिए ना!"`;
+  const voiceGenderRule = /^(Kore|Aoede|Zephyr|Leda)$/i.test(String((cfg && cfg.voiceName) || 'Kore'))
+    ? 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm female voice — ALWAYS use natural feminine Hindi self-grammar ("मैं समझाती हूँ", "मैं बताती हूँ", "मैं हाज़िर हूँ आका!").'
+    : 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm male voice — ALWAYS use natural masculine Hindi self-grammar ("मैं समझाता हूँ", "मैं बताता हूँ", "मैं हाज़िर हूँ आका!").';
+  if (guruSessionMode === 'doc_live') {
+    return `You are an ultra-humanized, deeply patient, charismatic Magic Lamp Genie (चिराग का जिनी) sitting right beside the student while they read a PDF or Image document.
+${langLock}
+${voiceGenderRule}
+USER ADDRESS: Address the student warmly as "आका" with respectful "आप" framing.
+DOCUMENT LIVE TUTOR RULES (STRICT SINGLE-SPOT GROUND-ZERO TEACHING):
+1. STRICT ONE-CONCEPT LOCK (NEVER BLABBER AHEAD): You receive TWO images — Image 1 is the full page with a RED TARGET RING; Image 2 is a zoomed close-up of that exact spot. Explain ONLY that ONE single formula, line, or diagram inside the target ring. NEVER rush ahead or start explaining the rest of the page!
+2. ZERO RUSH — TEACH FROM ABSOLUTE GROUND ZERO: Imagine the student has never studied this topic before in their life. Explain calmly, step-by-step, unpacking every symbol or word with genuine warmth.
+3. UNFORGETTABLE DESI ANALOGY & EXAM TRAP: Give 1 vivid everyday Indian real-life analogy so it clicks instantly, plus the exact exam trap if relevant.
+4. STOP & CHECK UNDERSTANDING: After explaining that ONE spot comfortably (~90 to 140 words), STOP and ask warmly in Hindi: "आका, यह वाला point अच्छे से दिमाग में बैठ गया? कोई doubt हो तो पूछिए, या Next दबाइए तो हम अगले हिस्से पर चलें!" NEVER output markdown symbols or meta-labels.
+5. CREATOR IDENTITY: If asked who built you or this app, warmly say Pradeep Prajapati ("मुझे प्रदीप प्रजापति ने बड़े प्यार और मेहनत से बनाया है!").`;
+  }
   const ctx = q ? ('\n' + formatQuestionContextSnippet(q)) : '';
   if (guruSessionMode === 'quiz') {
-    return `You are a warm, polite, charismatic Indian Quiz Host running a 100% hands-free voice MCQ session while the student may be away from the phone (cooking, walking, or relaxing).
+    return `${langLock}
+You are a warm, polite, charismatic Indian Quiz Host running a 100% hands-free voice MCQ session while the student may be away from the phone (cooking, walking, or relaxing).
 HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
 1. READ QUESTION & 4 OPTIONS CLEARLY: Start immediately by reading the active question cleanly in natural Indian Hinglish/English at a balanced, comfortable pace—neither rushed nor overly slow. Then read Option A, Option B, Option C, and Option D clearly in order.
 2. ASK FOR CHOICE: Politely ask which option they want to lock ("बताइए, कौन से option पर ताला लगाया जाए?"). Then STOP and listen.
@@ -10619,6 +11072,7 @@ HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
       ? 'You are a sharp, charming Magic Lamp Genie and SSC JE / RRB JE master mentor — crisp, human, emotionally alive, and razor-focused in natural Indian Hinglish.'
       : 'You are an ultra-humanized, charismatic Magic Lamp Genie (चिराग का जिनी) with the warmth and wit of a beloved Patna-style Indian guru — so real, expressive, and funny that even the toughest Civil Engineering or GK concept clicks effortlessly and makes the student smile.';
   return `${persona}
+${langLock}
 ${/^(Kore|Aoede|Zephyr|Leda)$/i.test(String((cfg && cfg.voiceName) || 'Kore'))
   ? 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm female voice — ALWAYS use natural feminine Hindi self-grammar ("मैं समझाती हूँ", "मैं बताती हूँ", "मैं हाज़िर हूँ आका!").'
   : 'YOUR OWN VOICE GENDER (CRITICAL): You are speaking in a warm male voice — ALWAYS use natural masculine Hindi self-grammar ("मैं समझाता हूँ", "मैं बताता हूँ", "मैं हाज़िर हूँ आका!").'}
@@ -10863,7 +11317,31 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               : (guruSessionMode === 'quiz'
                 ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
                 : 'हुकुम आका! इस सवाल को आराम से, तसल्ली से, एक बढ़िया रोज़मर्रा के देसी उदाहरण के साथ समझाओ कि असल में क्या पूछा गया है, इसका सही कॉन्सेप्ट और एग्जाम ट्रैप क्या है, और फिर प्यार से पूछो कि कोई डाउट है क्या।');
-            if (qidTag === 'test') {
+            if (guruSessionMode === 'doc_live' && window.__guruPendingDocSnaps) {
+              const snaps = window.__guruPendingDocSnaps;
+              window.__guruPendingDocSnaps = null;
+              guruLiveAwaitingStart = false;
+              guruPendingKickoff = null;
+              if (IS_IOS_WEBKIT) {
+                if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
+                stopGuruMicOnly();
+                setTitanAudioSession('playback');
+                __iosRouteSwitchAt = performance.now();
+              }
+              guruLiveWs.send(JSON.stringify({
+                clientContent: {
+                  turns: [{
+                    role: 'user',
+                    parts: [
+                      { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
+                      { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } },
+                      { text: 'आका ने अपने डॉक्यूमेंट में Red Target Ring वाली जगह पर Magic Pen रखा है। इस exact concept, formula या diagram को एकदम आराम से, प्यार से, ज़ीरो लेवल से एक मज़ेदार देसी उदाहरण के साथ समझाओ ताकि पहली बार पढ़ने वाले के दिमाग में भी हमेशा के लिए छप जाए!' }
+                    ]
+                  }],
+                  turnComplete: true
+                }
+              }));
+            } else if (qidTag === 'test') {
               guruLiveAwaitingStart = false;
               guruPendingKickoff = null;
               guruLiveWs.send(JSON.stringify({
@@ -11528,6 +12006,10 @@ window.toggleLampVoiceAssistant = function() {
     stopActiveVoicePlayback();
     return;
   }
+  if ((document.body.getAttribute('data-universe') || 'mcq') === 'pdf') {
+    if (typeof window.__startDocLiveFromLamp === 'function') window.__startDocLiveFromLamp();
+    return;
+  }
   unlockGuruAudioSync();
   guruSessionMode = 'tutor';
   const q = window.findActiveViewportQuestion();
@@ -11556,7 +12038,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
   if (btnEl) { btnEl.classList.add('is-loading'); btnEl.textContent = '⏳'; }
   const dock = document.getElementById('guru-live-dock');
   const titleEl = document.getElementById('guru-dock-title');
-  if (titleEl) titleEl.textContent = q ? `${guruSessionMode === 'quiz' ? '🎯 Voice Quiz' : 'Titan Guru'} · Q#${q.id}` : 'Titan Guru · Live';
+  if (titleEl) titleEl.textContent = guruSessionMode === 'doc_live' ? '🧞 Doc Live Genie' : (q ? `${guruSessionMode === 'quiz' ? '🎯 Voice Quiz' : 'Titan Guru'} · Q#${q.id}` : 'Titan Guru · Live');
   if (dock) dock.style.display = 'flex';
   setGuruCaption('');
   if (typeof window.showLiveLampGenie === 'function') window.showLiveLampGenie('thinking');
@@ -11578,7 +12060,17 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
     : (guruSessionMode === 'quiz'
       ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
       : 'इस सवाल को एकदम तसल्ली से, आराम-आराम से, बिल्कुल आसान देसी हिंदी और असली ज़िंदगी के उदाहरण से पूरा समझाओ कि सवाल क्या पूछ रहा है, इसके पीछे का असली concept क्या है, और फिर प्यार से पूछो कि कोई और doubt या cross-question हो तो खुलकर पूछो।');
-  if (qidTag === 'test') {
+  if (guruSessionMode === 'doc_live' && window.__guruPendingDocSnaps) {
+    const snaps = window.__guruPendingDocSnaps;
+    window.__guruPendingDocSnaps = null;
+    guruLiveAwaitingStart = false;
+    guruPendingKickoff = null;
+    await sendGuruTurn([
+      { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
+      { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } },
+      { text: 'आका ने अपने डॉक्यूमेंट में Red Target Ring वाली जगह पर Magic Pen रखा है। इसे एकदम आराम से, प्यार से, ज़ीरो लेवल से एक मज़ेदार देसी उदाहरण के साथ समझाओ!' }
+    ]);
+  } else if (qidTag === 'test') {
     guruLiveAwaitingStart = false;
     guruPendingKickoff = null;
     await sendGuruTurn(kickoff);
@@ -15167,12 +15659,6 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
       if (typeof stopActiveVoicePlayback === 'function') { try { stopActiveVoicePlayback(); } catch (e) {} }
       stopActiveTitanAudio();
-      if (pdfMicActive && pdfMicRec) {
-        pdfMicActive = false;
-        const pm = document.getElementById('btn-pdf-voice-ask');
-        if (pm) { pm.classList.remove('recording'); pm.textContent = '🎤 Ask by Voice'; }
-        try { pdfMicRec.stop(); } catch (e) {}
-      }
       if (chatMicActive && chatMicRec) {
         chatMicActive = false;
         const cm = document.getElementById('btn-chat-mic');
@@ -15191,7 +15677,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     const chatPanel = document.getElementById('universe-chat-view');
     if (pdfPanel) pdfPanel.classList.toggle('active', valid === 'pdf');
     if (chatPanel) chatPanel.classList.toggle('active', valid === 'chat');
-    if (valid === 'pdf') initPdfVaultList();
+    if (valid === 'pdf') { initPdfVaultList(); requestAnimationFrame(() => { if (pdfDoc) renderPdfPage(pdfCurrentPage); else if (pdfLoadedImg) renderLoadedImageCanvas(); }); }
     else if (valid === 'chat') renderChatFeed();
   }
 
@@ -15202,55 +15688,83 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   // ===================================================================
   // UNIVERSE 2: PDF POINTER TUTOR (ROYAL PDFs + CIVIL DEMO SHEET)
   // ===================================================================
-  let pdfDoc = null, pdfIsDemo = false, pdfRenderTask = null, pdfCurrentId = '';
-  let pdfCurrentPage = 1, pdfTotalPages = 0, pdfScale = 1.25;
-  let pdfPointerEnabled = true, pdfVoiceAutoPlay = true;
-  let pdfPointerNorm = { x: 0.50, y: 0.42 };
-  let pdfTutorHistory = [], pdfBusy = false;
-  let pdfMicRec = null, pdfMicChunks = [], pdfMicActive = false;
+  let pdfDoc = null, pdfLoadedImg = null, pdfRenderTask = null, pdfCurrentId = '';
+  let pdfCurrentPage = 1, pdfTotalPages = 0, pdfScale = 1.0, pdfPointerEnabled = true;
+  let pdfPointerNorm = { x: 0.50, y: 0.16 };
+  let pdfReadingBlocks = [], pdfCurrentBlockIdx = -1;
+  let pdfVoiceAutoPlay = true, pdfBusy = false, pdfTutorHistory = [];
+  let __pdfMemVault = [];
 
   function openPdfDB() {
     return new Promise((resolve, reject) => {
-      const req = indexedDB.open(PG_PDF_DB_NAME, 1);
-      req.onupgradeneeded = () => {
-        if (!req.result.objectStoreNames.contains(PG_PDF_STORE)) {
-          req.result.createObjectStore(PG_PDF_STORE, { keyPath: 'id' });
-        }
-      };
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
+      try {
+        if (typeof indexedDB === 'undefined') return reject(new Error('No IndexedDB'));
+        const req = indexedDB.open(PG_PDF_DB_NAME, 1);
+        req.onupgradeneeded = () => {
+          if (!req.result.objectStoreNames.contains(PG_PDF_STORE)) {
+            req.result.createObjectStore(PG_PDF_STORE, { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      } catch (e) { reject(e); }
     });
   }
   async function savePdfToVault(rec) {
-    const db = await openPdfDB();
-    return new Promise((res, rej) => {
-      const tx = db.transaction(PG_PDF_STORE, 'readwrite');
-      tx.objectStore(PG_PDF_STORE).put(rec);
-      tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
-    });
+    const idx = __pdfMemVault.findIndex(x => x.id === rec.id);
+    if (idx >= 0) __pdfMemVault[idx] = rec; else __pdfMemVault.push(rec);
+    try {
+      const db = await openPdfDB();
+      await new Promise((res, rej) => {
+        const tx = db.transaction(PG_PDF_STORE, 'readwrite');
+        tx.objectStore(PG_PDF_STORE).put(rec);
+        tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
+      });
+    } catch (e) { /* Sandboxed/private fallback stays safely in __pdfMemVault */ }
   }
   async function getAllPdfsFromVault() {
-    const db = await openPdfDB();
-    return new Promise((res, rej) => {
-      const tx = db.transaction(PG_PDF_STORE, 'readonly');
-      const r = tx.objectStore(PG_PDF_STORE).getAll();
-      r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error);
-    });
+    try {
+      const db = await openPdfDB();
+      const rows = await new Promise((res, rej) => {
+        const tx = db.transaction(PG_PDF_STORE, 'readonly');
+        const r = tx.objectStore(PG_PDF_STORE).getAll();
+        r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error);
+      });
+      if (rows && rows.length) return rows;
+    } catch (e) {}
+    return __pdfMemVault.slice();
   }
   async function deletePdfFromVault(id) {
-    const db = await openPdfDB();
-    return new Promise((res, rej) => {
-      const tx = db.transaction(PG_PDF_STORE, 'readwrite');
-      tx.objectStore(PG_PDF_STORE).delete(id);
-      tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
-    });
+    __pdfMemVault = __pdfMemVault.filter(x => x.id !== id);
+    try {
+      const db = await openPdfDB();
+      await new Promise((res, rej) => {
+        const tx = db.transaction(PG_PDF_STORE, 'readwrite');
+        tx.objectStore(PG_PDF_STORE).delete(id);
+        tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error);
+      });
+    } catch (e) {}
   }
-  function ensurePdfJsReady() {
+  function pickSafeAudioMime() {
+    if (window.MediaRecorder && typeof MediaRecorder.isTypeSupported === 'function') {
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) return 'audio/webm;codecs=opus';
+      if (MediaRecorder.isTypeSupported('audio/webm')) return 'audio/webm';
+      if (MediaRecorder.isTypeSupported('audio/mp4')) return 'audio/mp4';
+    }
+    return '';
+  }
+
+  async function ensurePdfJsReady() {
     if (window.pdfjsLib) {
-      if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      return true;
+    }
+    for (let i = 0; i < 20; i++) {
+      await new Promise(r => setTimeout(r, 150));
+      if (window.pdfjsLib) {
         window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        return true;
       }
-      return Promise.resolve(true);
     }
     return new Promise((resolve) => {
       const s = document.createElement('script');
@@ -15266,106 +15780,192 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     });
   }
 
-  function renderBuiltInDemoSheet() {
-    pdfDoc = null; pdfIsDemo = true; pdfTotalPages = 1; pdfCurrentPage = 1; pdfTutorHistory = [];
-    document.getElementById('pdf-empty-state').style.display = 'none';
-    document.getElementById('pdf-canvas-wrap').style.display = 'inline-block';
-    document.getElementById('pdf-page-input').value = 1;
-    document.getElementById('pdf-page-total').textContent = '/ 1';
-
-    const canvas = document.getElementById('pdf-render-canvas');
-    const W = 720, H = 960;
-    canvas.width = W; canvas.height = H;
-    canvas.style.width = '100%'; canvas.style.maxWidth = '540px'; canvas.style.height = 'auto';
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = '#CBD5E1'; ctx.lineWidth = 1;
-    for (let y = 90; y < H - 30; y += 34) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-    ctx.strokeStyle = '#FB7185'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(74, 0); ctx.lineTo(74, H); ctx.stroke();
-
-    ctx.fillStyle = '#1E3A8A'; ctx.font = 'bold 32px sans-serif';
-    ctx.fillText('IS 456:2000 — RCC & CONCRETE', 95, 62);
-    ctx.fillStyle = '#1D4ED8'; ctx.font = 'bold 22px sans-serif';
-    ctx.fillText('1. Minimum Grade of Concrete (Table 5):', 95, 130);
-    ctx.fillStyle = '#1E293B'; ctx.font = '20px sans-serif';
-    ctx.fillText('* Plain Concrete (PCC) Mild Exposure: M15 (1:2:4)', 98, 168);
-    ctx.fillText('* Reinforced Concrete (RCC) Mild Exposure: M20', 98, 204);
-    ctx.fillText('* Sea Water / Severe RCC Exposure: M30 Minimum', 98, 240);
-
-    ctx.strokeStyle = '#2563EB'; ctx.lineWidth = 3;
-    ctx.strokeRect(110, 285, 520, 240);
-    ctx.fillStyle = '#FEF08A'; ctx.fillRect(135, 315, 220, 56);
-    ctx.strokeStyle = '#B45309'; ctx.lineWidth = 2; ctx.strokeRect(135, 315, 220, 56);
-    ctx.fillStyle = '#0F172A'; ctx.font = 'bold 19px sans-serif';
-    ctx.fillText('Nominal Cover (IS 456)', 148, 350);
-    ctx.fillStyle = '#1E293B'; ctx.font = 'bold 19px sans-serif';
-    ctx.fillText('Slab: 20 mm   |   Beam: 25 mm', 148, 415);
-    ctx.fillText('Column: 40 mm |   Footing: 50 mm', 148, 455);
-    ctx.fillStyle = '#047857'; ctx.font = 'bold 18px sans-serif';
-    ctx.fillText('Rule: Higher Soil/Water Exposure -> Thicker Cover!', 145, 500);
-
-    ctx.fillStyle = '#1D4ED8'; ctx.font = 'bold 22px sans-serif';
-    ctx.fillText('2. Key Bogue Compounds (OPC Cement):', 95, 590);
-    ctx.fillStyle = '#1E293B'; ctx.font = '20px sans-serif';
-    ctx.fillText('* C3A (Celite): Flash Set + Max Heat (Gypsum retards)', 98, 628);
-    ctx.fillText('* C3S (Alite): Early 7-Day Strength & Best Cementing', 98, 664);
-    ctx.fillText('* C2S (Belite): Ultimate Strength (after 28 days)', 98, 700);
-
-    ctx.fillStyle = '#FEF08A'; ctx.fillRect(365, 755, 315, 145);
-    ctx.strokeStyle = '#CA8A04'; ctx.lineWidth = 2; ctx.strokeRect(365, 755, 315, 145);
-    ctx.fillStyle = '#B91C1C'; ctx.font = 'bold 20px sans-serif';
-    ctx.fillText('SSC JE / RRB JE TRAP:', 385, 790);
-    ctx.fillStyle = '#1E3A8A'; ctx.font = '18px sans-serif';
-    ctx.fillText('Max w/c ratio for M20 = 0.55', 385, 825);
-    ctx.fillText('Modulus of Elasticity:', 385, 853);
-    ctx.fillText('Ec = 5000 * sqrt(fck) N/mm2', 385, 881);
-
-    updatePointerBallCss();
-    document.getElementById('pdf-tutor-status').textContent = '🧪 Civil Demo Sheet Ready — Ball रखकर Explain दबाओ!';
+  function updateDocDeleteBtn() {
+    const hasDoc = !!(pdfDoc || pdfLoadedImg);
+    const delBtn = document.getElementById('btn-pdf-delete');
+    const toolsEl = document.getElementById('doc-viewer-tools');
+    const dockEl = document.getElementById('pdf-action-dock');
+    const selEl = document.getElementById('pdf-library-select');
+    if (delBtn) delBtn.style.display = (hasDoc || pdfCurrentId) ? 'inline-flex' : 'none';
+    if (toolsEl) toolsEl.style.display = hasDoc ? 'flex' : 'none';
+    if (dockEl) dockEl.classList.toggle('has-doc', hasDoc);
+    if (selEl) selEl.style.display = (selEl.options.length > 1) ? 'inline-block' : 'none';
   }
 
   async function initPdfVaultList(autoSelectId) {
     const sel = document.getElementById('pdf-library-select');
-    const delBtn = document.getElementById('btn-pdf-delete');
     if (!sel) return;
     try {
       const list = await getAllPdfsFromVault();
       list.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
-      sel.innerHTML = `<option value="">-- Saved PDFs (${list.length}) --</option>`;
+      sel.innerHTML = `<option value="">-- Saved Docs (${list.length}) --</option>`;
       for (const item of list) {
         const opt = document.createElement('option');
         opt.value = item.id;
-        opt.textContent = `📄 ${item.name} (${item.totalPages || '?'}p)`;
+        const isImg = item.kind === 'image';
+        opt.textContent = isImg ? `🖼️ ${item.name}` : `📄 ${item.name} (${item.totalPages || '?'}p)`;
         sel.appendChild(opt);
       }
       const pickId = autoSelectId || pdfCurrentId || (list[0] ? list[0].id : '');
       if (pickId && list.some(x => x.id === pickId)) {
         sel.value = pickId;
-        if (delBtn) delBtn.style.display = 'inline-flex';
-        if (pickId !== pdfCurrentId || !pdfDoc) {
+        if (pickId !== pdfCurrentId || (!pdfDoc && !pdfLoadedImg)) {
           const found = list.find(x => x.id === pickId);
-          if (found) await loadPdfFromBuffer(found.id, found.name, found.data, found.lastPage || 1);
+          if (found) {
+            if (found.kind === 'image') await loadImageDocRecord(found);
+            else await loadPdfFromBuffer(found.id, found.name, found.data, found.lastPage || 1);
+          }
         }
-      } else if (delBtn) delBtn.style.display = 'none';
+      }
+      updateDocDeleteBtn();
     } catch (e) {}
   }
 
+  function computeImageInkBlocks(canvas) {
+    const blocks = [];
+    try {
+      const w = canvas.width, h = canvas.height;
+      if (!w || !h) return blocks;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      const imgData = ctx.getImageData(0, 0, w, h).data;
+      const rowDensity = [];
+      const stepY = Math.max(2, Math.floor(h / 260));
+      const stepX = Math.max(4, Math.floor(w / 140));
+      for (let y = 0; y < h; y += stepY) {
+        let darkCount = 0, total = 0;
+        let minX = w, maxX = 0;
+        for (let x = 0; x < w; x += stepX) {
+          const idx = (y * w + x) * 4;
+          const lum = (imgData[idx] * 0.299 + imgData[idx + 1] * 0.587 + imgData[idx + 2] * 0.114);
+          total++;
+          if (lum < 215) {
+            darkCount++;
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+          }
+        }
+        rowDensity.push({ normY: y / h, active: (darkCount / Math.max(1, total)) > 0.018, midX: maxX > minX ? ((minX + maxX) / 2) / w : 0.5 });
+      }
+      let curBand = null;
+      for (const r of rowDensity) {
+        if (r.active) {
+          if (!curBand) curBand = { y1: r.normY, y2: r.normY, xs: [r.midX] };
+          else { curBand.y2 = r.normY; curBand.xs.push(r.midX); }
+        } else if (curBand && (r.normY - curBand.y2) > 0.022) {
+          if (curBand.y2 - curBand.y1 > 0.015) {
+            const avgX = curBand.xs.reduce((a, b) => a + b, 0) / curBand.xs.length;
+            blocks.push({ x: Math.max(0.18, Math.min(0.82, avgX)), y: Math.max(0.06, Math.min(0.94, (curBand.y1 + curBand.y2) / 2)) });
+          }
+          curBand = null;
+        }
+      }
+      if (curBand && (curBand.y2 - curBand.y1 > 0.015)) {
+        const avgX = curBand.xs.reduce((a, b) => a + b, 0) / curBand.xs.length;
+        blocks.push({ x: Math.max(0.18, Math.min(0.82, avgX)), y: Math.max(0.06, Math.min(0.94, (curBand.y1 + curBand.y2) / 2)) });
+      }
+    } catch (e) {}
+    if (blocks.length < 2) {
+      return [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
+    }
+    return blocks;
+  }
+
+  async function computePdfTextBlocks(page, baseVp) {
+    try {
+      const tc = await page.getTextContent();
+      const items = (tc.items || []).filter(it => it.str && it.str.trim().length > 1);
+      if (!items.length) return computeImageInkBlocks(document.getElementById('pdf-render-canvas'));
+      const pts = items.map(it => {
+        const tx = it.transform[4], ty = it.transform[5];
+        const normX = Math.max(0.12, Math.min(0.88, (tx + (it.width || 0) * 0.4) / Math.max(1, baseVp.width)));
+        const normY = Math.max(0.05, Math.min(0.95, 1 - (ty / Math.max(1, baseVp.height))));
+        return { x: normX, y: normY };
+      }).sort((a, b) => a.y - b.y);
+      const blocks = [];
+      let grp = null;
+      for (const p of pts) {
+        if (!grp) grp = { yStart: p.y, yEnd: p.y, xs: [p.x] };
+        else if (p.y - grp.yEnd < 0.055 && (p.y - grp.yStart) < 0.14) {
+          grp.yEnd = p.y; grp.xs.push(p.x);
+        } else {
+          blocks.push({ x: grp.xs.reduce((a, b) => a + b, 0) / grp.xs.length, y: (grp.yStart + grp.yEnd) / 2 });
+          grp = { yStart: p.y, yEnd: p.y, xs: [p.x] };
+        }
+      }
+      if (grp) blocks.push({ x: grp.xs.reduce((a, b) => a + b, 0) / grp.xs.length, y: (grp.yStart + grp.yEnd) / 2 });
+      return blocks.length >= 2 ? blocks : [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
+    } catch (e) {
+      return [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
+    }
+  }
+
+  function renderLoadedImageCanvas() {
+    if (!pdfLoadedImg) return;
+    const canvas = document.getElementById('pdf-render-canvas');
+    const stageOuter = document.getElementById('pdf-stage-outer');
+    const availW = Math.max(280, (stageOuter ? stageOuter.clientWidth : window.innerWidth) - 14);
+    const natW = pdfLoadedImg.naturalWidth || pdfLoadedImg.width || 800;
+    const natH = pdfLoadedImg.naturalHeight || pdfLoadedImg.height || 600;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const targetCssW = Math.round(availW * pdfScale);
+    canvas.width = Math.max(1, Math.round(Math.min(2000, Math.max(natW, targetCssW * dpr))));
+    canvas.height = Math.max(1, Math.round(canvas.width * (natH / Math.max(1, natW))));
+    canvas.style.width = targetCssW + 'px';
+    canvas.style.maxWidth = 'none';
+    canvas.style.height = 'auto';
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(pdfLoadedImg, 0, 0, canvas.width, canvas.height);
+    pdfReadingBlocks = computeImageInkBlocks(canvas);
+    if (pdfCurrentBlockIdx < 0 && pdfReadingBlocks.length) {
+      pdfPointerNorm = { x: pdfReadingBlocks[0].x, y: pdfReadingBlocks[0].y };
+    }
+    updatePointerBallCss();
+  }
+
+  async function loadImageDocRecord(rec) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        pdfDoc = null; pdfLoadedImg = img;
+        pdfCurrentId = rec.id; pdfTotalPages = 1; pdfCurrentPage = 1; pdfTutorHistory = [];
+        pdfScale = 1.0; pdfCurrentBlockIdx = -1;
+        document.getElementById('pdf-empty-state').style.display = 'none';
+        document.getElementById('pdf-canvas-wrap').style.display = 'inline-block';
+        const navWrap = document.getElementById('pdf-page-nav-wrap');
+        if (navWrap) navWrap.style.display = 'none';
+        document.getElementById('pdf-page-input').value = 1;
+        document.getElementById('pdf-page-total').textContent = '/ 1';
+        renderLoadedImageCanvas();
+        updateDocDeleteBtn();
+        document.getElementById('pdf-tutor-status').textContent = `🖼️ ${rec.name} — Spotlight रखो या ⏭️ Next दबाओ`;
+        resolve(true);
+      };
+      img.onerror = () => { showToast('❌ Image load नहीं हो पाई'); resolve(false); };
+      img.src = rec.dataUrl;
+    });
+  }
+
   async function loadPdfFromBuffer(id, name, arrayBuffer, startPage) {
+    pdfLoadedImg = null;
     if (!(await ensurePdfJsReady())) { showToast('⚠️ PDF.js load नहीं हो पाया — internet check करो'); return; }
     document.getElementById('pdf-tutor-status').textContent = '⏳ Loading PDF...';
     try {
       const task = window.pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
       pdfDoc = await task.promise;
-      pdfIsDemo = false; pdfCurrentId = id; pdfTotalPages = pdfDoc.numPages;
+      pdfCurrentId = id; pdfTotalPages = pdfDoc.numPages;
       pdfCurrentPage = Math.max(1, Math.min(startPage || 1, pdfTotalPages));
       pdfTutorHistory = [];
+      pdfScale = 1.0; pdfCurrentBlockIdx = -1;
       document.getElementById('pdf-empty-state').style.display = 'none';
       document.getElementById('pdf-canvas-wrap').style.display = 'inline-block';
+      const navWrap = document.getElementById('pdf-page-nav-wrap');
+      if (navWrap) navWrap.style.display = pdfTotalPages > 1 ? 'flex' : 'none';
       document.getElementById('pdf-page-total').textContent = `/ ${pdfTotalPages}`;
       document.getElementById('pdf-page-input').max = pdfTotalPages;
       await renderPdfPage(pdfCurrentPage);
-      document.getElementById('pdf-tutor-status').textContent = `🎯 ${name} — Ball रखकर Explain दबाओ`;
+      updateDocDeleteBtn();
+      document.getElementById('pdf-tutor-status').textContent = `📄 ${name} — Spotlight रखो या ⏭️ Next दबाओ`;
     } catch (err) {
       document.getElementById('pdf-tutor-status').textContent = '❌ PDF खोलने में दिक्कत आई';
       showToast('❌ Invalid PDF file');
@@ -15378,9 +15978,9 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     document.getElementById('pdf-page-input').value = pdfCurrentPage;
     const page = await pdfDoc.getPage(pdfCurrentPage);
     const stageOuter = document.getElementById('pdf-stage-outer');
-    const availW = Math.max(300, (stageOuter ? stageOuter.clientWidth : 360) - 24);
+    const availW = Math.max(280, (stageOuter ? stageOuter.clientWidth : window.innerWidth) - 14);
     const baseVp = page.getViewport({ scale: 1.0 });
-    const fitScale = (availW / baseVp.width) * (pdfScale / 1.25);
+    const fitScale = (availW / baseVp.width) * pdfScale;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const vp = page.getViewport({ scale: fitScale });
     const canvas = document.getElementById('pdf-render-canvas');
@@ -15395,6 +15995,10 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     try { await pdfRenderTask.promise; }
     catch (e) { if (e && e.name === 'RenderingCancelledException') return; throw e; }
     finally { pdfRenderTask = null; }
+    pdfReadingBlocks = await computePdfTextBlocks(page, baseVp);
+    if (pdfCurrentBlockIdx < 0 && pdfReadingBlocks.length) {
+      pdfPointerNorm = { x: pdfReadingBlocks[0].x, y: pdfReadingBlocks[0].y };
+    }
     updatePointerBallCss();
     try {
       const list = await getAllPdfsFromVault();
@@ -15406,9 +16010,42 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   function updatePointerBallCss() {
     const ball = document.getElementById('pdf-pointer-ball');
     if (!ball) return;
-    ball.classList.toggle('visible', pdfPointerEnabled && (!!pdfDoc || pdfIsDemo));
+    ball.classList.toggle('visible', pdfPointerEnabled && (!!pdfDoc || !!pdfLoadedImg));
     ball.style.left = `${(pdfPointerNorm.x * 100).toFixed(2)}%`;
     ball.style.top = `${(pdfPointerNorm.y * 100).toFixed(2)}%`;
+  }
+
+  function scrollSpotlightIntoCenter() {
+    const stage = document.getElementById('pdf-stage-outer');
+    const canvas = document.getElementById('pdf-render-canvas');
+    if (!stage || !canvas) return;
+    const targetTop = Math.max(0, pdfPointerNorm.y * canvas.offsetHeight - stage.clientHeight * 0.42);
+    stage.scrollTo({ top: targetTop, behavior: 'smooth' });
+  }
+
+  function updateLoupePreview(clientX, clientY) {
+    const loupe = document.getElementById('pdf-loupe');
+    const lCanvas = document.getElementById('pdf-loupe-canvas');
+    const srcCanvas = document.getElementById('pdf-render-canvas');
+    if (!loupe || !lCanvas || !srcCanvas || !srcCanvas.width) return;
+    loupe.classList.add('active');
+    const topPos = clientY > 155 ? (clientY - 88) : (clientY + 88);
+    const leftPos = Math.max(66, Math.min(window.innerWidth - 66, clientX));
+    loupe.style.left = leftPos + 'px';
+    loupe.style.top = topPos + 'px';
+    const lw = lCanvas.width, lh = lCanvas.height;
+    const lctx = lCanvas.getContext('2d');
+    lctx.fillStyle = '#FFFFFF';
+    lctx.fillRect(0, 0, lw, lh);
+    const srcPatch = Math.max(60, Math.round(srcCanvas.width * 0.16));
+    const sx = Math.round(pdfPointerNorm.x * srcCanvas.width - srcPatch / 2);
+    const sy = Math.round(pdfPointerNorm.y * srcCanvas.height - srcPatch / 2);
+    lctx.drawImage(srcCanvas, sx, sy, srcPatch, srcPatch, 0, 0, lw, lh);
+  }
+
+  function hideLoupePreview() {
+    const loupe = document.getElementById('pdf-loupe');
+    if (loupe) loupe.classList.remove('active');
   }
 
   function capturePdfPointerSnapshots(canvas, normX, normY) {
@@ -15429,8 +16066,8 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     fctx.restore();
     const fullB64 = fc.toDataURL('image/jpeg', 0.84).split(',')[1];
 
-    const cropW = Math.min(cw, Math.max(120, Math.round(cw * 0.46)));
-    const cropH = Math.min(ch, Math.max(100, Math.round(ch * 0.32)));
+    const cropW = Math.min(cw, Math.max(120, Math.round(cw * 0.44)));
+    const cropH = Math.min(ch, Math.max(100, Math.round(ch * 0.28)));
     const sx = Math.max(0, Math.min(cw - cropW, Math.round(normX * cw - cropW / 2)));
     const sy = Math.max(0, Math.min(ch - cropH, Math.round(normY * ch - cropH / 2)));
     const zc = document.createElement('canvas');
@@ -15442,26 +16079,26 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     return { fullB64, cropB64 };
   }
 
-  const PDF_POINTER_SYSTEM_PROMPT = `You are Titan Guru, a legendary, warm, super-charismatic North Indian / Purvanchal classroom mentor who makes the toughest SSC JE / RRB JE Civil Engineering & GK/GS concepts feel ridiculously easy using vivid everyday desi analogies.
+  const PDF_POINTER_SYSTEM_PROMPT = `You are Titan Guru — a beloved, deeply patient, warm North-Indian classroom mentor whose explanations are so crystal clear, unhurried, and unforgettable that even a student seeing a concept for the very first time in their life falls in love with learning it.
 
 ABSOLUTE NON-NEGOTIABLE RULES:
-1. VISION FOCUS: You receive TWO images — Image 1 is the FULL PDF page with a RED TARGET RING marking the exact spot where the student placed their pointer ball; Image 2 is a ZOOMED CLOSE-UP of that spot. Explain ONLY the exact formula, IS code, clause, diagram, or line under that RED TARGET RING.
+1. STRICT SINGLE-SPOT LOCK (NEVER RUSH AHEAD): You receive TWO images — Image 1 is the FULL document/image page with a RED TARGET RING; Image 2 is a ZOOMED CLOSE-UP of that exact spot. Explain ONLY that ONE single formula, clause, diagram, or paragraph inside the RED TARGET RING. NEVER jump ahead to other sections on the page!
 2. IRONCLAD SCRIPT RULE (ZERO WORD SWAPPING — NEVER VIOLATE):
-   - Write ALL normal Hindi sentences, connectors, explanations, and everyday examples STRICTLY in clean, ultra-simple **Devanagari Hindi script** (देवनागरी हिंदी). NEVER write Hindi words in Roman/English letters (NO Hinglish like "yeh formula aise kaam karta hai"!).
-   - Keep ALL English engineering, scientific, constitutional, and exam technical terms STRICTLY in **English Latin script** wrapped in backticks (e.g., \`IS 456:2000\`, \`M20 Grade\`, \`Nominal Cover\`, \`Reynolds Number\`, \`Article 123\`, \`Void Ratio\`, \`C3A\`). NEVER transliterate English technical words into Devanagari (NEVER write "कंक्रीट", "रिसेप्टर", "रेनॉल्ड्स", "आर्टिकल"!).
-   - ❌ WRONG: "Yeh C3A cement mein flash set kar deta hai" OR "सी3ए सीमेंट में फ्लैश सेट कर देता है।"
-   - ✅ RIGHT: "देखो भाई, \`OPC Cement\` में \`C3A\` (Tricalcium Aluminate) सबसे गरम मिज़ाज वाला खिलाड़ी है। पानी पड़ते ही यह तुरंत भड़ककर \`Flash Set\` कर देता है — बिल्कुल वैसे ही जैसे गरम तवे पर छींटा पड़ते ही भाप उठे! इसी को शांत करने के लिए 2–3% \`Gypsum\` मिलाते हैं।"
-3. ULTRA-SIMPLE DESI TEACHING STYLE: Zero heavy textbook Hindi, zero robotic tone, zero meta-labels. Use 1 super-relatable everyday Indian analogy so it sticks in 10 seconds!
-4. COLORFUL FORMAT:
-   ## [Short English Technical Title]
-   - 2–4 छोटे, एकदम आसान देवनागरी हिंदी points (सारे technical terms \`English\` में)
-   > 💡 देसी उदाहरण: [1 मज़ेदार रोज़मर्रा का उदाहरण]
-   > ✅ Exam में याद रखो: [1 ज़रूरी SSC JE / RRB JE trap या exam point]
-5. If the student asks for the next page ("next page", "अगला पेज"), start your reply with [NEXT_PAGE] on line 1.`;
+   - Write ALL Hindi explanations, sentences, and everyday stories STRICTLY in clean, warm, simple **Devanagari Hindi** (देवनागरी हिंदी). NEVER write Hindi words in Roman/English letters.
+   - Keep ALL engineering, scientific, constitutional, and exam technical terms STRICTLY in **English Latin script** wrapped in backticks (e.g., \`IS 456:2000\`, \`M20 Grade\`, \`Nominal Cover\`, \`Reynolds Number\`, \`Article 123\`, \`Void Ratio\`, \`C3A\`).
+3. ZERO RUSH — TEACH FROM ABSOLUTE GROUND ZERO WITH LOVE & PATIENCE:
+   - Unpack WHY this rule/formula works and what every symbol means in plain daily life so a first-time reader understands effortlessly without cramming.
+4. EFFORTLESS MEMORY ARCHITECTURE (COLORFUL EDITORIAL FORMAT):
+   ## [Crisp English Technical Title]
+   ### 🌱 बिल्कुल ज़ीरो से समझो (Ground-Zero Logic)
+   - 3–5 आराम से, प्यार से समझाए गए आसान देवनागरी हिंदी points (सारे technical terms \`English\` में)
+   > 💡 ज़िंदगी से जुड़ा देसी उदाहरण: [1 इतना मज़ेदार और सटीक रोज़मर्रा का उदाहरण कि पढ़ते ही दिमाग में तस्वीर बन जाए]
+   > ✅ Exam Point: [2 ज़रूरी limits, values या direct points]
+   > ⚠️ Examiner Trap & Memory Hook: [एग्जामिनर कहाँ फँसाता है + 1 लाइन का अनोखा याद रखने का जुगाड़]`;
 
-  async function runPdfPointerExplain(userAskText, audioB64, audioMime) {
-    if ((!pdfDoc && !pdfIsDemo) || pdfBusy) {
-      if (!pdfDoc && !pdfIsDemo) showToast('📂 पहले PDF load करो या 🧪 Demo Sheet दबाओ!');
+  async function runPdfPointerExplain(userAskText) {
+    if ((!pdfDoc && !pdfLoadedImg) || pdfBusy) {
+      if (!pdfDoc && !pdfLoadedImg) showToast('📂 पहले कोई PDF या Image load करो!');
       return;
     }
     unlockGuruAudioSync();
@@ -15470,22 +16107,16 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     const btnEx = document.getElementById('btn-pdf-explain-here');
     const btnStop = document.getElementById('btn-pdf-stop-audio');
     btnEx.disabled = true;
-    statusEl.textContent = '🧠 Titan Guru उस spot को देख रहा है...';
+    statusEl.textContent = '🧠 Guru इस spot को आराम से देख रहा है...';
     try {
       const canvas = document.getElementById('pdf-render-canvas');
       const snaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
       const parts = [
         { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
-        { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } }
+        { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } },
+        { text: userAskText || `Page ${pdfCurrentPage}/${pdfTotalPages}: जहाँ Red Target Ring रखा है, सिर्फ उसी एक concept/लाइन को बिल्कुल ज़ीरो से आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (बाकी पेज पर बिल्कुल मत भागना)।` }
       ];
-      if (audioB64) {
-        parts.push({ inlineData: { mimeType: audioMime || 'audio/webm', data: audioB64 } });
-        parts.push({ text: `Student placed the red pointer ring on Page ${pdfCurrentPage}/${pdfTotalPages} and asked this voice question. Reply strictly in simplest Devanagari Hindi + Latin English technical terms!` });
-      } else {
-        parts.push({ text: userAskText || `Page ${pdfCurrentPage}/${pdfTotalPages}: जहाँ Red Target Ring रखा है, उस exact हिस्से को एकदम आसान देवनागरी हिंदी और देसी उदाहरण में समझा दो (सारे Technical Terms सिर्फ \`English\` में रखना, Devanagari में बिल्कुल मत बदलना)।` });
-      }
       const reply = await callTitanMultimodal(parts, PDF_POINTER_SYSTEM_PROMPT, pdfTutorHistory);
-      const wantsNext = reply.includes('[NEXT_PAGE]');
       const cleanReply = reply.replace(/\[NEXT_PAGE\]/g, '').trim();
       pdfTutorHistory.push({ role: 'user', text: userAskText || `[Pointed Page ${pdfCurrentPage}]` });
       pdfTutorHistory.push({ role: 'model', text: cleanReply });
@@ -15493,12 +16124,28 @@ ABSOLUTE NON-NEGOTIABLE RULES:
 
       const ansBox = document.getElementById('pdf-answer-box');
       const ansContent = document.getElementById('pdf-answer-content');
-      ansContent.innerHTML = renderColorfulGuruCard(cleanReply) + `
+      ansContent.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+          <strong style="font-size:0.86rem; color:var(--ink);">📖 Ground-Zero Explanation</strong>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="ctrl-btn" id="btn-pdf-expand-ans">⤢ Full Screen</button>
+            <button type="button" class="ctrl-btn" id="btn-pdf-close-ans">✕ Close</button>
+          </div>
+        </div>
+        ${renderColorfulGuruCard(cleanReply)}
         <div class="guru-card-actions">
           <button type="button" class="ctrl-btn" id="btn-pdf-replay-voice">🔊 फिर से सुनो</button>
           <button type="button" class="ctrl-btn" id="btn-pdf-copy-ans">📋 Copy</button>
+          <button type="button" class="ctrl-btn btn-primary" id="btn-pdf-drawer-next">⏭️ Next Point</button>
         </div>`;
       ansBox.classList.add('show');
+      document.getElementById('btn-pdf-close-ans').addEventListener('click', () => {
+        ansBox.classList.remove('show', 'is-expanded');
+      });
+      document.getElementById('btn-pdf-drawer-next').addEventListener('click', () => {
+        ansBox.classList.remove('show', 'is-expanded');
+        advanceDocSpotlightAndExplain();
+      });
       document.getElementById('btn-pdf-replay-voice').addEventListener('click', () => {
         unlockGuruAudioSync(); stopActiveTitanAudio();
         btnStop.style.display = 'inline-flex';
@@ -15507,8 +16154,10 @@ ABSOLUTE NON-NEGOTIABLE RULES:
       document.getElementById('btn-pdf-copy-ans').addEventListener('click', () => {
         navigator.clipboard.writeText(cleanReply).then(() => showToast('📋 Copied!')).catch(() => {});
       });
-
-      if (wantsNext && pdfDoc && pdfCurrentPage < pdfTotalPages) await renderPdfPage(pdfCurrentPage + 1);
+      document.getElementById('btn-pdf-expand-ans').addEventListener('click', (ev) => {
+        const exp = ansBox.classList.toggle('is-expanded');
+        ev.currentTarget.textContent = exp ? '✕ Back' : '⤢ Full Screen';
+      });
 
       if (pdfVoiceAutoPlay) {
         stopActiveTitanAudio();
@@ -15516,10 +16165,10 @@ ABSOLUTE NON-NEGOTIABLE RULES:
         btnStop.style.display = 'inline-flex';
         await speakWithStudioVoice(cleanTextForTTS(cleanReply), getVoiceConfig(), () => {
           btnStop.style.display = 'none';
-          statusEl.textContent = '✅ समझ आ गया? Ball आगे बढ़ाओ या "आगे समझाओ" दबाओ';
+          statusEl.textContent = '✅ समझ आ गया? अब ⏭️ Next दबाओ';
         });
       } else {
-        statusEl.textContent = '✅ नीचे explanation तैयार है (Silent Mode)';
+        statusEl.textContent = '✅ Explanation तैयार है — पढ़कर ⏭️ Next दबाओ';
       }
     } catch (err) {
       if (err && err.message === 'NO_API_KEY') {
@@ -15535,51 +16184,170 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     }
   }
 
+  function sendCurrentSpotToLiveGenie(promptText) {
+    const canvas = document.getElementById('pdf-render-canvas');
+    if (!canvas) return false;
+    const snaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
+    if (guruLiveConnected && guruLiveWs && guruLiveWs.readyState === WebSocket.OPEN) {
+      flushLiveAudioQueue();
+      if (IS_IOS_WEBKIT) {
+        if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
+        stopGuruMicOnly();
+        setTitanAudioSession('playback');
+        __iosRouteSwitchAt = performance.now();
+      }
+      guruLiveWs.send(JSON.stringify({
+        clientContent: {
+          turns: [{
+            role: 'user',
+            parts: [
+              { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
+              { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } },
+              { text: promptText || 'आका ने Spotlight अब इस नई Red Target Ring वाली जगह पर रखा है। सिर्फ इसी एक concept को आराम से ज़ीरो लेवल से देसी उदाहरण के साथ समझाओ और फिर रुककर पूछना!' }
+            ]
+          }],
+          turnComplete: true
+        }
+      }));
+      return true;
+    }
+    return false;
+  }
+
+  window.__startDocLiveFromLamp = function() {
+    if (!pdfDoc && !pdfLoadedImg) {
+      showToast('📂 पहले कोई PDF या Image load करो!');
+      return;
+    }
+    stopActiveVoicePlayback();
+    unlockGuruAudioSync();
+    const canvas = document.getElementById('pdf-render-canvas');
+    window.__guruPendingDocSnaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
+    guruSessionMode = 'doc_live';
+    startTitanGuruLive(null, 'doc_live', null);
+  };
+
+  async function advanceDocSpotlightAndExplain() {
+    if (!pdfDoc && !pdfLoadedImg) { showToast('📂 पहले कोई PDF या Image load करो!'); return; }
+    const blocks = pdfReadingBlocks && pdfReadingBlocks.length
+      ? pdfReadingBlocks
+      : [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
+    let nextIdx = blocks.findIndex(b => b.y > pdfPointerNorm.y + 0.045);
+    if (nextIdx === -1) {
+      if (pdfDoc && pdfCurrentPage < pdfTotalPages) {
+        pdfCurrentBlockIdx = 0;
+        await renderPdfPage(pdfCurrentPage + 1);
+        const newBlocks = pdfReadingBlocks && pdfReadingBlocks.length ? pdfReadingBlocks : [{ x: 0.50, y: 0.14 }];
+        pdfPointerNorm = { x: newBlocks[0].x, y: newBlocks[0].y };
+        updatePointerBallCss();
+        scrollSpotlightIntoCenter();
+        document.getElementById('pdf-tutor-status').textContent = `📄 Page ${pdfCurrentPage}/${pdfTotalPages} • Step 1/${newBlocks.length}`;
+      } else {
+        pdfCurrentBlockIdx = 0;
+        pdfPointerNorm = { x: blocks[0].x, y: blocks[0].y };
+        updatePointerBallCss();
+        scrollSpotlightIntoCenter();
+        showToast('🔄 पेज पूरा हुआ — वापस पहले point पर आ गए');
+      }
+    } else {
+      pdfCurrentBlockIdx = nextIdx;
+      pdfPointerNorm = { x: blocks[nextIdx].x, y: blocks[nextIdx].y };
+      updatePointerBallCss();
+      scrollSpotlightIntoCenter();
+      document.getElementById('pdf-tutor-status').textContent = `🎯 Step ${nextIdx + 1}/${blocks.length} पर Spotlight आ गया`;
+    }
+    if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
+      if (sendCurrentSpotToLiveGenie('आका ने Next दबाकर Spotlight को नीचे वाले इस अगले concept पर बढ़ाया है। अब सिर्फ इसी Red Target Ring वाले हिस्से को आराम से ज़ीरो से समझाओ और फिर रुकना!')) {
+        showToast('🧞 Live Genie अगले point पर पहुँच गया!');
+        return;
+      }
+    }
+    runPdfPointerExplain();
+  }
+
   const ballEl = document.getElementById('pdf-pointer-ball');
   const wrapEl = document.getElementById('pdf-canvas-wrap');
   let draggingBall = false;
   function moveBallToClientXY(cx, cy) {
     const rect = document.getElementById('pdf-render-canvas').getBoundingClientRect();
     if (!rect.width || !rect.height) return;
-    pdfPointerNorm.x = Math.max(0.03, Math.min(0.97, (cx - rect.left) / rect.width));
-    pdfPointerNorm.y = Math.max(0.03, Math.min(0.97, (cy - rect.top) / rect.height));
+    pdfPointerNorm.x = Math.max(0.04, Math.min(0.96, (cx - rect.left) / rect.width));
+    pdfPointerNorm.y = Math.max(0.04, Math.min(0.96, (cy - rect.top) / rect.height));
     updatePointerBallCss();
+    updateLoupePreview(cx, cy);
   }
   ballEl.addEventListener('pointerdown', (e) => {
     e.preventDefault(); e.stopPropagation(); draggingBall = true; ballEl.classList.add('dragging');
     if (ballEl.setPointerCapture) ballEl.setPointerCapture(e.pointerId);
+    updateLoupePreview(e.clientX, e.clientY);
   });
-  ballEl.addEventListener('pointermove', (e) => { if (draggingBall) { e.preventDefault(); moveBallToClientXY(e.clientX, e.clientY); } });
-  const endDrag = () => { draggingBall = false; ballEl.classList.remove('dragging'); };
+  ballEl.addEventListener('pointermove', (e) => {
+    if (draggingBall) { e.preventDefault(); moveBallToClientXY(e.clientX, e.clientY); }
+  });
+  const endDrag = () => {
+    if (!draggingBall) return;
+    draggingBall = false;
+    ballEl.classList.remove('dragging');
+    hideLoupePreview();
+    if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
+      sendCurrentSpotToLiveGenie();
+      showToast('🧞 नई जगह Live Genie को दिखा दी!');
+    }
+  };
   ballEl.addEventListener('pointerup', endDrag);
   ballEl.addEventListener('pointercancel', endDrag);
   wrapEl.addEventListener('click', (e) => {
     if (!pdfPointerEnabled || draggingBall || e.target.closest('#pdf-pointer-ball')) return;
-    moveBallToClientXY(e.clientX, e.clientY);
+    const rect = document.getElementById('pdf-render-canvas').getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    pdfPointerNorm.x = Math.max(0.04, Math.min(0.96, (e.clientX - rect.left) / rect.width));
+    pdfPointerNorm.y = Math.max(0.04, Math.min(0.96, (e.clientY - rect.top) / rect.height));
+    updatePointerBallCss();
+    if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
+      sendCurrentSpotToLiveGenie();
+      showToast('🧞 नई जगह Live Genie को दिखा दी!');
+    }
   });
 
   const pdfFileInput = document.getElementById('pdf-file-input');
   document.getElementById('btn-pdf-upload').addEventListener('click', () => pdfFileInput.click());
   document.getElementById('btn-pdf-empty-upload').addEventListener('click', () => pdfFileInput.click());
-  document.getElementById('btn-pdf-demo-page').addEventListener('click', renderBuiltInDemoSheet);
-  document.getElementById('btn-pdf-empty-demo').addEventListener('click', renderBuiltInDemoSheet);
   document.getElementById('btn-pdf-voice-mode').addEventListener('click', (e) => {
     pdfVoiceAutoPlay = !pdfVoiceAutoPlay;
-    e.currentTarget.textContent = pdfVoiceAutoPlay ? '🔊 Voice: ON' : '🔇 Text Only';
+    e.currentTarget.classList.toggle('is-active', pdfVoiceAutoPlay);
+    showToast(pdfVoiceAutoPlay ? 'Voice ON' : 'Silent Mode');
   });
 
   pdfFileInput.addEventListener('change', async (e) => {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
+    const isImageFile = /^image\//i.test(f.type || '') || /\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name || '');
+    if (isImageFile) {
+      try {
+        const dataUrl = await new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = () => res(r.result);
+          r.onerror = rej;
+          r.readAsDataURL(f);
+        });
+        const id = 'img_' + Date.now();
+        const cleanName = f.name.replace(/\.[^.]+$/, '');
+        await savePdfToVault({ id, kind: 'image', name: cleanName, size: f.size, addedAt: Date.now(), lastPage: 1, totalPages: 1, dataUrl });
+        await initPdfVaultList(id);
+        showToast(`🖼️ ${cleanName} load हो गई!`);
+      } catch (err) { showToast('❌ Image पढ़ने में दिक्कत आई'); }
+      e.target.value = '';
+      return;
+    }
     const buf = await f.arrayBuffer();
     if (!(await ensurePdfJsReady())) { showToast('⚠️ PDF.js load नहीं हो पाया'); return; }
     try {
       const probe = await window.pdfjsLib.getDocument({ data: buf.slice(0) }).promise;
       const id = 'pdf_' + Date.now();
-      await savePdfToVault({ id, name: f.name.replace(/\.pdf$/i, ''), size: f.size, addedAt: Date.now(), lastPage: 1, totalPages: probe.numPages, data: buf });
+      await savePdfToVault({ id, kind: 'pdf', name: f.name.replace(/\.pdf$/i, ''), size: f.size, addedAt: Date.now(), lastPage: 1, totalPages: probe.numPages, data: buf });
       await initPdfVaultList(id);
-      showToast(`📄 ${f.name} Vault में save हो गया!`);
-    } catch (err) { showToast('❌ यह valid PDF file नहीं है'); }
+      showToast(`📄 ${f.name} load हो गया!`);
+    } catch (err) { showToast('❌ यह valid PDF या Image file नहीं है'); }
     e.target.value = '';
   });
 
@@ -15588,19 +16356,20 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     if (!id) return;
     const found = (await getAllPdfsFromVault()).find(x => x.id === id);
     if (found) {
-      document.getElementById('btn-pdf-delete').style.display = 'inline-flex';
-      await loadPdfFromBuffer(found.id, found.name, found.data, found.lastPage || 1);
+      if (found.kind === 'image') await loadImageDocRecord(found);
+      else await loadPdfFromBuffer(found.id, found.name, found.data, found.lastPage || 1);
     }
   });
   document.getElementById('btn-pdf-delete').addEventListener('click', async () => {
-    if (!pdfCurrentId) return;
-    await deletePdfFromVault(pdfCurrentId);
-    pdfDoc = null; pdfIsDemo = false; pdfCurrentId = '';
+    if (pdfCurrentId) await deletePdfFromVault(pdfCurrentId);
+    pdfDoc = null; pdfLoadedImg = null; pdfCurrentId = ''; pdfReadingBlocks = []; pdfCurrentBlockIdx = -1;
     document.getElementById('pdf-canvas-wrap').style.display = 'none';
     document.getElementById('pdf-empty-state').style.display = 'block';
+    document.getElementById('pdf-answer-box').classList.remove('show', 'is-expanded');
     document.getElementById('pdf-page-total').textContent = '/ 0';
+    updateDocDeleteBtn();
     await initPdfVaultList();
-    showToast('🗑️ PDF हटाया गया');
+    showToast('🗑️ Document हटाया गया');
   });
   document.getElementById('btn-pdf-prev').addEventListener('click', () => pdfDoc && renderPdfPage(pdfCurrentPage - 1));
   document.getElementById('btn-pdf-next').addEventListener('click', () => pdfDoc && renderPdfPage(pdfCurrentPage + 1));
@@ -15608,72 +16377,36 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     const v = parseInt(e.target.value, 10);
     if (pdfDoc && v >= 1 && v <= pdfTotalPages) renderPdfPage(v);
   });
-  function applyDemoZoom() {
-    const c = document.getElementById('pdf-render-canvas');
-    if (c) c.style.maxWidth = `${Math.round(540 * (pdfScale / 1.25))}px`;
-  }
+  document.getElementById('btn-pdf-fit').addEventListener('click', () => {
+    pdfScale = 1.0;
+    if (pdfDoc) renderPdfPage(pdfCurrentPage);
+    else if (pdfLoadedImg) renderLoadedImageCanvas();
+    showToast('⛶ Screen पर फिट हो गया');
+  });
   document.getElementById('btn-pdf-zoom-in').addEventListener('click', () => {
-    pdfScale = Math.min(2.4, pdfScale + 0.25);
-    if (pdfDoc) renderPdfPage(pdfCurrentPage); else if (pdfIsDemo) applyDemoZoom();
+    pdfScale = Math.min(2.6, +(pdfScale + 0.25).toFixed(2));
+    if (pdfDoc) renderPdfPage(pdfCurrentPage); else if (pdfLoadedImg) renderLoadedImageCanvas();
   });
   document.getElementById('btn-pdf-zoom-out').addEventListener('click', () => {
-    pdfScale = Math.max(0.75, pdfScale - 0.25);
-    if (pdfDoc) renderPdfPage(pdfCurrentPage); else if (pdfIsDemo) applyDemoZoom();
+    pdfScale = Math.max(0.6, +(pdfScale - 0.25).toFixed(2));
+    if (pdfDoc) renderPdfPage(pdfCurrentPage); else if (pdfLoadedImg) renderLoadedImageCanvas();
   });
   document.getElementById('btn-pdf-pointer-toggle').addEventListener('click', (e) => {
     pdfPointerEnabled = !pdfPointerEnabled;
-    e.currentTarget.textContent = pdfPointerEnabled ? '🎯 Pointer: ON' : '🎯 Pointer: OFF';
-    e.currentTarget.classList.toggle('active', pdfPointerEnabled);
+    e.currentTarget.classList.toggle('is-active', pdfPointerEnabled);
     updatePointerBallCss();
   });
   document.getElementById('btn-pdf-explain-here').addEventListener('click', () => runPdfPointerExplain());
-  document.getElementById('btn-pdf-next-explain').addEventListener('click', () => runPdfPointerExplain(`पिछला point समझ आ गया! अब Page ${pdfCurrentPage} पर इसी के आगे का अगला हिस्सा आसान देवनागरी हिंदी + \`English\` technical terms में समझा दो (या page खत्म हो तो [NEXT_PAGE] लिखकर अगले page की शुरुआत बताओ)।`));
+  document.getElementById('btn-pdf-next-explain').addEventListener('click', () => advanceDocSpotlightAndExplain());
   document.getElementById('btn-pdf-stop-audio').addEventListener('click', () => {
     stopActiveTitanAudio();
     document.getElementById('btn-pdf-stop-audio').style.display = 'none';
     document.getElementById('pdf-tutor-status').textContent = '⏹️ Voice रुकी हुई है';
   });
-
-  function pickSafeAudioMime() {
-    if (window.MediaRecorder && typeof MediaRecorder.isTypeSupported === 'function') {
-      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) return 'audio/webm;codecs=opus';
-      if (MediaRecorder.isTypeSupported('audio/webm')) return 'audio/webm';
-      if (MediaRecorder.isTypeSupported('audio/mp4')) return 'audio/mp4';
-    }
-    return '';
-  }
-
-  const btnPdfMic = document.getElementById('btn-pdf-voice-ask');
-  btnPdfMic.addEventListener('click', async () => {
-    if (!pdfDoc && !pdfIsDemo) { showToast('📂 पहले PDF load करो या Demo Sheet दबाओ!'); return; }
-    unlockGuruAudioSync();
-    if (pdfMicActive && pdfMicRec) {
-      pdfMicActive = false; btnPdfMic.classList.remove('recording'); btnPdfMic.textContent = '🎤 Ask by Voice';
-      try { pdfMicRec.stop(); } catch (e) {}
-      return;
-    }
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      pdfMicChunks = [];
-      const mime = pickSafeAudioMime();
-      pdfMicRec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
-      pdfMicRec.ondataavailable = (ev) => { if (ev.data && ev.data.size > 0) pdfMicChunks.push(ev.data); };
-      pdfMicRec.onstop = () => {
-        stream.getTracks().forEach(t => t.stop());
-        const blob = new Blob(pdfMicChunks, { type: mime || 'audio/webm' });
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const b64 = String(reader.result || '').split(',')[1];
-          if (b64) runPdfPointerExplain('', b64, mime || 'audio/webm');
-        };
-        reader.readAsDataURL(blob);
-      };
-      pdfMicRec.start();
-      pdfMicActive = true;
-      btnPdfMic.classList.add('recording');
-      btnPdfMic.textContent = '⏹️ Done Speaking';
-      document.getElementById('pdf-tutor-status').textContent = '🎤 बोलो... (बोलकर Done Speaking दबाओ)';
-    } catch (err) { showToast('🎤 Mic permission allow करो (HTTPS पर)'); }
+  window.addEventListener('resize', () => {
+    if ((document.body.getAttribute('data-universe') || '') !== 'pdf') return;
+    if (pdfDoc) renderPdfPage(pdfCurrentPage);
+    else if (pdfLoadedImg) renderLoadedImageCanvas();
   });
 
   // ===================================================================
