@@ -10312,6 +10312,8 @@ let guruLiveAwaitingStart = false;
 let guruPendingKickoff = null;
 let guruStartSpeechFrames = 0;
 let __iosMicReopenTimer = null;
+let __iosRouteSwitchAt = 0;
+let __genieLipSyncTimer = null;
 let guruWorkletSpeaking = false;
 
 function resampleContiguousLinear(input, inRate, outRate, prevSample) {
@@ -10338,6 +10340,7 @@ function flushLiveAudioQueue() {
   guruLivePcmCarryByte = null;
   guruLiveLastSample = 0;
   guruWorkletSpeaking = false;
+  if (__genieLipSyncTimer) { clearTimeout(__genieLipSyncTimer); __genieLipSyncTimer = null; }
   if (guruLivePlayCtx) guruLiveNextTime = guruLivePlayCtx.currentTime;
   if (activeSpeakingQid !== null && typeof window.setLiveLampGenieMode === 'function') {
     window.setLiveLampGenieMode(guruLiveConnected && !guruMicMuted ? 'listening' : 'ready');
@@ -10401,7 +10404,9 @@ function playLivePcm24k(base64Pcm, mimeType) {
   }
   const now = guruLivePlayCtx.currentTime;
   const isContiguous = (guruLiveSources.length > 0 && guruLiveNextTime > now + 0.004);
-  const startAt = isContiguous ? guruLiveNextTime : (now + (IS_IOS_WEBKIT ? 0.38 : 0.095));
+  const justSwitchedRoute = IS_IOS_WEBKIT && (__iosRouteSwitchAt > 0) && ((performance.now() - __iosRouteSwitchAt) < 1100);
+  const leadSec = IS_IOS_WEBKIT ? (justSwitchedRoute ? 0.78 : 0.42) : 0.14;
+  const startAt = isContiguous ? guruLiveNextTime : (now + leadSec);
   if (!isContiguous) {
     const fade = Math.min(48, Math.floor(len / 8));
     for (let i = 0; i < fade; i++) float32[i] *= (i / fade);
@@ -10420,7 +10425,20 @@ function playLivePcm24k(base64Pcm, mimeType) {
   src.start(startAt);
   guruLiveNextTime = startAt + buffer.duration;
   guruLiveSources.push(src);
-  if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('speaking');
+  if (typeof window.setLiveLampGenieMode === 'function') {
+    const delayMs = Math.max(0, Math.round((startAt - now) * 1000));
+    if (!isContiguous && delayMs > 40) {
+      if (__genieLipSyncTimer) clearTimeout(__genieLipSyncTimer);
+      __genieLipSyncTimer = setTimeout(() => {
+        __genieLipSyncTimer = null;
+        if (guruLiveSources.length > 0 && typeof window.setLiveLampGenieMode === 'function') {
+          window.setLiveLampGenieMode('speaking');
+        }
+      }, delayMs);
+    } else {
+      window.setLiveLampGenieMode('speaking');
+    }
+  }
   src.onended = () => {
     guruLiveSources = guruLiveSources.filter(s => s !== src);
     if (guruLiveSources.length === 0) {
@@ -10518,6 +10536,7 @@ function triggerPendingGuruKickoff() {
       if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
       stopGuruMicOnly();
       setTitanAudioSession('playback');
+      __iosRouteSwitchAt = performance.now();
     }
     guruLiveWs.send(JSON.stringify({
       clientContent: { turns: [{ role: 'user', parts: [{ text: promptText }] }], turnComplete: true }
@@ -10889,7 +10908,7 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
                 guruPendingKickoff = null;
                 if (IS_IOS_WEBKIT) {
                   if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
-                  if (guruMicStream) { stopGuruMicOnly(); setTitanAudioSession('playback'); }
+                  if (guruMicStream) { stopGuruMicOnly(); setTitanAudioSession('playback'); __iosRouteSwitchAt = performance.now(); }
                 }
                 resetWaveBarsCss(); updateGuruDockState(IS_IOS_WEBKIT ? '⚡ Instant Live · Tap to interrupt' : '⚡ Instant Live · Speak to interrupt', false);
                 updateGuruMicBtn();
