@@ -5549,65 +5549,55 @@ body[data-universe="pdf"] .pdf-empty-state h3 {
   color: var(--muted);
 }
 
-/* Theme-Native Transparent Spotlight Pointer */
+/* Crystal-Clear Transparent Golden-Sapphire Sudarshan Chakra Halo (ZERO hidden letters!) */
 #pdf-pointer-ball {
   position: absolute;
-  width: 44px !important;
-  height: 44px !important;
-  margin-left: -22px !important;
-  margin-top: -22px !important;
+  width: 54px !important;
+  height: 54px !important;
+  margin-left: -27px !important;
+  margin-top: -27px !important;
   border-radius: 50% !important;
-  background: radial-gradient(circle, transparent 48%, rgba(37, 99, 235, 0.14) 100%) !important;
-  border: 2px solid var(--accent) !important;
-  box-shadow: 0 0 0 4px var(--accent-soft), 0 4px 14px rgba(15, 23, 42, 0.16) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  transition: left 0.30s cubic-bezier(0.22, 1, 0.36, 1), top 0.30s cubic-bezier(0.22, 1, 0.36, 1), transform 0.14s ease;
+  transition: transform 0.16s cubic-bezier(0.22, 1.3, 0.36, 1);
   cursor: grab;
   touch-action: none;
   z-index: 25;
   display: none;
   align-items: center;
   justify-content: center;
+  overflow: visible !important;
 }
 #pdf-pointer-ball.visible { display: flex; }
 #pdf-pointer-ball::before,
 #pdf-pointer-ball::after {
-  content: "" !important;
-  display: block !important;
-  position: absolute;
-  background: var(--accent);
-  opacity: 0.35;
-  pointer-events: none;
+  display: none !important;
+  content: none !important;
 }
-#pdf-pointer-ball::before { width: 1.5px; height: 100%; left: 50%; top: 0; transform: translateX(-50%); }
-#pdf-pointer-ball::after { height: 1.5px; width: 100%; top: 50%; left: 0; transform: translateY(-50%); }
-#pdf-pointer-ball .spotlight-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #F43F5E;
-  border: 2px solid #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25);
-  pointer-events: none;
-  z-index: 2;
-}
-#pdf-pointer-ball .spotlight-ring {
+.sudarshan-svg {
   position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  border: 1.5px dashed rgba(245, 158, 11, 0.80);
-  animation: spotlightSpin 10s linear infinite;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  animation: spotlightSpin 14s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.42));
+}
+body.theme-night .sudarshan-svg {
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.58));
+}
+#pdf-pointer-ball.dragging {
+  cursor: grabbing;
+  transform: scale(1.14);
+}
+#pdf-pointer-ball.dragging .sudarshan-svg {
+  animation-duration: 3.5s;
+  filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.55));
 }
 @keyframes spotlightSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-#pdf-pointer-ball.dragging {
-  transition: none !important;
-  cursor: grabbing;
-  transform: scale(1.16);
-  border-color: #F43F5E !important;
-  box-shadow: 0 0 0 7px rgba(244, 63, 94, 0.18), 0 8px 20px rgba(244, 63, 94, 0.28) !important;
-}
 
 /* Finger-Proof Offset 2x Magnifier Loupe */
 #pdf-loupe {
@@ -5788,9 +5778,6 @@ body[data-universe="pdf"].doc-live-active #pdf-pointer-ball.is-spot-armed #pdf-s
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, -50%) scale(1);
-}
-body[data-universe="pdf"].doc-live-active #pdf-pointer-ball.is-spot-armed .spotlight-dot {
-  opacity: 0;
 }
 #pdf-pointer-ball.dragging #pdf-spotlight-ask-chip {
   opacity: 0 !important;
@@ -6521,12 +6508,37 @@ body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock {
 
         <div class="pdf-canvas-wrap" id="pdf-canvas-wrap" style="display:none;">
           <canvas id="pdf-render-canvas"></canvas>
-          <div id="pdf-pointer-ball" class="visible" style="left:50%; top:18%;" title="Drag Spotlight">
+          <div id="pdf-pointer-ball" class="visible" style="left:50%; top:24%;" title="Drag Sudarshan Halo">
+            <svg class="sudarshan-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="sdGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FDE047"/>
+                  <stop offset="50%" stop-color="#F59E0B"/>
+                  <stop offset="100%" stop-color="#38BDF8"/>
+                </linearGradient>
+              </defs>
+              <!-- Delicate Crystal-Clear Hollow Outer Ring (Interior r=21 is 100% open & transparent!) -->
+              <circle cx="32" cy="32" r="22.5" stroke="url(#sdGold)" stroke-width="1.4" stroke-opacity="0.9"/>
+              <circle cx="32" cy="32" r="25.5" stroke="url(#sdGold)" stroke-width="0.9" stroke-dasharray="3 4" stroke-opacity="0.72"/>
+              <!-- 12 Fine Sudarshan Chakra Flame-Tipped Outer Petals (Strictly outside r=22.5, never touching center text!) -->
+              <g fill="url(#sdGold)" opacity="0.92">
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(30 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(60 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(90 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(120 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(150 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(180 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(210 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(240 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(270 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(300 32 32)"/>
+                <path d="M32 2.5 L34.2 8.2 L32 6.8 L29.8 8.2 Z" transform="rotate(330 32 32)"/>
+              </g>
+            </svg>
             <button type="button" id="pdf-spotlight-ask-chip" aria-label="Ask Genie" title="Ask Genie">
               <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
             </button>
-            <span class="spotlight-ring"></span>
-            <span class="spotlight-dot"></span>
           </div>
         </div>
       </div>
@@ -16530,11 +16542,15 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     }
   }
 
+  let __docStoryGen = 0;
   async function speakDocStoryVoice(text, cfg) {
+    const myGen = ++__docStoryGen;
     stopActiveTitanAudio();
+    if (typeof flushLiveAudioQueue === 'function') { try { flushLiveAudioQueue(); } catch (e) {} }
     syncDocAudioUi('loading');
     stopGuruMicOnly();
     await new Promise(r => setTimeout(r, 180));
+    if (myGen !== __docStoryGen) return;
     const ttsModels = ['gemini-3.8-flash-lite-tts', 'gemini-3.8-flash-tts', 'gemini-2.5-flash-preview-tts'];
     const indianStoryStyle = 'Speak in a 100% authentic, warm, expressive native North-Indian Hindi storytelling accent (like a beloved Patna or Lucknow mentor — NEVER a foreign, American, or British accent!). Pronounce every Hindi word with natural Indian rhythm, warm emotional highs and lows, joyful storytelling expression on real-life analogies, slight thoughtful pauses before key concepts, and clear Indian-English pronunciation for technical terms at a relaxed, unhurried pace.';
     if (cfg && cfg.apiKey) {
@@ -16588,6 +16604,7 @@ ${text}` };
             if (guruAudioEl === player) guruAudioEl = null;
             syncDocAudioUi('idle');
           };
+          if (myGen !== __docStoryGen) { finishPlay(); return; }
           player.onended = finishPlay;
           player.onerror = finishPlay;
           await player.play();
@@ -16988,6 +17005,9 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     if (!canvas) return false;
     const snaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
     if (guruLiveConnected && guruLiveWs && guruLiveWs.readyState === WebSocket.OPEN) {
+      __docStoryGen++;
+      stopActiveTitanAudio();
+      syncDocAudioUi('idle');
       flushLiveAudioQueue();
       if (IS_IOS_WEBKIT) {
         if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
@@ -17018,6 +17038,9 @@ ABSOLUTE NON-NEGOTIABLE RULES:
       showToast('📂 पहले कोई PDF या Image load करो!');
       return;
     }
+    __docStoryGen++;
+    stopActiveTitanAudio();
+    syncDocAudioUi('idle');
     stopActiveVoicePlayback();
     unlockGuruAudioSync();
     const canvas = document.getElementById('pdf-render-canvas');
@@ -17031,43 +17054,17 @@ ABSOLUTE NON-NEGOTIABLE RULES:
   window.__voiceAdvanceDocSpotlight = function() { advanceDocSpotlightAndExplain(); };
   async function advanceDocSpotlightAndExplain() {
     if (!pdfDoc && !pdfLoadedImg) { showToast('📂 पहले कोई PDF या Image load करो!'); return; }
-    const blocks = pdfReadingBlocks && pdfReadingBlocks.length
-      ? pdfReadingBlocks
-      : [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y }));
-    const nextUnread = findNextBlockOnPage(blocks, pdfPointerNorm.x, pdfPointerNorm.y);
-    if (!nextUnread) {
-      if (pdfDoc && pdfCurrentPage < pdfTotalPages) {
-        pdfCurrentBlockIdx = 0;
-        await renderPdfPage(pdfCurrentPage + 1);
-        const newBlocks = pdfReadingBlocks && pdfReadingBlocks.length ? pdfReadingBlocks : [{ x: 0.50, y: 0.14 }];
-        const nextPageSpot = findNextBlockOnPage(newBlocks, 0.25, -1) || { idx: 0, block: newBlocks[0] };
-        pdfCurrentBlockIdx = nextPageSpot.idx;
-        pdfPointerNorm = { x: nextPageSpot.block.x, y: nextPageSpot.block.y };
-        updatePointerBallCss();
-            scrollSpotlightIntoCenter();
-        document.getElementById('pdf-tutor-status').textContent = `📄 Page ${pdfCurrentPage}/${pdfTotalPages}`;
-      } else {
-        pdfCurrentBlockIdx = 0;
-        pdfPointerNorm = { x: blocks[0].x, y: blocks[0].y };
-        updatePointerBallCss();
-        scrollSpotlightIntoCenter();
-        showToast('✨ पूरा पेज कवर हो गया!');
-      }
-    } else {
-      pdfCurrentBlockIdx = nextUnread.idx;
-      pdfPointerNorm = { x: nextUnread.block.x, y: nextUnread.block.y };
-      updatePointerBallCss();
-      scrollSpotlightIntoCenter();
-      document.getElementById('pdf-tutor-status').textContent = `🎯 Step ${nextUnread.idx + 1}/${blocks.length}`;
-    }
-    const coveredOnPage = pdfCurrentDocNotes.filter(n => n.page === pdfCurrentPage).map(n => n.title).slice(-4);
-    const coveredCtx = coveredOnPage.length ? `अभी तक इस पेज पर ये हिस्से कवर हो चुके हैं: (${coveredOnPage.join(', ')})। इन्हें बिल्कुल मत दोहराना — ` : '';
-    const nextPrompt = `${coveredCtx}अब Spotlight ठीक नीचे इस अगले unread हिस्से पर आ गया है। सिर्फ इसी Red Target Ring वाले नए concept को बिल्कुल ज़ीरो से प्यार से समझाओ और फिर शांति से रुक जाना।`;
+    // Pointer stays 100% stationary under the user's control (never jumps randomly!)
+    const coveredOnPage = pdfCurrentDocNotes.filter(n => n.page === pdfCurrentPage).map(n => n.title).slice(-5);
+    const coveredCtx = coveredOnPage.length
+      ? `अभी तक इस पेज पर ये हिस्से कवर हो चुके हैं: (${coveredOnPage.join(', ')})। इन्हें बिल्कुल मत दोहराना — `
+      : '';
+    const nextPrompt = `${coveredCtx}अब Page ${pdfCurrentPage}/${pdfTotalPages} पर पिछले हिस्से के ठीक आगे आने वाले अगले नए concept/लाइन/पॉइंट को बिल्कुल ज़ीरो से प्यार से समझाओ (और खत्म करके शांति से रुक जाना)।`;
     if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
       saveLastBookmarkSpot();
-      ballEl.classList.remove('is-spot-armed');
+      const spBall = document.getElementById('pdf-pointer-ball');
+      if (spBall) spBall.classList.remove('is-spot-armed');
       if (sendCurrentSpotToLiveGenie(nextPrompt)) {
-        showToast('🧞 अगला पड़ाव तैयार');
         return;
       }
     }
@@ -17266,6 +17263,7 @@ ABSOLUTE NON-NEGOTIABLE RULES:
   document.getElementById('btn-pdf-next-explain').addEventListener('click', () => advanceDocSpotlightAndExplain());
   document.getElementById('btn-pdf-pause-audio').addEventListener('click', () => toggleDocAudioPause());
   document.getElementById('btn-pdf-stop-audio').addEventListener('click', () => {
+    __docStoryGen++;
     stopActiveTitanAudio();
     syncDocAudioUi('idle');
   });
