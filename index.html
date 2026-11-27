@@ -4907,28 +4907,19 @@ body.theme-night .gv-actor svg {
    ===================================================================== */
 body[data-universe="chat"] {
   padding: 0 !important;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-}
-body[data-universe="chat"] .app-wrap {
-  max-width: 100% !important;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  padding: 0 !important;
-  margin: 0 !important;
-  display: flex;
-  flex-direction: column;
 }
 body[data-universe="chat"] .top-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 960;
   border-radius: 0 !important;
   border: none !important;
   border-bottom: 1px solid var(--border) !important;
   margin: 0 !important;
   padding: calc(6px + env(safe-area-inset-top, 0px)) 10px 6px !important;
   box-shadow: none !important;
-  flex-shrink: 0;
   background: var(--card);
 }
 body[data-universe="chat"] .top-header .header-row-1 {
@@ -4948,12 +4939,17 @@ body[data-universe="chat"] .pg-uni-btn {
   border-radius: 9px !important;
 }
 body[data-universe="chat"] #universe-chat-view.pg-uni-panel.active {
+  position: fixed !important;
+  top: calc(54px + env(safe-area-inset-top, 0px));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 950;
   display: flex !important;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
   margin: 0 !important;
   overflow: hidden;
+  background: var(--bg);
 }
 body[data-universe="chat"] .chat-shell {
   flex: 1;
@@ -10641,7 +10637,7 @@ HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
 4. LOCK ON CONFIRMATION: The moment the student confirms ("हाँ / पक्का / lock कर दो / ताला लगा दो"), IMMEDIATELY call the tool lock_mcq_option with that exact displayed letter (A, B, C, or D) (or end your reply with [LOCK:B] if tools are unavailable).
 5. FEEDBACK & COMPLETE SATISFACTION: After locking, warmly congratulate if right—or gently explain the exact concept and why the right answer wins in dead-simple everyday Hindi if wrong. Then ask clearly if they understood completely and are ready for the next question ("अच्छे से समझ आ गया? अगले सवाल पर चलें?").
 6. WAIT FOR EXPLICIT PERMISSION BEFORE MOVING ON: NEVER call go_to_next_question until the student explicitly gives permission ("हाँ / चलो / next / आगे बढ़ो"). Once they say yes, call go_to_next_question (or include [NEXT_Q]) and immediately begin Step 1 for the newly loaded question!
-${hasLiveTools ? '7. LIVE SCREEN MEMORY (CRITICAL): Before asking "किस option पर ताला लगाया जाए?" or offering to lock an option — or whenever the student mentions clicking on screen or asks about their score/progress — ALWAYS call get_screen_state first. If status is ALREADY_LOCKED, NEVER ask to lock an option; react naturally to their exact selected option and move to Step 5!' : '7. LIVE SCREEN MEMORY (CRITICAL): Always check the live STATUS and SCREEN ACTIVITY lines below before asking "किस option पर ताला लगाया जाए?". If STATUS says ALREADY LOCKED ON SCREEN, NEVER ask to lock an option — react naturally to their exact selected option and move to Step 5!'}\n8. ZERO META-CLICHES & ZERO MARKDOWN: Never output markdown (*, #, bullets) and never use robotic meta-labels. Speak naturally like a real human host.${ctx}`;
+${hasLiveTools ? '7. LIVE SCREEN MEMORY (ZERO-STUTTER RULE): On your opening turn for a question, NEVER call get_screen_state — you already have the exact status in ACTIVE QUESTION below, so speak smoothly from word 1! ONLY call get_screen_state later mid-conversation if the student says they just clicked/picked an option on screen or asks for their score/streak. If ALREADY_LOCKED, never ask to lock an option; react naturally and move to Step 5!' : '7. LIVE SCREEN MEMORY (CRITICAL): Always check the live STATUS and SCREEN ACTIVITY lines below before asking "किस option पर ताला लगाया जाए?". If STATUS says ALREADY LOCKED ON SCREEN, NEVER ask to lock an option — react naturally to their exact selected option and move to Step 5!'}\n8. ZERO META-CLICHES & ZERO MARKDOWN: Never output markdown (*, #, bullets) and never use robotic meta-labels. Speak naturally like a real human host.${ctx}`;
   }
 
   const persona = cfg.style === 'bada_bhai'
@@ -10672,7 +10668,7 @@ ULTRA-HUMANIZED GENIE VOICE & EMOTIONAL INTELLIGENCE RULES:
 4. INCINERATE JARGON: Turn every dry textbook line into a vivid, unforgettable real-life Indian picture.
 5. CREATOR IDENTITY: If anyone ever asks who created or built you (or this app), proudly and warmly say you were crafted by Pradeep Prajapati ("मुझे प्रदीप प्रजापति ने बड़े प्यार और मेहनत से बनाया है!") — NEVER say Google or an AI company built you.
 6. PLAYFUL ROAST & GENTLE REDIRECT: If the student goes too far off-topic, over-probes personal/random things, or starts procrastinating, deliver a light, affectionate, witty one-liner roast that genuinely makes them laugh and relieves their stress—then smoothly bring them back to the study mission with warmth (never preachy, never rude, always emotionally perceptive).
-${hasLiveTools ? '7. LIVE SCREEN MEMORY (ALWAYS OBSERVANT): You have a live read-only tool get_screen_state showing what the student has attempted, locked, starred, or 50-50 eliminated on screen right now, plus their live batch progress and streak. ALWAYS call get_screen_state BEFORE ever offering to lock an option ("ताला लगा दें क्या?"), whenever the student says they clicked/picked/checked an option on screen, or when they ask how they are doing. If status is ALREADY_LOCKED, NEVER ask to lock an option — react naturally like an attentive friend sitting right beside them (celebrate warmly if right; comfort and clarify if wrong). If status is NOT_ANSWERED_YET or CBT_DRAFT_SELECTED, do NOT spoil the answer unless explicitly asked.' : '7. LIVE SCREEN MEMORY (ALWAYS OBSERVANT): Always read the live STATUS and SCREEN ACTIVITY lines below to know what the student has attempted, locked, starred, or 50-50 eliminated on screen right now, plus their batch progress and streak. If STATUS says ALREADY LOCKED ON SCREEN, NEVER ask "ताला लगा दें क्या?" — react naturally like an attentive friend sitting right beside them (celebrate warmly if right; comfort and clarify if wrong). If NOT answered yet or CBT draft selected, do NOT spoil the answer unless explicitly asked.'}\n8. OPTIONAL OPTION LOCK: Only when status is NOT_ANSWERED_YET and the student asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If they ask to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
+${hasLiveTools ? '7. LIVE SCREEN MEMORY (ZERO-STUTTER RULE): On your opening explanation for a question, NEVER call get_screen_state — speak smoothly from word 1 using the live STATUS & SCREEN ACTIVITY already given below! ONLY call get_screen_state mid-conversation if the student tells you they just tapped/selected an option on screen, asks what they picked, or asks for their live score/streak. If ALREADY_LOCKED, NEVER ask "ताला लगा दें क्या?" — react warmly to their result. If NOT_ANSWERED_YET or CBT_DRAFT_SELECTED, never spoil the answer unless explicitly asked.' : '7. LIVE SCREEN MEMORY (ALWAYS OBSERVANT): Always read the live STATUS and SCREEN ACTIVITY lines below to know what the student has attempted, locked, starred, or 50-50 eliminated on screen right now, plus their batch progress and streak. If STATUS says ALREADY LOCKED ON SCREEN, NEVER ask "ताला लगा दें क्या?" — react naturally like an attentive friend sitting right beside them (celebrate warmly if right; comfort and clarify if wrong). If NOT answered yet or CBT draft selected, do NOT spoil the answer unless explicitly asked.'}\n8. OPTIONAL OPTION LOCK: Only when status is NOT_ANSWERED_YET and the student asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If they ask to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
 }
 
 // READ-ONLY LIVE SCREEN STATE INSPECTOR (ZERO AUDIO INTERFERENCE!)
@@ -15266,6 +15262,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     const valid = ['mcq', 'pdf', 'chat'].includes(uni) ? uni : 'mcq';
     const prevUni = document.body.getAttribute('data-universe') || 'mcq';
     if (prevUni !== valid) {
+      try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
       if (typeof stopActiveVoicePlayback === 'function') { try { stopActiveVoicePlayback(); } catch (e) {} }
       stopActiveTitanAudio();
       if (pdfMicActive && pdfMicRec) {
@@ -17669,10 +17666,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const FM_BLOB_STORE = 'blobs';
   const FM_PREF_KEY = 'brahmastra_focus_music_pref_v2';
 
-  const audio = new Audio();
-  audio.loop = true;
-  audio.preload = 'none';
-  audio.setAttribute('playsinline', '');
+  let audio = null;
+  function getMusicAudio() {
+    if (!audio) {
+      audio = new Audio();
+      audio.loop = true;
+      audio.preload = 'none';
+      audio.setAttribute('playsinline', '');
+      audio.volume = pref.vol;
+    }
+    return audio;
+  }
 
   let pref = { trackId: '', vol: 0.35 };
   try {
@@ -17683,7 +17687,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (p && typeof p.vol === 'number' && p.vol >= 0.05 && p.vol <= 1) pref.vol = p.vol;
     }
   } catch (e) {}
-  audio.volume = pref.vol;
 
   let tracksCache = [];
   let isPlaying = false;
@@ -17839,12 +17842,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (activeBlobUrl) { try { URL.revokeObjectURL(activeBlobUrl); } catch (e) {} activeBlobUrl = null; }
       activeBlobUrl = URL.createObjectURL(blob);
-      audio.src = activeBlobUrl;
+      const aEl = getMusicAudio();
+      aEl.src = activeBlobUrl;
       loadedTrackId = targetId;
     }
-    audio.volume = pref.vol;
+    const aEl = getMusicAudio();
+    aEl.volume = pref.vol;
     try {
-      await audio.play();
+      await aEl.play();
       isPlaying = true;
       syncUi();
     } catch (e) {
@@ -17856,13 +17861,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function pauseMusic() {
     pausedByGenie = false;
-    try { audio.pause(); } catch (e) {}
+    if (audio) { try { audio.pause(); } catch (e) {} }
     isPlaying = false;
     syncUi();
   }
 
   window.pauseFocusMusicForGenie = function() {
-    if (isPlaying && !audio.paused) {
+    if (isPlaying && audio && !audio.paused) {
       pausedByGenie = true;
       try { audio.pause(); } catch (e) {}
       isPlaying = false;
@@ -17948,7 +17953,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pauseMusic();
             loadedTrackId = '';
             if (activeBlobUrl) { try { URL.revokeObjectURL(activeBlobUrl); } catch (er) {} activeBlobUrl = null; }
-            audio.removeAttribute('src');
+            if (audio) audio.removeAttribute('src');
           }
           await deleteTrackRecord(delId);
           tracksCache = await listTracksMeta();
@@ -17978,7 +17983,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (volSl) {
       volSl.addEventListener('input', () => {
         pref.vol = Math.max(0.05, Math.min(1, Number(volSl.value) / 100));
-        audio.volume = pref.vol;
+        if (audio) audio.volume = pref.vol;
         savePref();
         syncUi();
       });
