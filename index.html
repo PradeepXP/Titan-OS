@@ -10075,15 +10075,61 @@ function stopActiveVoicePlayback() {
   if (typeof window.hideLiveLampGenie === 'function') window.hideLiveLampGenie();
 }
 
+function getGuruBatchActivityStats() {
+  const isCbt = !!(appState && appState.cbtMode);
+  const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
+  const slice = (typeof getActiveBatchSlice === 'function' && getActiveBatchSlice().slice) || [];
+  let answered = 0, correct = 0, wrong = 0;
+  for (let i = 0; i < slice.length; i++) {
+    const qid = slice[i];
+    if (isCbt) {
+      if (typeof cbtDraftAnswers === 'object' && cbtDraftAnswers && cbtDraftAnswers[qid] !== undefined) answered++;
+    } else {
+      const r = hist[qid];
+      if (r) {
+        answered++;
+        if (r.status === 'correct') correct++;
+        else wrong++;
+      }
+    }
+  }
+  return {
+    mode: isCbt ? 'CBT_EXAM' : 'PRACTICE',
+    total: slice.length,
+    answered,
+    correct: isCbt ? null : correct,
+    wrong: isCbt ? null : wrong,
+    unattempted: Math.max(0, slice.length - answered),
+    currentStreak: isCbt ? 0 : ((appState && Number(appState.currentStreak)) || 0)
+  };
+}
+
 function formatQuestionContextSnippet(q) {
   if (!q) return '';
+  const isCbt = !!(appState && appState.cbtMode);
   const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
-  const rec = hist[q.id];
+  const rec = isCbt ? null : hist[q.id];
+  const cbtPick = (isCbt && typeof cbtDraftAnswers === 'object' && cbtDraftAnswers) ? cbtDraftAnswers[q.id] : undefined;
   const isAnswered = !!rec;
   const dispOrder = (appState && appState.optionOrders && appState.optionOrders[q.id]) || [0, 1, 2, 3];
   const optsTxt = dispOrder.map((origIdx, dispIdx) => `${['A','B','C','D'][dispIdx]}) ${cleanTextForSpeech((q.opts || [])[origIdx])}`).join(' | ');
+  const used5050 = !!(typeof getActiveUsedLifeline === 'function' && getActiveUsedLifeline()[q.id]);
+  const elimOrig = (typeof getActiveEliminatedOpts === 'function' && getActiveEliminatedOpts()[q.id]) || [];
+  const elimLetters = elimOrig.map(o => ['A','B','C','D'][dispOrder.indexOf(o)]).filter(Boolean);
+  const isStarred = !!(appState && appState.starredInCurrentRound && appState.starredInCurrentRound[q.id]);
+  const bStats = getGuruBatchActivityStats();
+  const extras = [];
+  if (used5050) extras.push(`50-50 Used${elimLetters.length ? ' (Eliminated: ' + elimLetters.join(', ') + ')' : ''}`);
+  if (isStarred) extras.push('Starred ⭐');
+  const activityLine = isCbt
+    ? `SCREEN ACTIVITY (CBT EXAM MODE): ${bStats.answered}/${bStats.total} marked (${bStats.unattempted} left)${extras.length ? ' | ' + extras.join(' | ') : ''}`
+    : `SCREEN ACTIVITY: Batch ${bStats.answered}/${bStats.total} attempted (${bStats.correct} right, ${bStats.wrong} wrong, ${bStats.unattempted} left) | Streak: ${bStats.currentStreak}${extras.length ? ' | ' + extras.join(' | ') : ''}`;
   let statusBlock = 'IMPORTANT: The student has NOT answered yet. Do NOT spoil the final option unless explicitly asked—guide their thinking naturally!';
-  if (isAnswered) {
+  if (isCbt && cbtPick !== undefined) {
+    const selDisp = dispOrder.indexOf(cbtPick);
+    const selLetter = selDisp >= 0 ? ['A','B','C','D'][selDisp] : '?';
+    statusBlock = `STATUS: CBT DRAFT SELECTED ON SCREEN — Student marked Option ${selLetter} (CBT exam not submitted yet; do NOT reveal the final answer unless explicitly asked!).`;
+  } else if (isAnswered) {
     const selDisp = dispOrder.indexOf(rec.selectedOptId);
     const corrDisp = dispOrder.indexOf(q.ans);
     const selLetter = selDisp >= 0 ? ['A','B','C','D'][selDisp] : '?';
@@ -10091,10 +10137,10 @@ function formatQuestionContextSnippet(q) {
     const resTag = rec.status === 'correct' ? 'CORRECT' : 'WRONG';
     statusBlock = `STATUS: ALREADY LOCKED ON SCREEN — Student selected Option ${selLetter} (${resTag}). NEVER ask "ताला लगा दें क्या?" or offer to lock an option for this question!\nCorrect Answer: Option ${corrLetter} (${cleanTextForSpeech(q.opts[q.ans])})\nConcept: ${cleanTextForSpeech(q.flowHtml || q.ankiFact || '')}\nHook: ${cleanTextForSpeech(q.hook || '')}`;
   }
-  return `ACTIVE QUESTION (Q#${q.id}):\nEnglish: ${cleanTextForSpeech(q.en || q.hi)}\nHindi: ${cleanTextForSpeech(q.hi || '')}\nOptions: ${optsTxt}\n${statusBlock}`;
+  return `ACTIVE QUESTION (Q#${q.id}):\nEnglish: ${cleanTextForSpeech(q.en || q.hi)}\nHindi: ${cleanTextForSpeech(q.hi || '')}\nOptions: ${optsTxt}\n${activityLine}\n${statusBlock}`;
 }
 
-function buildTitanGuruSystemPrompt(q, cfg) {
+function buildTitanGuruSystemPrompt(q, cfg, hasLiveTools = false) {
   const ctx = q ? ('\n' + formatQuestionContextSnippet(q)) : '';
   if (guruSessionMode === 'quiz') {
     return `You are a warm, polite, charismatic Indian Quiz Host running a 100% hands-free voice MCQ session while the student may be away from the phone (cooking, walking, or relaxing).
@@ -10105,7 +10151,7 @@ HANDS-FREE QUIZ FLOW (FOLLOW STRICTLY STEP BY STEP):
 4. LOCK ON CONFIRMATION: The moment the student confirms ("हाँ / पक्का / lock कर दो / ताला लगा दो"), IMMEDIATELY call the tool lock_mcq_option with that exact displayed letter (A, B, C, or D) (or end your reply with [LOCK:B] if tools are unavailable).
 5. FEEDBACK & COMPLETE SATISFACTION: After locking, warmly congratulate if right—or gently explain the exact concept and why the right answer wins in dead-simple everyday Hindi if wrong. Then ask clearly if they understood completely and are ready for the next question ("अच्छे से समझ आ गया? अगले सवाल पर चलें?").
 6. WAIT FOR EXPLICIT PERMISSION BEFORE MOVING ON: NEVER call go_to_next_question until the student explicitly gives permission ("हाँ / चलो / next / आगे बढ़ो"). Once they say yes, call go_to_next_question (or include [NEXT_Q]) and immediately begin Step 1 for the newly loaded question!
-7. ZERO META-CLICHES & ZERO MARKDOWN: Never output markdown (*, #, bullets) and never use robotic meta-labels. Speak naturally like a real human host.${ctx}`;
+${hasLiveTools ? '7. LIVE SCREEN MEMORY (CRITICAL): Before asking "किस option पर ताला लगाया जाए?" or offering to lock an option — or whenever the student mentions clicking on screen or asks about their score/progress — ALWAYS call get_screen_state first. If status is ALREADY_LOCKED, NEVER ask to lock an option; react naturally to their exact selected option and move to Step 5!' : '7. LIVE SCREEN MEMORY (CRITICAL): Always check the live STATUS and SCREEN ACTIVITY lines below before asking "किस option पर ताला लगाया जाए?". If STATUS says ALREADY LOCKED ON SCREEN, NEVER ask to lock an option — react naturally to their exact selected option and move to Step 5!'}\n8. ZERO META-CLICHES & ZERO MARKDOWN: Never output markdown (*, #, bullets) and never use robotic meta-labels. Speak naturally like a real human host.${ctx}`;
   }
 
   const persona = cfg.style === 'bada_bhai'
@@ -10136,7 +10182,62 @@ ULTRA-HUMANIZED GENIE VOICE & EMOTIONAL INTELLIGENCE RULES:
 4. INCINERATE JARGON: Turn every dry textbook line into a vivid, unforgettable real-life Indian picture.
 5. CREATOR IDENTITY: If anyone ever asks who created or built you (or this app), proudly and warmly say you were crafted by Pradeep Prajapati ("मुझे प्रदीप प्रजापति ने बड़े प्यार और मेहनत से बनाया है!") — NEVER say Google or an AI company built you.
 6. PLAYFUL ROAST & GENTLE REDIRECT: If the student goes too far off-topic, over-probes personal/random things, or starts procrastinating, deliver a light, affectionate, witty one-liner roast that genuinely makes them laugh and relieves their stress—then smoothly bring them back to the study mission with warmth (never preachy, never rude, always emotionally perceptive).
-7. OPTIONAL OPTION LOCK: If the student asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If they ask to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
+${hasLiveTools ? '7. LIVE SCREEN MEMORY (ALWAYS OBSERVANT): You have a live read-only tool get_screen_state showing what the student has attempted, locked, starred, or 50-50 eliminated on screen right now, plus their live batch progress and streak. ALWAYS call get_screen_state BEFORE ever offering to lock an option ("ताला लगा दें क्या?"), whenever the student says they clicked/picked/checked an option on screen, or when they ask how they are doing. If status is ALREADY_LOCKED, NEVER ask to lock an option — react naturally like an attentive friend sitting right beside them (celebrate warmly if right; comfort and clarify if wrong). If status is NOT_ANSWERED_YET or CBT_DRAFT_SELECTED, do NOT spoil the answer unless explicitly asked.' : '7. LIVE SCREEN MEMORY (ALWAYS OBSERVANT): Always read the live STATUS and SCREEN ACTIVITY lines below to know what the student has attempted, locked, starred, or 50-50 eliminated on screen right now, plus their batch progress and streak. If STATUS says ALREADY LOCKED ON SCREEN, NEVER ask "ताला लगा दें क्या?" — react naturally like an attentive friend sitting right beside them (celebrate warmly if right; comfort and clarify if wrong). If NOT answered yet or CBT draft selected, do NOT spoil the answer unless explicitly asked.'}\n8. OPTIONAL OPTION LOCK: Only when status is NOT_ANSWERED_YET and the student asks you to lock an option, confirm once ("पक्का ताला लगा दें आका?") and call lock_mcq_option (or [LOCK:X]). If they ask to move on, call go_to_next_question (or [NEXT_Q]).${ctx}`;
+}
+
+// READ-ONLY LIVE SCREEN STATE INSPECTOR (ZERO AUDIO INTERFERENCE!)
+function executeGuruGetScreenState() {
+  let q = null;
+  if (activeSpeakingQid && activeSpeakingQid !== 'test' && activeSpeakingQid !== 'lamp') {
+    q = QUIZ_DATA.find(x => x.id === activeSpeakingQid) || null;
+  }
+  if (!q && guruActiveQ) q = guruActiveQ;
+  if (!q && typeof window.findActiveViewportQuestion === 'function') {
+    q = window.findActiveViewportQuestion() || null;
+  }
+  const bStats = getGuruBatchActivityStats();
+  if (!q) {
+    return {
+      ok: true,
+      hasActiveQuestion: false,
+      batchProgress: bStats
+    };
+  }
+  const isCbt = !!(appState && appState.cbtMode);
+  const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
+  const rec = isCbt ? null : hist[q.id];
+  const cbtPick = (isCbt && typeof cbtDraftAnswers === 'object' && cbtDraftAnswers) ? cbtDraftAnswers[q.id] : undefined;
+  const order = (appState && appState.optionOrders && appState.optionOrders[q.id]) || [0, 1, 2, 3];
+  const used5050 = !!(typeof getActiveUsedLifeline === 'function' && getActiveUsedLifeline()[q.id]);
+  const elimOrig = (typeof getActiveEliminatedOpts === 'function' && getActiveEliminatedOpts()[q.id]) || [];
+  const eliminatedLetters = elimOrig.map(o => ['A', 'B', 'C', 'D'][order.indexOf(o)]).filter(Boolean);
+  const starred = !!(appState && appState.starredInCurrentRound && appState.starredInCurrentRound[q.id]);
+  const base = {
+    ok: true,
+    hasActiveQuestion: true,
+    questionId: q.id,
+    status: (isCbt && cbtPick !== undefined) ? 'CBT_DRAFT_SELECTED' : (rec ? 'ALREADY_LOCKED' : 'NOT_ANSWERED_YET'),
+    used5050,
+    eliminatedLetters,
+    starred,
+    batchProgress: bStats
+  };
+  if (isCbt && cbtPick !== undefined) {
+    const selDisp = order.indexOf(cbtPick);
+    base.selectedLetter = selDisp >= 0 ? ['A', 'B', 'C', 'D'][selDisp] : '?';
+    base.selectedText = cleanTextForSpeech((q.opts || [])[cbtPick] || '');
+  } else if (rec) {
+    const selDisp = order.indexOf(rec.selectedOptId);
+    const corrDisp = order.indexOf(q.ans);
+    base.selectedLetter = selDisp >= 0 ? ['A', 'B', 'C', 'D'][selDisp] : '?';
+    base.selectedText = cleanTextForSpeech((q.opts || [])[rec.selectedOptId] || '');
+    base.isCorrect = rec.status === 'correct';
+    base.correctLetter = corrDisp >= 0 ? ['A', 'B', 'C', 'D'][corrDisp] : '?';
+    base.correctAnswer = cleanTextForSpeech((q.opts || [])[q.ans] || '');
+    base.concept = cleanTextForSpeech(q.flowHtml || q.ankiFact || '');
+    base.hook = cleanTextForSpeech(q.hook || '');
+  }
+  return base;
 }
 
 // KBC VOICE OPTION LOCK + AUTO-NEXT QUESTION EXECUTOR (SHUFFLED-SAFE!)
@@ -10149,10 +10250,19 @@ function executeGuruLockOption(letterRaw) {
   const q = QUIZ_DATA.find(x => x.id === activeSpeakingQid);
   if (!q) return { ok: false, error: 'Question not found' };
   const hist = typeof getActiveHist === 'function' ? getActiveHist() : {};
-  if (hist[q.id]) {
-    return { ok: true, alreadyAnswered: true, isCorrect: hist[q.id].status === 'correct', correctAnswer: cleanTextForSpeech(q.opts[q.ans]) };
-  }
   const order = (appState && appState.optionOrders && appState.optionOrders[q.id]) || [0, 1, 2, 3];
+  if (hist[q.id]) {
+    const selDisp = order.indexOf(hist[q.id].selectedOptId);
+    const corrDisp = order.indexOf(q.ans);
+    return {
+      ok: true,
+      alreadyAnswered: true,
+      selectedLetter: selDisp >= 0 ? ['A', 'B', 'C', 'D'][selDisp] : '?',
+      isCorrect: hist[q.id].status === 'correct',
+      correctLetter: corrDisp >= 0 ? ['A', 'B', 'C', 'D'][corrDisp] : '?',
+      correctAnswer: cleanTextForSpeech(q.opts[q.ans])
+    };
+  }
   const origIdx = order[dispIdx];
   handleAnswerClick(q.id, origIdx);
   const isCorrect = (origIdx === q.ans);
@@ -10316,9 +10426,14 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               responseModalities: ['AUDIO'],
               speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: cfg.voiceName } } }
             },
-            systemInstruction: { parts: [{ text: buildTitanGuruSystemPrompt(q, cfg) }] },
+            systemInstruction: { parts: [{ text: buildTitanGuruSystemPrompt(q, cfg, true) }] },
             tools: [{
               functionDeclarations: [
+                {
+                  name: 'get_screen_state',
+                  description: 'Reads the live screen state for the active question (whether ALREADY_LOCKED or NOT_ANSWERED_YET, selected option, correctness, 50-50 eliminated options, starred status, and batch progress/streak). Always call this before offering to lock an option or when checking what the student attempted on screen.',
+                  parameters: { type: 'OBJECT', properties: {} }
+                },
                 {
                   name: 'lock_mcq_option',
                   description: 'Locks and submits the confirmed MCQ option (A, B, C, or D) ONLY AFTER the student explicitly confirms locking it.',
@@ -10378,7 +10493,9 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
           if (msg.toolCall && Array.isArray(msg.toolCall.functionCalls)) {
             const responses = msg.toolCall.functionCalls.map(fc => {
               let resObj = { ok: false };
-              if (fc.name === 'lock_mcq_option') {
+              if (fc.name === 'get_screen_state') {
+                resObj = executeGuruGetScreenState();
+              } else if (fc.name === 'lock_mcq_option') {
                 resObj = executeGuruLockOption(fc.args && fc.args.option_letter);
               } else if (fc.name === 'go_to_next_question') {
                 resObj = executeGuruGoNextQuestion();
@@ -10517,7 +10634,7 @@ async function callGuruBrain(userParts, cfg) {
   const cleanKey = sanitizeTitanApiKey(cfg.apiKey);
   const baseModels = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-4-hydrogen'];
   const models = await pgGetRankedModels(cleanKey, baseModels);
-  const sysText = buildTitanGuruSystemPrompt(guruActiveQ, cfg);
+  const sysText = buildTitanGuruSystemPrompt(guruActiveQ, cfg, false);
   guruChatHistory.push({ role: 'user', parts: userParts });
   let lastErr = null;
   let triedDiscovery = false;
