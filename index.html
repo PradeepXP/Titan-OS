@@ -5064,6 +5064,7 @@ body[data-universe="chat"] .chat-feed > .chat-msg {
 }
 body[data-universe="chat"] .chat-msg.user {
   width: auto !important;
+  white-space: pre-wrap;
   max-width: min(82%, 620px) !important;
   margin-left: auto !important;
   margin-right: max(0px, calc((100% - 760px) / 2)) !important;
@@ -5271,6 +5272,73 @@ body[data-universe="chat"] .chat-send-btn:active { transform: scale(0.92); }
   body[data-universe="chat"] .chat-feed { padding: 18px 24px 24px !important; }
   body[data-universe="chat"] .chat-bottom-dock { padding: 6px 20px 14px; }
 }
+
+/* =====================================================================
+   TITAN FOCUS MUSIC PLAYER (3 LOCAL MP3 TRACKS + GENIE AUTO-PAUSE)
+   ===================================================================== */
+#btn-focus-music.is-playing {
+  background: linear-gradient(135deg, #2563EB, #7C3AED) !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.34);
+}
+.fmusic-track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+.fmusic-track-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--opt-bg);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.12s ease;
+}
+.fmusic-track-btn:hover { border-color: var(--accent); background: var(--opt-hover); }
+.fmusic-track-btn:active { transform: scale(0.99); }
+.fmusic-track-btn.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.fmusic-track-title { font-size: 0.88rem; font-weight: 800; color: var(--ink); }
+.fmusic-track-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.fmusic-track-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(128,128,128,0.12);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.fmusic-track-btn.is-active .fmusic-track-badge {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+.fmusic-vol-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--opt-bg);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.fmusic-vol-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
 </head>
@@ -5331,6 +5399,7 @@ body[data-universe="chat"] .chat-send-btn:active { transform: scale(0.92); }
         <button type="button" class="ctrl-btn" id="btn-toggle-cbt" title="Switch to Real Timed CBT Mock Mode">🔥 CBT: OFF</button>
         <button type="button" class="ctrl-btn" id="btn-toggle-autonext">⚡ Auto: OFF</button>
         <button type="button" class="ctrl-btn" id="btn-toggle-sound">🔊 ON</button>
+        <button type="button" class="ctrl-btn" id="btn-focus-music" title="Background Focus Music (Auto-pauses when Genie speaks)">🎵</button>
       </div>
     </div>
 
@@ -6324,6 +6393,30 @@ body[data-universe="chat"] .chat-send-btn:active { transform: scale(0.92); }
       <button type="button" class="ctrl-btn" id="btn-copy-upi">📋 Copy UPI ID</button>
     </div>
     <button type="button" class="big-cta" id="btn-send-heart" style="background:linear-gradient(90deg, #E11D48, #BE123C);">♥ Appreciate This Work</button>
+  </div>
+</div>
+
+<!-- Background Focus Music Modal (Unlimited Offline IndexedDB Vault + Genie Auto-Pause) -->
+<div class="modal-backdrop no-print" id="focus-music-modal" role="dialog" aria-modal="true" aria-label="Focus Music">
+  <div class="modal-box" style="max-width:430px;">
+    <div class="modal-head">
+      <h3>🎵 Offline Focus Music Vault</h3>
+      <button type="button" class="ctrl-btn" id="btn-close-fmusic">✕</button>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
+      <button type="button" class="ctrl-btn btn-primary" id="btn-fmusic-add" style="flex:1; justify-content:center; padding:8px 12px; font-weight:800;">📂 + Add Music from Device (MP3 / M4A)</button>
+      <input type="file" id="fmusic-file-input" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac" multiple style="display:none;">
+    </div>
+    <div class="fmusic-track-list" id="fmusic-track-list" style="max-height:240px; overflow-y:auto;"></div>
+    <div class="fmusic-vol-row">
+      <span style="font-size:0.84rem; font-weight:800;">🔉</span>
+      <input type="range" id="fmusic-vol-slider" min="5" max="100" value="35" aria-label="Music volume">
+      <span id="fmusic-vol-val" style="font-size:0.78rem; font-weight:800; min-width:34px; text-align:right;">35%</span>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:space-between; align-items:center;">
+      <span id="fmusic-status-lbl" style="font-size:0.75rem; color:var(--muted); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">100% Offline · Genie बोलते ही Auto-Pause</span>
+      <button type="button" class="ctrl-btn btn-primary" id="btn-fmusic-toggle" style="padding:7px 14px; flex-shrink:0;">▶ Play</button>
+    </div>
   </div>
 </div>
 
@@ -10469,6 +10562,7 @@ function stopActiveVoicePlayback() {
   if (qzBtn) { qzBtn.classList.remove('quiz-live-on'); qzBtn.textContent = '🎯 Voice Quiz'; }
   activeSpeakingQid = null;
   if (typeof window.hideLiveLampGenie === 'function') window.hideLiveLampGenie();
+  if (typeof window.resumeFocusMusicAfterGenie === 'function') window.resumeFocusMusicAfterGenie();
 }
 
 function getGuruBatchActivityStats() {
@@ -11556,6 +11650,7 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
     return;
   }
 
+  if (typeof window.pauseFocusMusicForGenie === 'function') window.pauseFocusMusicForGenie();
   activeSpeakingQid = qidTag;
   guruActiveQ = q;
   guruChatHistory = [];
@@ -15996,7 +16091,7 @@ STRICT ZERO-SCRIPT-SWAPPING LAW (NON-NEGOTIABLE):
     chatTa.style.height = Math.min(150, chatTa.scrollHeight) + 'px';
   });
   chatTa.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatTa.style.height = 'auto'; sendAskGuruMessage(); }
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); chatTa.style.height = 'auto'; sendAskGuruMessage(); }
   });
 
   const btnChatMic = document.getElementById('btn-chat-mic');
@@ -16865,6 +16960,7 @@ async function handleGuestDeviceWipe() {
       try { indexedDB.deleteDatabase(dbName); } catch (e) {}
     }
     try { indexedDB.deleteDatabase('BrahmastraPdfVaultDB'); } catch (e) {}
+    try { indexedDB.deleteDatabase('BrahmastraFocusMusicDB'); } catch (e) {}
     try { localStorage.clear(); } catch (e) {}
     showToast('🚪 Device 100% Wiped! Reloading clean...');
     setTimeout(() => location.reload(), 650);
@@ -17561,5 +17657,338 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+
+<script>
+/* =====================================================================
+   TITAN OFFLINE FOCUS MUSIC VAULT (IndexedDB v2 · Split Meta/Blob Stores)
+   Zero-RAM startup even with 500MB+ MP3s · 100% isolated from Genie Audio!
+   ===================================================================== */
+(function initFocusMusicVault() {
+  const FM_DB_NAME = 'BrahmastraFocusMusicDB';
+  const FM_META_STORE = 'meta';
+  const FM_BLOB_STORE = 'blobs';
+  const FM_PREF_KEY = 'brahmastra_focus_music_pref_v2';
+
+  const audio = new Audio();
+  audio.loop = true;
+  audio.preload = 'none';
+  audio.setAttribute('playsinline', '');
+
+  let pref = { trackId: '', vol: 0.35 };
+  try {
+    const raw = localStorage.getItem(FM_PREF_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (p && typeof p.trackId === 'string') pref.trackId = p.trackId;
+      if (p && typeof p.vol === 'number' && p.vol >= 0.05 && p.vol <= 1) pref.vol = p.vol;
+    }
+  } catch (e) {}
+  audio.volume = pref.vol;
+
+  let tracksCache = [];
+  let isPlaying = false;
+  let pausedByGenie = false;
+  let loadedTrackId = '';
+  let activeBlobUrl = null;
+  let isSavingFiles = false;
+
+  function savePref() {
+    try { localStorage.setItem(FM_PREF_KEY, JSON.stringify(pref)); } catch (e) {}
+  }
+
+  function openMusicDB() {
+    return new Promise((resolve, reject) => {
+      try {
+        const req = indexedDB.open(FM_DB_NAME, 2);
+        req.onupgradeneeded = (ev) => {
+          const db = ev.target.result;
+          if (!db.objectStoreNames.contains(FM_META_STORE)) db.createObjectStore(FM_META_STORE, { keyPath: 'id' });
+          if (!db.objectStoreNames.contains(FM_BLOB_STORE)) db.createObjectStore(FM_BLOB_STORE, { keyPath: 'id' });
+        };
+        req.onsuccess = (ev) => resolve(ev.target.result);
+        req.onerror = (ev) => reject(ev.target.error);
+      } catch (e) { reject(e); }
+    });
+  }
+
+  async function listTracksMeta() {
+    try {
+      const db = await openMusicDB();
+      return await new Promise((resolve) => {
+        const tx = db.transaction(FM_META_STORE, 'readonly');
+        const req = tx.objectStore(FM_META_STORE).getAll();
+        req.onsuccess = () => {
+          const arr = (req.result || []).slice().sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
+          db.close();
+          resolve(arr);
+        };
+        req.onerror = () => { db.close(); resolve([]); };
+      });
+    } catch (e) { return []; }
+  }
+
+  async function getTrackBlob(id) {
+    const db = await openMusicDB();
+    return await new Promise((resolve) => {
+      const tx = db.transaction(FM_BLOB_STORE, 'readonly');
+      const req = tx.objectStore(FM_BLOB_STORE).get(id);
+      req.onsuccess = () => { const rec = req.result; db.close(); resolve(rec ? rec.blob : null); };
+      req.onerror = () => { db.close(); resolve(null); };
+    });
+  }
+
+  async function putTrackRecord(meta, blob) {
+    const db = await openMusicDB();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction([FM_META_STORE, FM_BLOB_STORE], 'readwrite');
+      tx.objectStore(FM_META_STORE).put(meta);
+      tx.objectStore(FM_BLOB_STORE).put({ id: meta.id, blob });
+      tx.oncomplete = () => { db.close(); resolve(true); };
+      tx.onerror = () => { db.close(); reject(tx.error); };
+    });
+  }
+
+  async function deleteTrackRecord(id) {
+    const db = await openMusicDB();
+    return await new Promise((resolve) => {
+      const tx = db.transaction([FM_META_STORE, FM_BLOB_STORE], 'readwrite');
+      tx.objectStore(FM_META_STORE).delete(id);
+      tx.objectStore(FM_BLOB_STORE).delete(id);
+      tx.oncomplete = () => { db.close(); resolve(true); };
+      tx.onerror = () => { db.close(); resolve(false); };
+    });
+  }
+
+  function fmtSizeMb(bytes) {
+    const mb = (Number(bytes) || 0) / (1024 * 1024);
+    return mb >= 1 ? mb.toFixed(1) + ' MB' : Math.max(1, Math.round((Number(bytes) || 0) / 1024)) + ' KB';
+  }
+
+  function esc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function renderTrackList() {
+    const listEl = document.getElementById('fmusic-track-list');
+    if (!listEl) return;
+    if (!tracksCache.length) {
+      listEl.innerHTML = `<div style="text-align:center; padding:18px 12px; border:1.5px dashed var(--border); border-radius:12px; color:var(--muted); font-size:0.8rem; line-height:1.5;">
+        🎧 अभी कोई म्यूज़िक सेव नहीं है।<br>ऊपर <b>+ Add Music from Device</b> दबाकर अपने पसंदीदा MP3 चुन लो — हमेशा के लिए ऑफ़लाइन सेव हो जाएँगे!
+      </div>`;
+      return;
+    }
+    listEl.innerHTML = tracksCache.map((tr, i) => {
+      const active = tr.id === pref.trackId;
+      const badgeTxt = (active && isPlaying) ? '🎶 Playing' : fmtSizeMb(tr.size);
+      return `<div class="fmusic-track-btn ${active ? 'is-active' : ''}" data-ftrack-id="${esc(tr.id)}" role="button" tabindex="0">
+        <div style="min-width:0; flex:1;">
+          <div class="fmusic-track-title" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${active && isPlaying ? '🔊 ' : '🎵 '}${i + 1}. ${esc(tr.name)}</div>
+          <div class="fmusic-track-sub">Offline Saved · Infinite Loop</div>
+        </div>
+        <span class="fmusic-track-badge">${badgeTxt}</span>
+        <button type="button" class="ctrl-btn" data-ftrack-del="${esc(tr.id)}" title="Remove track" style="padding:4px 7px; font-size:0.72rem; flex-shrink:0;">🗑️</button>
+      </div>`;
+    }).join('');
+  }
+
+  function syncUi() {
+    const topBtn = document.getElementById('btn-focus-music');
+    const togBtn = document.getElementById('btn-fmusic-toggle');
+    const addBtn = document.getElementById('btn-fmusic-add');
+    const volSl = document.getElementById('fmusic-vol-slider');
+    const volVal = document.getElementById('fmusic-vol-val');
+    const stLbl = document.getElementById('fmusic-status-lbl');
+    if (topBtn) {
+      topBtn.classList.toggle('is-playing', isPlaying);
+      topBtn.textContent = isPlaying ? '🎵 ON' : '🎵';
+    }
+    if (addBtn) {
+      addBtn.disabled = isSavingFiles;
+      addBtn.textContent = isSavingFiles ? '⏳ Saving to Offline Vault...' : '📂 + Add Music from Device (MP3 / M4A)';
+    }
+    if (togBtn) {
+      togBtn.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+      togBtn.disabled = tracksCache.length === 0 || isSavingFiles;
+    }
+    if (volSl) volSl.value = Math.round(pref.vol * 100);
+    if (volVal) volVal.textContent = Math.round(pref.vol * 100) + '%';
+    const curTr = tracksCache.find(t => t.id === pref.trackId);
+    if (stLbl) {
+      stLbl.textContent = pausedByGenie
+        ? '⏸️ Genie के लिए Auto-Paused'
+        : (isPlaying && curTr ? ('🎶 ' + curTr.name) : '100% Offline · Genie बोलते ही Auto-Pause');
+    }
+    renderTrackList();
+  }
+
+  async function playTrackById(id) {
+    const targetId = id || pref.trackId || (tracksCache[0] && tracksCache[0].id);
+    if (!targetId) {
+      if (typeof showToast === 'function') showToast('📂 पहले + Add Music से कोई MP3 जोड़ लो!');
+      return;
+    }
+    pref.trackId = targetId;
+    savePref();
+    pausedByGenie = false;
+
+    if (loadedTrackId !== targetId || !activeBlobUrl) {
+      const blob = await getTrackBlob(targetId);
+      if (!blob) {
+        if (typeof showToast === 'function') showToast('⚠️ यह ट्रैक लोड नहीं हो पाया — दोबारा Add कर लो');
+        return;
+      }
+      if (activeBlobUrl) { try { URL.revokeObjectURL(activeBlobUrl); } catch (e) {} activeBlobUrl = null; }
+      activeBlobUrl = URL.createObjectURL(blob);
+      audio.src = activeBlobUrl;
+      loadedTrackId = targetId;
+    }
+    audio.volume = pref.vol;
+    try {
+      await audio.play();
+      isPlaying = true;
+      syncUi();
+    } catch (e) {
+      isPlaying = false;
+      syncUi();
+      if (typeof showToast === 'function') showToast('⚠️ Play करने के लिए एक बार फिर टैप करो');
+    }
+  }
+
+  function pauseMusic() {
+    pausedByGenie = false;
+    try { audio.pause(); } catch (e) {}
+    isPlaying = false;
+    syncUi();
+  }
+
+  window.pauseFocusMusicForGenie = function() {
+    if (isPlaying && !audio.paused) {
+      pausedByGenie = true;
+      try { audio.pause(); } catch (e) {}
+      isPlaying = false;
+      syncUi();
+    }
+  };
+
+  window.resumeFocusMusicAfterGenie = function() {
+    if (pausedByGenie) {
+      pausedByGenie = false;
+      playTrackById(pref.trackId);
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const modal = document.getElementById('focus-music-modal');
+    const openBtn = document.getElementById('btn-focus-music');
+    const closeBtn = document.getElementById('btn-close-fmusic');
+    const addBtn = document.getElementById('btn-fmusic-add');
+    const fileIn = document.getElementById('fmusic-file-input');
+    const togBtn = document.getElementById('btn-fmusic-toggle');
+    const volSl = document.getElementById('fmusic-vol-slider');
+    const listEl = document.getElementById('fmusic-track-list');
+
+    tracksCache = await listTracksMeta();
+    if (!tracksCache.some(t => t.id === pref.trackId)) {
+      pref.trackId = tracksCache[0] ? tracksCache[0].id : '';
+    }
+    syncUi();
+
+    if (openBtn && modal) {
+      openBtn.addEventListener('click', async () => {
+        tracksCache = await listTracksMeta();
+        syncUi();
+        modal.classList.add('open');
+      });
+    }
+    if (closeBtn && modal) closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+    if (addBtn && fileIn) addBtn.addEventListener('click', () => fileIn.click());
+
+    if (fileIn) {
+      fileIn.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (!files.length) return;
+        isSavingFiles = true;
+        syncUi();
+        let added = 0;
+        let firstNewId = '';
+        for (const f of files) {
+          try {
+            const cleanName = String(f.name || 'Track').replace(/\.[^.]+$/, '');
+            const id = 'fm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+            const meta = { id, name: cleanName, size: f.size, addedAt: Date.now() };
+            try {
+              await putTrackRecord(meta, f);
+            } catch (iosErr) {
+              const ab = await f.arrayBuffer();
+              await putTrackRecord(meta, new Blob([ab], { type: f.type || 'audio/mpeg' }));
+            }
+            if (!firstNewId) firstNewId = id;
+            added++;
+          } catch (err) {}
+        }
+        e.target.value = '';
+        isSavingFiles = false;
+        tracksCache = await listTracksMeta();
+        if (!pref.trackId && firstNewId) { pref.trackId = firstNewId; savePref(); }
+        syncUi();
+        if (added > 0 && typeof showToast === 'function') {
+          showToast(`🎵 ${added} म्यूज़िक ट्रैक ऑफ़लाइन सेव हो गए!`);
+        }
+      });
+    }
+
+    if (listEl) {
+      listEl.addEventListener('click', async (e) => {
+        const delBtn = e.target.closest('[data-ftrack-del]');
+        if (delBtn) {
+          e.stopPropagation();
+          const delId = delBtn.dataset.ftrackDel;
+          if (loadedTrackId === delId) {
+            pauseMusic();
+            loadedTrackId = '';
+            if (activeBlobUrl) { try { URL.revokeObjectURL(activeBlobUrl); } catch (er) {} activeBlobUrl = null; }
+            audio.removeAttribute('src');
+          }
+          await deleteTrackRecord(delId);
+          tracksCache = await listTracksMeta();
+          if (pref.trackId === delId) {
+            pref.trackId = tracksCache[0] ? tracksCache[0].id : '';
+            savePref();
+          }
+          syncUi();
+          if (typeof showToast === 'function') showToast('🗑️ म्यूज़िक ट्रैक हटाया गया');
+          return;
+        }
+        const row = e.target.closest('[data-ftrack-id]');
+        if (!row) return;
+        const tid = row.dataset.ftrackId;
+        if (tid === pref.trackId && isPlaying) pauseMusic();
+        else playTrackById(tid);
+      });
+    }
+
+    if (togBtn) {
+      togBtn.addEventListener('click', () => {
+        if (isPlaying) pauseMusic();
+        else playTrackById(pref.trackId);
+      });
+    }
+
+    if (volSl) {
+      volSl.addEventListener('input', () => {
+        pref.vol = Math.max(0.05, Math.min(1, Number(volSl.value) / 100));
+        audio.volume = pref.vol;
+        savePref();
+        syncUi();
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal && modal.classList.contains('open')) modal.classList.remove('open');
+    });
+  });
+})();
+</script>
 </body>
 </html>
