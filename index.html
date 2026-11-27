@@ -5498,7 +5498,7 @@ body[data-universe="pdf"] .pdf-stage-outer {
   margin: 0 !important;
   border: none !important;
   border-radius: 0 !important;
-  padding: 12px 10px 84px !important;
+  padding: 12px 10px 156px !important;
   background: var(--bg);
   display: flex;
   justify-content: center;
@@ -5751,6 +5751,350 @@ body[data-universe="pdf"] #pdf-answer-content .guru-rich-h2 {
   display: block;
   margin: 10px 0 10px !important;
   padding: 7px 12px !important;
+}
+
+/* Ultra-Glossy Liquid-Glass Transparent Play Orb Above Spotlight (ZERO text!) */
+#pdf-spotlight-ask-chip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.72);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.18));
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  color: var(--accent);
+  cursor: pointer;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.85), 0 8px 22px rgba(15, 23, 42, 0.20), 0 0 0 3px var(--accent-soft);
+  z-index: 30;
+  transition: transform 0.16s cubic-bezier(0.22, 1.3, 0.36, 1), opacity 0.16s ease, box-shadow 0.18s ease;
+  animation: docChipFloat 2.6s ease-in-out infinite;
+}
+body.theme-night #pdf-spotlight-ask-chip {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.68), rgba(15, 23, 42, 0.42));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.28), 0 8px 22px rgba(0, 0, 0, 0.42), 0 0 0 3px var(--accent-soft);
+}
+#pdf-spotlight-ask-chip svg { width: 14px; height: 14px; margin-left: 1.5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.16)); }
+#pdf-spotlight-ask-chip:active { transform: translateX(-50%) scale(0.88) !important; }
+body[data-universe="pdf"].doc-live-active #pdf-spotlight-ask-chip {
+  display: inline-flex;
+}
+#pdf-pointer-ball.dragging #pdf-spotlight-ask-chip {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Whisper-quiet 2px Reading Progress Hairline at Top of Document Stage */
+#doc-read-progress {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  z-index: 28;
+  background: transparent;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+#doc-read-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  opacity: 0.72;
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Zero-Overlap Genie Bar in Doc Studio (Sits Cleanly ABOVE Explain/Next + Freely Draggable!) */
+body[data-universe="pdf"].genie-speaker-open .guru-live-dock {
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+  cursor: grab;
+  touch-action: none;
+  transform: translate3d(var(--dock-dx, 0px), var(--dock-dy, 0px), 0) !important;
+  transition: box-shadow 0.16s ease !important;
+}
+body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock {
+  cursor: grabbing;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.36) !important;
+}
+/* 2-Step Safe Delete Armed Pulse */
+.is-armed-delete {
+  background: #E11D48 !important;
+  color: #FFFFFF !important;
+  border-color: #BE123C !important;
+  animation: docArmedPulse 0.9s ease-in-out infinite;
+}
+@keyframes docArmedPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+.doc-hist-del-btn {
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.70rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+.doc-hist-del-btn:hover { color: var(--bad-ink); border-color: var(--bad-bd); }
+
+/* Magical Study Trail Layer (Sits cleanly over canvas with pointer-events:none — never mutates canvas pixels!) */
+#pdf-covered-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 16;
+  overflow: hidden;
+  border-radius: inherit;
+}
+#pdf-covered-veil {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.045) 0%, rgba(16, 185, 129, 0.085) 100%);
+  border-bottom: 1.5px dashed rgba(16, 185, 129, 0.42);
+  transition: height 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+  display: none;
+}
+#pdf-covered-veil.has-trail { display: block; }
+/* Continuous Connected Study Thread inside Reading Sheet */
+.doc-thread-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.doc-thread-item {
+  position: relative;
+  padding: 12px 13px;
+  border-radius: 15px;
+  background: var(--opt-bg);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.doc-thread-item.is-active-step {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.doc-thread-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border);
+}
+.doc-thread-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+.doc-thread-step-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.doc-mini-btn {
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 0.70rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.doc-mini-btn:hover { border-color: var(--accent); color: var(--accent); }
+.doc-covered-bead {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  margin-left: -7.5px;
+  margin-top: -7.5px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.88);
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.82);
+  opacity: 0.78;
+}
+@keyframes docChipFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0px); }
+  50% { transform: translateX(-50%) translateY(-3px); }
+}
+
+/* Live Audio Equalizer Wave + Pause/Resume Pill inside Reading Sheet */
+.doc-audio-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  margin: 0 0 12px;
+  border-radius: 13px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.doc-audio-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.doc-eq-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 15px;
+  width: 16px;
+}
+.doc-eq-bars span {
+  display: block;
+  width: 3px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: height 0.18s ease;
+}
+.doc-audio-bar.is-playing .doc-eq-bars span:nth-child(1) { animation: docEq 0.72s ease-in-out infinite; }
+.doc-audio-bar.is-playing .doc-eq-bars span:nth-child(2) { animation: docEq 0.54s ease-in-out 0.15s infinite; }
+.doc-audio-bar.is-playing .doc-eq-bars span:nth-child(3) { animation: docEq 0.66s ease-in-out 0.30s infinite; }
+@keyframes docEq {
+  0%, 100% { height: 4px; }
+  50% { height: 15px; }
+}
+.doc-audio-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.doc-history-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+/* Per-Document Saved Chat & Notes History Drawer */
+#pdf-history-drawer {
+  position: fixed;
+  top: calc(54px + env(safe-area-inset-top, 0px));
+  right: 0;
+  bottom: 0;
+  width: min(400px, 100vw);
+  z-index: 2050;
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  box-shadow: -12px 0 36px rgba(15, 23, 42, 0.20);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+#pdf-history-drawer.open {
+  display: flex;
+  animation: pgUniFade 0.20s ease-out;
+}
+.doc-hist-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+.doc-hist-head h4 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.doc-hist-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+.doc-hist-card {
+  padding: 12px 13px;
+  border-radius: 14px;
+  background: var(--opt-bg);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.12s ease;
+}
+.doc-hist-card:hover { border-color: var(--accent); }
+.doc-hist-card:active { transform: scale(0.985); }
+.doc-hist-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 5px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+.doc-hist-page-pill {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 800;
+}
+.doc-hist-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.doc-hist-preview {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.48;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.doc-hist-empty {
+  margin: auto;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.84rem;
+  padding: 30px 16px;
 }
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
@@ -6184,10 +6528,15 @@ body[data-universe="pdf"] #pdf-answer-content .guru-rich-h2 {
             <button type="button" class="doc-icon-btn is-active" id="btn-pdf-voice-mode" title="Voice Readout">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
             </button>
+            <button type="button" class="doc-icon-btn" id="btn-pdf-history" title="Saved Notes &amp; Chat History">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="doc-history-badge" id="pdf-history-count" style="display:none;">0</span>
+            </button>
           </div>
         </div>
       </div>
 
+      <div id="doc-read-progress"><div id="doc-read-progress-fill"></div></div>
       <div class="pdf-stage-outer" id="pdf-stage-outer">
         <div class="pdf-empty-state" id="pdf-empty-state">
           <div class="doc-empty-icon">
@@ -6203,7 +6552,11 @@ body[data-universe="pdf"] #pdf-answer-content .guru-rich-h2 {
 
         <div class="pdf-canvas-wrap" id="pdf-canvas-wrap" style="display:none;">
           <canvas id="pdf-render-canvas"></canvas>
+          <div id="pdf-covered-layer"><div id="pdf-covered-veil"></div></div>
           <div id="pdf-pointer-ball" class="visible" style="left:50%; top:18%;" title="Drag Spotlight">
+            <button type="button" id="pdf-spotlight-ask-chip" aria-label="Ask Genie" title="Ask Genie">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            </button>
             <span class="spotlight-ring"></span>
             <span class="spotlight-dot"></span>
           </div>
@@ -6221,13 +6574,25 @@ body[data-universe="pdf"] #pdf-answer-content .guru-rich-h2 {
           <span>Next</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
         </button>
-        <button type="button" class="doc-pill-btn danger" id="btn-pdf-stop-audio" style="display:none;">Stop</button>
+        <button type="button" class="doc-pill-btn secondary" id="btn-pdf-pause-audio" style="display:none;">⏸ Pause</button>
+        <button type="button" class="doc-pill-btn danger" id="btn-pdf-stop-audio" style="display:none;">⏹</button>
       </div>
       <span id="pdf-tutor-status" style="display:none;"></span>
 
       <div class="pdf-answer-box" id="pdf-answer-box">
         <div class="chat-msg ai" id="pdf-answer-content"></div>
       </div>
+
+      <aside id="pdf-history-drawer" aria-label="Document Chat History">
+        <div class="doc-hist-head">
+          <h4 id="pdf-hist-title">Saved Explanations</h4>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="doc-icon-btn is-danger" id="btn-pdf-hist-clear" title="Clear History">Clear</button>
+            <button type="button" class="doc-icon-btn" id="btn-pdf-hist-close" title="Close">✕</button>
+          </div>
+        </div>
+        <div class="doc-hist-body" id="pdf-hist-list"></div>
+      </aside>
     </div>
   </section>
 
@@ -11009,6 +11374,8 @@ function stopActiveVoicePlayback() {
   });
   releaseGuruWakeLock();
   guruSessionMode = 'tutor';
+  document.body.classList.remove('doc-live-active');
+  if (typeof window.__resetDocGenieDockPos === 'function') window.__resetDocGenieDockPos();
   const qzBtn = document.getElementById('btn-start-voice-quiz');
   if (qzBtn) { qzBtn.classList.remove('quiz-live-on'); qzBtn.textContent = '🎯 Voice Quiz'; }
   activeSpeakingQid = null;
@@ -11049,8 +11416,9 @@ DOCUMENT LIVE TUTOR RULES (STRICT SINGLE-SPOT GROUND-ZERO TEACHING):
 1. STRICT ONE-CONCEPT LOCK (NEVER BLABBER AHEAD): You receive TWO images — Image 1 is the full page with a RED TARGET RING; Image 2 is a zoomed close-up of that exact spot. Explain ONLY that ONE single formula, line, or diagram inside the target ring. NEVER rush ahead or start explaining the rest of the page!
 2. ZERO RUSH — TEACH FROM ABSOLUTE GROUND ZERO: Imagine the student has never studied this topic before in their life. Explain calmly, step-by-step, unpacking every symbol or word with genuine warmth.
 3. UNFORGETTABLE DESI ANALOGY & EXAM TRAP: Give 1 vivid everyday Indian real-life analogy so it clicks instantly, plus the exact exam trap if relevant.
-4. STOP & CHECK UNDERSTANDING: After explaining that ONE spot comfortably (~90 to 140 words), STOP and ask warmly in Hindi: "आका, यह वाला point अच्छे से दिमाग में बैठ गया? कोई doubt हो तो पूछिए, या Next दबाइए तो हम अगले हिस्से पर चलें!" NEVER output markdown symbols or meta-labels.
-5. CREATOR IDENTITY: If asked who built you or this app, warmly say Pradeep Prajapati ("मुझे प्रदीप प्रजापति ने बड़े प्यार और मेहनत से बनाया है!").`;
+4. CLEAN NATURAL ENDING (ZERO REPETITIVE OUTROS): After explaining that ONE spot comfortably (~90 to 140 words), end naturally on a crisp, warm closing sentence about the concept and IMMEDIATELY STOP SPEAKING. NEVER repeat robotic sign-offs like "कोई doubt हो तो पूछिए" or "Next दबाइए" — the student will speak or tap whenever they are ready! NEVER output markdown symbols or meta-labels.
+5. VOICE NEXT NAVIGATION (STRICTLY DOCUMENT ONLY): If the student says "next", "अगला समझाओ", or "आगे बढ़ो", call \`advance_doc_spotlight\` to glide the Spotlight to the next unread part of THIS document — NEVER talk about MCQs or quiz questions!
+6. CREATOR IDENTITY: If asked who built you or this app, warmly say Pradeep Prajapati ("मुझे प्रदीप प्रजापति ने बड़े प्यार और मेहनत से बनाया है!").`;
   }
   const ctx = q ? ('\n' + formatQuestionContextSnippet(q)) : '';
   if (guruSessionMode === 'quiz') {
@@ -11277,22 +11645,30 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
             },
             systemInstruction: { parts: [{ text: buildTitanGuruSystemPrompt(q, cfg) }] },
             tools: [{
-              functionDeclarations: [
-                {
-                  name: 'lock_mcq_option',
-                  description: 'Locks and submits the confirmed MCQ option (A, B, C, or D) ONLY AFTER the student explicitly confirms locking it.',
-                  parameters: {
-                    type: 'OBJECT',
-                    properties: { option_letter: { type: 'STRING', description: 'Displayed option letter: A, B, C, or D' } },
-                    required: ['option_letter']
-                  }
-                },
-                {
-                  name: 'go_to_next_question',
-                  description: 'Scrolls smoothly to the next unanswered question and switches focus to it when the student asks to move forward.',
-                  parameters: { type: 'OBJECT', properties: {} }
-                }
-              ]
+              functionDeclarations: guruSessionMode === 'doc_live'
+                ? [
+                    {
+                      name: 'advance_doc_spotlight',
+                      description: 'Moves the Document Reader Spotlight smoothly down to the next unread concept/section on the current PDF or Image page (or next PDF page) ONLY when the student explicitly asks to go next or move forward.',
+                      parameters: { type: 'OBJECT', properties: {} }
+                    }
+                  ]
+                : [
+                    {
+                      name: 'lock_mcq_option',
+                      description: 'Locks and submits the confirmed MCQ option (A, B, C, or D) ONLY AFTER the student explicitly confirms locking it.',
+                      parameters: {
+                        type: 'OBJECT',
+                        properties: { option_letter: { type: 'STRING', description: 'Displayed option letter: A, B, C, or D' } },
+                        required: ['option_letter']
+                      }
+                    },
+                    {
+                      name: 'go_to_next_question',
+                      description: 'Scrolls smoothly to the next unanswered question and switches focus to it when the student asks to move forward.',
+                      parameters: { type: 'OBJECT', properties: {} }
+                    }
+                  ]
             }]
           }
         }));
@@ -11359,17 +11735,30 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
             return;
           }
           if (msg.toolCall && Array.isArray(msg.toolCall.functionCalls)) {
+            let triggerDocVoiceNext = false;
             const responses = msg.toolCall.functionCalls.map(fc => {
               let resObj = { ok: false };
-              if (fc.name === 'lock_mcq_option') {
-                resObj = executeGuruLockOption(fc.args && fc.args.option_letter);
-              } else if (fc.name === 'go_to_next_question') {
-                resObj = executeGuruGoNextQuestion();
+              if (guruSessionMode === 'doc_live') {
+                if (fc.name === 'advance_doc_spotlight') {
+                  triggerDocVoiceNext = true;
+                  resObj = { ok: true, status: 'Spotlight moved to next section; fresh zoomed image incoming now.' };
+                } else {
+                  resObj = { ok: false, error: 'MCQ tools are disabled inside Document Reader.' };
+                }
+              } else {
+                if (fc.name === 'lock_mcq_option') {
+                  resObj = executeGuruLockOption(fc.args && fc.args.option_letter);
+                } else if (fc.name === 'go_to_next_question') {
+                  resObj = executeGuruGoNextQuestion();
+                }
               }
               return { id: fc.id, name: fc.name, response: { result: resObj } };
             });
             if (guruLiveWs && guruLiveWs.readyState === WebSocket.OPEN) {
               guruLiveWs.send(JSON.stringify({ toolResponse: { functionResponses: responses } }));
+            }
+            if (triggerDocVoiceNext && typeof window.__voiceAdvanceDocSpotlight === 'function') {
+              setTimeout(() => { window.__voiceAdvanceDocSpotlight(); }, 180);
             }
             return;
           }
@@ -11873,13 +12262,13 @@ async function sendGuruTurn(userInput) {
     const parts = Array.isArray(userInput) ? userInput : [{ text: String(userInput) }];
     let reply = await callGuruBrain(parts, cfg);
     const lockM = reply.match(/\[LOCK:([ABCD])\]/i);
-    if (lockM) {
+    if (lockM && guruSessionMode !== 'doc_live') {
       executeGuruLockOption(lockM[1]);
       reply = reply.replace(/\[LOCK:[ABCD]\]/gi, '').trim();
     }
     const nextM = /\[NEXT_Q\]/i.test(reply);
     let movedNextInQuiz = false;
-    if (nextM) {
+    if (nextM && guruSessionMode !== 'doc_live') {
       reply = reply.replace(/\[NEXT_Q\]/gi, '').trim();
       const mv = executeGuruGoNextQuestion();
       if (mv && mv.ok && guruSessionMode === 'quiz') movedNextInQuiz = true;
@@ -15691,8 +16080,9 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   let pdfDoc = null, pdfLoadedImg = null, pdfRenderTask = null, pdfCurrentId = '';
   let pdfCurrentPage = 1, pdfTotalPages = 0, pdfScale = 1.0, pdfPointerEnabled = true;
   let pdfPointerNorm = { x: 0.50, y: 0.16 };
-  let pdfReadingBlocks = [], pdfCurrentBlockIdx = -1;
+  let pdfReadingBlocks = [], pdfCurrentBlockIdx = -1, pdfIsTwoCol = false;
   let pdfVoiceAutoPlay = true, pdfBusy = false, pdfTutorHistory = [];
+  let pdfCurrentDocNotes = [], pdfCoveredSpots = [], docAudioState = 'idle', docLastReplyText = '';
   let __pdfMemVault = [];
 
   function openPdfDB() {
@@ -15821,81 +16211,639 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     } catch (e) {}
   }
 
+  function normalizeColumnBlocks(rawBlocks, colIdx, defaultX) {
+    if (!rawBlocks || !rawBlocks.length) return [];
+    const sorted = rawBlocks.slice().sort((a, b) => a.y - b.y);
+    const merged = [];
+    for (const b of sorted) {
+      const prev = merged[merged.length - 1];
+      if (!prev || (b.y - prev.y) >= 0.11) {
+        merged.push({
+          x: Math.max(0.10, Math.min(0.90, b.x || defaultX)),
+          y: Math.max(0.08, Math.min(0.92, b.y)),
+          col: colIdx
+        });
+      }
+    }
+    return merged;
+  }
+
+  function scanInkBandsInXRange(imgData, w, h, xStartNorm, xEndNorm, colIdx) {
+    const x0 = Math.max(0, Math.floor(w * xStartNorm));
+    const x1 = Math.min(w - 1, Math.floor(w * xEndNorm));
+    const stepY = Math.max(2, Math.floor(h / 240));
+    const stepX = Math.max(3, Math.floor((x1 - x0) / 70));
+    const rows = [];
+    for (let y = Math.floor(h * 0.04); y < Math.floor(h * 0.96); y += stepY) {
+      let darkCount = 0, total = 0, minX = x1, maxX = x0;
+      for (let x = x0; x <= x1; x += stepX) {
+        const idx = (y * w + x) * 4;
+        const lum = imgData[idx] * 0.299 + imgData[idx + 1] * 0.587 + imgData[idx + 2] * 0.114;
+        total++;
+        if (lum < 212) {
+          darkCount++;
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+        }
+      }
+      rows.push({
+        normY: y / h,
+        active: (darkCount / Math.max(1, total)) > 0.022,
+        midX: maxX > minX ? ((minX + maxX) / 2) / w : (xStartNorm + xEndNorm) / 2
+      });
+    }
+    const bands = [];
+    let cur = null;
+    for (const r of rows) {
+      if (r.active) {
+        if (!cur) cur = { y1: r.normY, y2: r.normY, xs: [r.midX] };
+        else { cur.y2 = r.normY; cur.xs.push(r.midX); }
+      } else if (cur && (r.normY - cur.y2) > 0.026) {
+        if (cur.y2 - cur.y1 > 0.016) {
+          const avgX = cur.xs.reduce((a, b) => a + b, 0) / cur.xs.length;
+          bands.push({ x: avgX, y: (cur.y1 + cur.y2) / 2, col: colIdx });
+        }
+        cur = null;
+      }
+    }
+    if (cur && (cur.y2 - cur.y1 > 0.016)) {
+      const avgX = cur.xs.reduce((a, b) => a + b, 0) / cur.xs.length;
+      bands.push({ x: avgX, y: (cur.y1 + cur.y2) / 2, col: colIdx });
+    }
+    return normalizeColumnBlocks(bands, colIdx, (xStartNorm + xEndNorm) / 2);
+  }
+
+  function detectImageTwoColumnSplit(imgData, w, h) {
+    // Measure vertical ink density profile across x = 0..100% (y = 12%..88%)
+    const bins = 100;
+    const density = new Float32Array(bins);
+    const y0 = Math.floor(h * 0.12), y1 = Math.floor(h * 0.88);
+    const stepY = Math.max(2, Math.floor((y1 - y0) / 140));
+    for (let b = 0; b < bins; b++) {
+      const x = Math.min(w - 1, Math.floor((b + 0.5) * w / bins));
+      let dark = 0, tot = 0;
+      for (let y = y0; y < y1; y += stepY) {
+        const idx = (y * w + x) * 4;
+        const lum = imgData[idx] * 0.299 + imgData[idx + 1] * 0.587 + imgData[idx + 2] * 0.114;
+        tot++;
+        if (lum < 210) dark++;
+      }
+      density[b] = dark / Math.max(1, tot);
+    }
+    let leftInk = 0, rightInk = 0;
+    for (let b = 8; b < 42; b++) leftInk += density[b];
+    for (let b = 58; b < 92; b++) rightInk += density[b];
+    leftInk /= 34; rightInk /= 34;
+    if (leftInk < 0.035 || rightInk < 0.035) return null; // Not enough text on both halves
+
+    // Case A: Solid vertical divider line in center (44..56) flanked by quiet white margins
+    for (let b = 45; b <= 55; b++) {
+      if (density[b] > 0.52 && density[b - 2] < 0.035 && density[b + 2] < 0.035) {
+        return b / 100;
+      }
+    }
+    // Case B: Clean white vertical gutter (at least 2 consecutive nearly empty bins in 44..56)
+    let bestGutter = -1, bestScore = 999;
+    for (let b = 44; b <= 55; b++) {
+      const pair = density[b] + density[b + 1];
+      if (density[b] < 0.022 && density[b + 1] < 0.022 && pair < bestScore) {
+        bestScore = pair;
+        bestGutter = (b + 0.5) / 100;
+      }
+    }
+    return bestGutter > 0 ? bestGutter : null;
+  }
+
   function computeImageInkBlocks(canvas) {
-    const blocks = [];
+    pdfIsTwoCol = false;
     try {
       const w = canvas.width, h = canvas.height;
-      if (!w || !h) return blocks;
+      if (!w || !h) return [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y, col: 0 }));
       const ctx = canvas.getContext('2d', { willReadFrequently: true });
       const imgData = ctx.getImageData(0, 0, w, h).data;
-      const rowDensity = [];
-      const stepY = Math.max(2, Math.floor(h / 260));
-      const stepX = Math.max(4, Math.floor(w / 140));
-      for (let y = 0; y < h; y += stepY) {
-        let darkCount = 0, total = 0;
-        let minX = w, maxX = 0;
-        for (let x = 0; x < w; x += stepX) {
-          const idx = (y * w + x) * 4;
-          const lum = (imgData[idx] * 0.299 + imgData[idx + 1] * 0.587 + imgData[idx + 2] * 0.114);
-          total++;
-          if (lum < 215) {
-            darkCount++;
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-          }
-        }
-        rowDensity.push({ normY: y / h, active: (darkCount / Math.max(1, total)) > 0.018, midX: maxX > minX ? ((minX + maxX) / 2) / w : 0.5 });
-      }
-      let curBand = null;
-      for (const r of rowDensity) {
-        if (r.active) {
-          if (!curBand) curBand = { y1: r.normY, y2: r.normY, xs: [r.midX] };
-          else { curBand.y2 = r.normY; curBand.xs.push(r.midX); }
-        } else if (curBand && (r.normY - curBand.y2) > 0.022) {
-          if (curBand.y2 - curBand.y1 > 0.015) {
-            const avgX = curBand.xs.reduce((a, b) => a + b, 0) / curBand.xs.length;
-            blocks.push({ x: Math.max(0.18, Math.min(0.82, avgX)), y: Math.max(0.06, Math.min(0.94, (curBand.y1 + curBand.y2) / 2)) });
-          }
-          curBand = null;
+      const splitX = detectImageTwoColumnSplit(imgData, w, h);
+      if (splitX) {
+        const leftBlocks = scanInkBandsInXRange(imgData, w, h, 0.04, splitX - 0.02, 0);
+        const rightBlocks = scanInkBandsInXRange(imgData, w, h, splitX + 0.02, 0.96, 1);
+        if (leftBlocks.length >= 2 && rightBlocks.length >= 2) {
+          pdfIsTwoCol = true;
+          return [...leftBlocks, ...rightBlocks];
         }
       }
-      if (curBand && (curBand.y2 - curBand.y1 > 0.015)) {
-        const avgX = curBand.xs.reduce((a, b) => a + b, 0) / curBand.xs.length;
-        blocks.push({ x: Math.max(0.18, Math.min(0.82, avgX)), y: Math.max(0.06, Math.min(0.94, (curBand.y1 + curBand.y2) / 2)) });
-      }
-    } catch (e) {}
-    if (blocks.length < 2) {
-      return [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
+      const single = scanInkBandsInXRange(imgData, w, h, 0.04, 0.96, 0);
+      return single.length >= 2 ? single : [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y, col: 0 }));
+    } catch (e) {
+      return [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y, col: 0 }));
     }
-    return blocks;
   }
 
   async function computePdfTextBlocks(page, baseVp) {
+    pdfIsTwoCol = false;
     try {
       const tc = await page.getTextContent();
       const items = (tc.items || []).filter(it => it.str && it.str.trim().length > 1);
       if (!items.length) return computeImageInkBlocks(document.getElementById('pdf-render-canvas'));
       const pts = items.map(it => {
-        const tx = it.transform[4], ty = it.transform[5];
-        const normX = Math.max(0.12, Math.min(0.88, (tx + (it.width || 0) * 0.4) / Math.max(1, baseVp.width)));
-        const normY = Math.max(0.05, Math.min(0.95, 1 - (ty / Math.max(1, baseVp.height))));
-        return { x: normX, y: normY };
-      }).sort((a, b) => a.y - b.y);
-      const blocks = [];
-      let grp = null;
-      for (const p of pts) {
-        if (!grp) grp = { yStart: p.y, yEnd: p.y, xs: [p.x] };
-        else if (p.y - grp.yEnd < 0.055 && (p.y - grp.yStart) < 0.14) {
-          grp.yEnd = p.y; grp.xs.push(p.x);
-        } else {
-          blocks.push({ x: grp.xs.reduce((a, b) => a + b, 0) / grp.xs.length, y: (grp.yStart + grp.yEnd) / 2 });
-          grp = { yStart: p.y, yEnd: p.y, xs: [p.x] };
+        const tx = it.transform[4], ty = it.transform[5], iw = it.width || 0;
+        const x1 = tx / Math.max(1, baseVp.width);
+        const x2 = (tx + iw) / Math.max(1, baseVp.width);
+        const normX = Math.max(0.08, Math.min(0.92, (x1 + x2) / 2));
+        const normY = Math.max(0.06, Math.min(0.94, 1 - (ty / Math.max(1, baseVp.height))));
+        return { x: normX, y: normY, x1, x2 };
+      });
+      const leftPts = pts.filter(p => p.x2 <= 0.51);
+      const rightPts = pts.filter(p => p.x1 >= 0.49);
+      const crossingPts = pts.filter(p => p.x1 < 0.47 && p.x2 > 0.53);
+      const groupCol = (arr, colIdx, defX) => {
+        const sorted = arr.slice().sort((a, b) => a.y - b.y);
+        const raw = [];
+        let grp = null;
+        for (const p of sorted) {
+          if (!grp) grp = { yStart: p.y, yEnd: p.y, xs: [p.x] };
+          else if (p.y - grp.yEnd < 0.06 && (p.y - grp.yStart) < 0.14) {
+            grp.yEnd = p.y; grp.xs.push(p.x);
+          } else {
+            raw.push({ x: grp.xs.reduce((a, b) => a + b, 0) / grp.xs.length, y: (grp.yStart + grp.yEnd) / 2 });
+            grp = { yStart: p.y, yEnd: p.y, xs: [p.x] };
+          }
+        }
+        if (grp) raw.push({ x: grp.xs.reduce((a, b) => a + b, 0) / grp.xs.length, y: (grp.yStart + grp.yEnd) / 2 });
+        return normalizeColumnBlocks(raw, colIdx, defX);
+      };
+      if (leftPts.length >= 6 && rightPts.length >= 6 && crossingPts.length < Math.max(3, pts.length * 0.12)) {
+        const lBlocks = groupCol(leftPts, 0, 0.26);
+        const rBlocks = groupCol(rightPts, 1, 0.74);
+        if (lBlocks.length >= 2 && rBlocks.length >= 2) {
+          pdfIsTwoCol = true;
+          return [...lBlocks, ...rBlocks];
         }
       }
-      if (grp) blocks.push({ x: grp.xs.reduce((a, b) => a + b, 0) / grp.xs.length, y: (grp.yStart + grp.yEnd) / 2 });
-      return blocks.length >= 2 ? blocks : [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
+      const single = groupCol(pts, 0, 0.50);
+      return single.length >= 2 ? single : [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y, col: 0 }));
     } catch (e) {
-      return [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
+      return [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y, col: 0 }));
+    }
+  }
+
+  function updateDocHistoryBadge() {
+    const badge = document.getElementById('pdf-history-count');
+    if (!badge) return;
+    const n = pdfCurrentDocNotes.length;
+    badge.textContent = String(n);
+    badge.style.display = n > 0 ? 'inline-flex' : 'none';
+  }
+
+  function renderCoveredTrailOverlay() {
+    const layer = document.getElementById('pdf-covered-layer');
+    const veil = document.getElementById('pdf-covered-veil');
+    if (!layer || !veil) return;
+    layer.querySelectorAll('.doc-covered-bead').forEach(el => el.remove());
+    const pageSpots = pdfCoveredSpots.filter(s => (s.page || 1) === pdfCurrentPage);
+    if (!pageSpots.length) {
+      veil.classList.remove('has-trail');
+      veil.style.height = '0%';
+      return;
+    }
+    let maxY = 0;
+    for (const s of pageSpots) {
+      if (s.y > maxY) maxY = s.y;
+      const bead = document.createElement('span');
+      bead.className = 'doc-covered-bead';
+      bead.textContent = '✓';
+      bead.style.left = `${(s.x * 100).toFixed(2)}%`;
+      bead.style.top = `${(s.y * 100).toFixed(2)}%`;
+      layer.appendChild(bead);
+    }
+    if (pdfIsTwoCol) {
+      veil.classList.remove('has-trail');
+      veil.style.height = '0%';
+    } else {
+      veil.style.height = `${Math.min(96, Math.max(4, (maxY + 0.03) * 100)).toFixed(1)}%`;
+      veil.classList.add('has-trail');
+    }
+  }
+
+  function isSpotAlreadyCovered(pageNum, xNorm, yNorm) {
+    return pdfCoveredSpots.some(s =>
+      (s.page || 1) === pageNum &&
+      Math.abs(s.y - yNorm) < 0.055 &&
+      (!pdfIsTwoCol || Math.abs(s.x - xNorm) < 0.22)
+    );
+  }
+
+  function findNextUnreadBlockOnPage(blocks, curX, curY) {
+    const list = (blocks && blocks.length) ? blocks : [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y, col: 0 }));
+    if (typeof curY !== 'number' || curY < 0) {
+      const firstIdx = list.findIndex(b => !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
+      return firstIdx >= 0 ? { idx: firstIdx, block: list[firstIdx] } : null;
+    }
+    if (pdfIsTwoCol) {
+      // Find nearest block in reading order (Left Col top->bottom, then Right Col top->bottom)
+      let curIdx = 0, bestDist = Infinity;
+      list.forEach((b, i) => {
+        const d = Math.hypot((b.x - curX) * 1.6, b.y - curY);
+        if (d < bestDist) { bestDist = d; curIdx = i; }
+      });
+      for (let i = curIdx + 1; i < list.length; i++) {
+        if (!isSpotAlreadyCovered(pdfCurrentPage, list[i].x, list[i].y)) {
+          return { idx: i, block: list[i] };
+        }
+      }
+      const anyIdx = list.findIndex(b => !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
+      return anyIdx >= 0 ? { idx: anyIdx, block: list[anyIdx] } : null;
+    }
+    const belowIdx = list.findIndex(b => b.y > (curY + 0.045) && !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
+    if (belowIdx >= 0) return { idx: belowIdx, block: list[belowIdx] };
+    const anyUnreadIdx = list.findIndex(b => !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
+    return anyUnreadIdx >= 0 ? { idx: anyUnreadIdx, block: list[anyUnreadIdx] } : null;
+  }
+
+  async function markCurrentSpotCovered(label) {
+    if (!pdfDoc && !pdfLoadedImg) return;
+    const exists = pdfCoveredSpots.some(s =>
+      (s.page || 1) === pdfCurrentPage &&
+      Math.abs(s.y - pdfPointerNorm.y) < 0.045 &&
+      (!pdfIsTwoCol || Math.abs(s.x - pdfPointerNorm.x) < 0.20)
+    );
+    if (!exists) {
+      pdfCoveredSpots.push({
+        page: pdfCurrentPage,
+        x: +pdfPointerNorm.x.toFixed(3),
+        y: +pdfPointerNorm.y.toFixed(3),
+        label: label || '',
+        ts: Date.now()
+      });
+      renderCoveredTrailOverlay();
+      await persistCurrentDocNotes();
+    }
+  }
+
+  function autoResumeSpotlightToNextUnread() {
+    const pageSpots = pdfCoveredSpots.filter(s => (s.page || 1) === pdfCurrentPage);
+    if (!pageSpots.length) return;
+    const farthestY = Math.max(...pageSpots.map(s => s.y));
+    const lastSpot = pageSpots[pageSpots.length - 1];
+    const nextUnread = findNextUnreadBlockOnPage(pdfReadingBlocks, lastSpot.x, lastSpot.y);
+    if (nextUnread) {
+      pdfCurrentBlockIdx = nextUnread.idx;
+      pdfPointerNorm = { x: nextUnread.block.x, y: nextUnread.block.y };
+      updatePointerBallCss();
+      scrollSpotlightIntoCenter();
+    }
+  }
+
+  async function loadNotesForCurrentDoc(docId) {
+    pdfCurrentDocNotes = [];
+    pdfCoveredSpots = [];
+    pdfTutorHistory = [];
+    if (!docId) { updateDocHistoryBadge(); renderCoveredTrailOverlay(); return; }
+    try {
+      const list = await getAllPdfsFromVault();
+      const rec = list.find(x => x.id === docId);
+      if (rec) {
+        if (Array.isArray(rec.notes)) {
+          pdfCurrentDocNotes = rec.notes.slice();
+          pdfTutorHistory = pdfCurrentDocNotes.slice(-6).flatMap(n => [
+            { role: 'user', text: `[Page ${n.page}: ${n.title}]` },
+            { role: 'model', text: n.reply }
+          ]);
+        }
+        if (Array.isArray(rec.coveredSpots)) {
+          pdfCoveredSpots = rec.coveredSpots.slice();
+        }
+      }
+    } catch (e) {}
+    updateDocHistoryBadge();
+    renderCoveredTrailOverlay();
+    autoResumeSpotlightToNextUnread();
+  }
+
+  async function persistCurrentDocNotes() {
+    updateDocHistoryBadge();
+    if (!pdfCurrentId) return;
+    try {
+      const list = await getAllPdfsFromVault();
+      const rec = list.find(x => x.id === pdfCurrentId);
+      if (rec) {
+        rec.notes = pdfCurrentDocNotes.slice(-60);
+        rec.coveredSpots = pdfCoveredSpots.slice(-180);
+        await savePdfToVault(rec);
+      }
+    } catch (e) {}
+  }
+
+  function extractNoteTitle(replyText) {
+    const m = String(replyText || '').match(/^##\s+(.+)$/m);
+    if (m && m[1]) return m[1].replace(/[`*_]/g, '').trim().slice(0, 68);
+    return String(replyText || 'Concept Note').replace(/[#>*_`]/g, '').trim().slice(0, 56);
+  }
+
+  function renderDocHistoryDrawer() {
+    const listEl = document.getElementById('pdf-hist-list');
+    const titleEl = document.getElementById('pdf-hist-title');
+    if (!listEl) return;
+    const sel = document.getElementById('pdf-library-select');
+    const docLabel = sel && sel.selectedOptions && sel.selectedOptions[0] ? sel.selectedOptions[0].textContent : 'Document Notes';
+    if (titleEl) titleEl.textContent = `${docLabel.slice(0, 26)} (${pdfCurrentDocNotes.length})`;
+    if (!pdfCurrentDocNotes.length) {
+      listEl.innerHTML = '<div class="doc-hist-empty">अभी इस document की कोई saved explanation नहीं है।<br>किसी भी spot पर <strong>Explain</strong> दबाओ — यहाँ अपने आप save हो जाएगी।</div>';
+      return;
+    }
+    listEl.innerHTML = pdfCurrentDocNotes.slice().reverse().map(note => {
+      const dt = new Date(note.ts || Date.now());
+      const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const prev = String(note.reply || '').replace(/[#>*_`]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+      return `<div class="doc-hist-card" data-note-id="${note.id}">
+        <div class="doc-hist-meta">
+          <span class="doc-hist-page-pill">Pg ${note.page || 1}</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span>${timeStr}</span>
+            <button type="button" class="doc-hist-del-btn" data-del-note="${note.id}" title="Delete Note">✕</button>
+          </div>
+        </div>
+        <div class="doc-hist-title">${note.title.replace(/</g, '&lt;')}</div>
+        <div class="doc-hist-preview">${prev.replace(/</g, '&lt;')}</div>
+      </div>`;
+    }).join('');
+    listEl.querySelectorAll('.doc-hist-del-btn').forEach(btn => {
+      btn.addEventListener('click', async (ev) => {
+        ev.stopPropagation();
+        const nid = btn.getAttribute('data-del-note');
+        if (!btn.classList.contains('is-armed-delete')) {
+          btn.classList.add('is-armed-delete');
+          btn.textContent = 'Delete?';
+          setTimeout(() => { if (btn && btn.isConnected) { btn.classList.remove('is-armed-delete'); btn.textContent = '✕'; } }, 3500);
+          return;
+        }
+        pdfCurrentDocNotes = pdfCurrentDocNotes.filter(x => x.id !== nid);
+        await persistCurrentDocNotes();
+        renderDocHistoryDrawer();
+        const ansBoxEl = document.getElementById('pdf-answer-box');
+        if (ansBoxEl && ansBoxEl.classList.contains('show')) {
+          if (pdfCurrentDocNotes.length) openDocExplanationDrawer(pdfCurrentDocNotes[pdfCurrentDocNotes.length - 1].id, false);
+          else ansBoxEl.classList.remove('show', 'is-expanded');
+        }
+        showToast('🗑️ Note deleted');
+      });
+    });
+    listEl.querySelectorAll('.doc-hist-card').forEach(card => {
+      card.addEventListener('click', async (ev) => {
+        if (ev.target.closest('.doc-hist-del-btn')) return;
+        const nid = card.getAttribute('data-note-id');
+        const note = pdfCurrentDocNotes.find(x => x.id === nid);
+        if (!note) return;
+        document.getElementById('pdf-history-drawer').classList.remove('open');
+        if (pdfDoc && note.page && note.page !== pdfCurrentPage) await renderPdfPage(note.page);
+        if (typeof note.x === 'number' && typeof note.y === 'number') {
+          pdfPointerNorm = { x: note.x, y: note.y };
+          updatePointerBallCss();
+          scrollSpotlightIntoCenter();
+        }
+        openDocExplanationDrawer(note.id, false);
+      });
+    });
+  }
+
+  function syncDocAudioUi(state) {
+    docAudioState = state;
+    const dockPause = document.getElementById('btn-pdf-pause-audio');
+    const dockStop = document.getElementById('btn-pdf-stop-audio');
+    const bar = document.getElementById('doc-audio-bar');
+    const barBtn = document.getElementById('btn-doc-bar-pause');
+    const barLbl = document.getElementById('doc-audio-label');
+    const active = (state === 'playing' || state === 'paused' || state === 'loading');
+    if (dockPause) {
+      dockPause.style.display = active ? 'inline-flex' : 'none';
+      dockPause.textContent = state === 'paused' ? '▶ Resume' : (state === 'loading' ? '⏳ Voice...' : '⏸ Pause');
+    }
+    if (dockStop) dockStop.style.display = active ? 'inline-flex' : 'none';
+    if (bar) bar.classList.toggle('is-playing', state === 'playing');
+    if (barBtn) {
+      barBtn.textContent = state === 'playing' ? '⏸ Pause' : (state === 'paused' ? '▶ Resume' : (state === 'loading' ? '⏳...' : '▶ Listen'));
+    }
+    if (barLbl) {
+      barLbl.textContent = state === 'playing' ? 'Playing' : (state === 'paused' ? 'Paused' : (state === 'loading' ? 'Loading...' : 'Audio'));
+    }
+  }
+
+  function toggleDocAudioPause() {
+    if (docAudioState === 'idle') {
+      if (docLastReplyText) speakDocStoryVoice(cleanTextForTTS(docLastReplyText), getVoiceConfig());
+      return;
+    }
+    if (docAudioState === 'playing') {
+      if (guruAudioEl && !guruAudioEl.paused) {
+        try { guruAudioEl.pause(); syncDocAudioUi('paused'); return; } catch (e) {}
+      }
+      if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        try { window.speechSynthesis.pause(); syncDocAudioUi('paused'); return; } catch (e) {}
+      }
+    } else if (docAudioState === 'paused') {
+      if (guruAudioEl && guruAudioEl.paused && guruAudioEl.src) {
+        try { guruAudioEl.play(); syncDocAudioUi('playing'); return; } catch (e) {}
+      }
+      if (window.speechSynthesis && window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); syncDocAudioUi('playing'); return; } catch (e) {}
+      }
+    }
+  }
+
+  async function speakDocStoryVoice(text, cfg) {
+    stopActiveTitanAudio();
+    syncDocAudioUi('loading');
+    stopGuruMicOnly();
+    await new Promise(r => setTimeout(r, 180));
+    const ttsModels = ['gemini-3.8-flash-lite-tts', 'gemini-3.8-flash-tts', 'gemini-2.5-flash-preview-tts'];
+    const indianStoryStyle = 'Speak in a 100% authentic, warm, expressive native North-Indian Hindi storytelling accent (like a beloved Patna or Lucknow mentor — NEVER a foreign, American, or British accent!). Pronounce every Hindi word with natural Indian rhythm, warm emotional highs and lows, joyful storytelling expression on real-life analogies, slight thoughtful pauses before key concepts, and clear Indian-English pronunciation for technical terms at a relaxed, unhurried pace.';
+    if (cfg && cfg.apiKey) {
+      for (const m of ttsModels) {
+        try {
+          const is38 = m.startsWith('gemini-3.8');
+          const partObj = is38 ? { text: text, speech_metadata: { style: indianStoryStyle } } : { text: `${indianStoryStyle}
+${text}` };
+          guruAbortCtrl = new AbortController();
+          const resp = await pgFetchGemini(`models/${m}:generateContent`, cfg.apiKey, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [partObj] }],
+              generationConfig: {
+                responseModalities: ['AUDIO'],
+                speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: cfg.voiceName || 'Kore' } } }
+              }
+            }),
+            signal: guruAbortCtrl.signal
+          });
+          if (!resp.ok) continue;
+          const json = await resp.json();
+          const inlinePart = json && json.candidates && json.candidates[0] && json.candidates[0].content &&
+            json.candidates[0].content.parts && json.candidates[0].content.parts.find(p => p.inlineData && p.inlineData.data);
+          if (!inlinePart) continue;
+          const mime = String(inlinePart.inlineData.mimeType || 'audio/wav').toLowerCase();
+          const binStr = atob(inlinePart.inlineData.data);
+          const bytes = new Uint8Array(binStr.length);
+          for (let bi = 0; bi < binStr.length; bi++) bytes[bi] = binStr.charCodeAt(bi);
+          setTitanAudioSession('playback');
+          const rateM = mime.match(/rate=(\d+)/);
+          const pcmRate = rateM ? Math.max(8000, Math.min(48000, Number(rateM[1]))) : 24000;
+          const isEncoded = mime.includes('mp3') || mime.includes('mpeg') || mime.includes('ogg') || mime.includes('mp4') || mime.includes('aac');
+          const wavBlob = isEncoded ? new Blob([bytes], { type: mime }) : buildPcm16WavBlob(bytes, pcmRate);
+          const player = getUnlockedHtml5Player();
+          if (guruActiveBlobUrl) { try { URL.revokeObjectURL(guruActiveBlobUrl); } catch (e) {} guruActiveBlobUrl = null; }
+          const blobUrl = URL.createObjectURL(wavBlob);
+          guruActiveBlobUrl = blobUrl;
+          guruAudioEl = player;
+          player.muted = false;
+          player.volume = 1.0;
+          player.src = blobUrl;
+          try { player.load(); } catch (e) {}
+          let done = false;
+          const finishPlay = () => {
+            if (done) return;
+            done = true;
+            player.onended = null; player.onerror = null;
+            if (guruActiveBlobUrl === blobUrl) { try { URL.revokeObjectURL(blobUrl); } catch (e) {} guruActiveBlobUrl = null; }
+            if (guruAudioEl === player) guruAudioEl = null;
+            syncDocAudioUi('idle');
+          };
+          player.onended = finishPlay;
+          player.onerror = finishPlay;
+          await player.play();
+          syncDocAudioUi('playing');
+          return;
+        } catch (e) {
+          if (e && e.name === 'AbortError') { syncDocAudioUi('idle'); return; }
+        }
+      }
+    }
+    // Native Hindi Indian fallback if no API key / TTS unavailable
+    if (window.speechSynthesis) {
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'hi-IN';
+        u.rate = 0.92;
+        const voices = window.speechSynthesis.getVoices() || [];
+        const hiVoice = voices.find(v => /hi[-_]?IN/i.test(v.lang)) || voices.find(v => /en[-_]?IN/i.test(v.lang));
+        if (hiVoice) u.voice = hiVoice;
+        u.onstart = () => syncDocAudioUi('playing');
+        u.onend = () => syncDocAudioUi('idle');
+        u.onerror = () => syncDocAudioUi('idle');
+        window.speechSynthesis.speak(u);
+        return;
+      } catch (e) {}
+    }
+    syncDocAudioUi('idle');
+  }
+
+  function openDocExplanationDrawer(activeReplyOrId, autoSpeak) {
+    const notes = pdfCurrentDocNotes.length
+      ? pdfCurrentDocNotes
+      : (activeReplyOrId ? [{ id: 'tmp', page: pdfCurrentPage, x: pdfPointerNorm.x, y: pdfPointerNorm.y, title: extractNoteTitle(activeReplyOrId), reply: String(activeReplyOrId), ts: Date.now() }] : []);
+    if (!notes.length) return;
+    let activeNote = notes.find(n => n.id === activeReplyOrId) || notes[notes.length - 1];
+    docLastReplyText = activeNote.reply;
+
+    const ansBox = document.getElementById('pdf-answer-box');
+    const ansContent = document.getElementById('pdf-answer-content');
+    const threadHtml = notes.map((n, idx) => {
+      const isAct = n.id === activeNote.id;
+      return `<div class="doc-thread-item${isAct ? ' is-active-step' : ''}" id="doc-thread-note-${n.id}" data-note-id="${n.id}">
+        <div class="doc-thread-item-head">
+          <span class="doc-thread-step-badge">Step ${idx + 1} · Pg ${n.page || 1}</span>
+          <div class="doc-thread-step-actions">
+            <button type="button" class="doc-mini-btn" data-act="jump" data-nid="${n.id}" title="Jump Spotlight here">🎯</button>
+            <button type="button" class="doc-mini-btn" data-act="listen" data-nid="${n.id}" title="Listen to this step">🔊</button>
+            <button type="button" class="doc-mini-btn" data-act="copy" data-nid="${n.id}" title="Copy">📋</button>
+          </div>
+        </div>
+        ${renderColorfulGuruCard(n.reply)}
+      </div>`;
+    }).join('');
+
+    ansContent.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
+        <strong style="font-size:0.88rem; color:var(--ink);">📖 Study Thread (${notes.length})</strong>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="doc-icon-btn" id="btn-pdf-open-hist-from-sheet" title="History">💬 ${pdfCurrentDocNotes.length}</button>
+          <button type="button" class="doc-icon-btn" id="btn-pdf-expand-ans">⤢ Full</button>
+          <button type="button" class="doc-icon-btn" id="btn-pdf-close-ans">✕</button>
+        </div>
+      </div>
+      <div class="doc-audio-bar" id="doc-audio-bar">
+        <div class="doc-audio-left">
+          <span class="doc-eq-bars"><span></span><span></span><span></span></span>
+          <span class="doc-audio-label" id="doc-audio-label">Audio</span>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="doc-icon-btn is-primary" id="btn-doc-bar-pause">▶ Listen</button>
+          <button type="button" class="doc-icon-btn" id="btn-pdf-replay-voice" title="Restart">↺</button>
+        </div>
+      </div>
+      <div class="doc-thread-list" id="doc-thread-list">${threadHtml}</div>
+      <div class="guru-card-actions" style="margin-top:12px;">
+        <button type="button" class="doc-icon-btn is-primary" id="btn-pdf-drawer-next" style="width:100%; justify-content:center;">Next Step ↓</button>
+      </div>`;
+
+    ansBox.classList.add('show');
+
+    document.getElementById('btn-pdf-close-ans').addEventListener('click', () => {
+      ansBox.classList.remove('show', 'is-expanded');
+    });
+    document.getElementById('btn-pdf-open-hist-from-sheet').addEventListener('click', () => {
+      renderDocHistoryDrawer();
+      document.getElementById('pdf-history-drawer').classList.add('open');
+    });
+    document.getElementById('btn-pdf-drawer-next').addEventListener('click', () => {
+      ansBox.classList.remove('show', 'is-expanded');
+      advanceDocSpotlightAndExplain();
+    });
+    document.getElementById('btn-doc-bar-pause').addEventListener('click', () => toggleDocAudioPause());
+    document.getElementById('btn-pdf-replay-voice').addEventListener('click', () => {
+      unlockGuruAudioSync();
+      speakDocStoryVoice(cleanTextForTTS(docLastReplyText), getVoiceConfig());
+    });
+    document.getElementById('btn-pdf-expand-ans').addEventListener('click', (ev) => {
+      const exp = ansBox.classList.toggle('is-expanded');
+      ev.currentTarget.textContent = exp ? '✕ Back' : '⤢ Full';
+    });
+
+    ansContent.querySelectorAll('.doc-mini-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const act = btn.getAttribute('data-act');
+        const nid = btn.getAttribute('data-nid');
+        const target = notes.find(x => x.id === nid);
+        if (!target) return;
+        if (act === 'copy') {
+          navigator.clipboard.writeText(target.reply).then(() => showToast('📋 Copied!')).catch(() => {});
+        } else if (act === 'listen') {
+          unlockGuruAudioSync();
+          docLastReplyText = target.reply;
+          ansContent.querySelectorAll('.doc-thread-item').forEach(el => el.classList.toggle('is-active-step', el.getAttribute('data-note-id') === nid));
+          speakDocStoryVoice(cleanTextForTTS(target.reply), getVoiceConfig());
+        } else if (act === 'jump') {
+          ansBox.classList.remove('show', 'is-expanded');
+          if (pdfDoc && target.page && target.page !== pdfCurrentPage) await renderPdfPage(target.page);
+          if (typeof target.x === 'number' && typeof target.y === 'number') {
+            pdfPointerNorm = { x: target.x, y: target.y };
+            updatePointerBallCss();
+            scrollSpotlightIntoCenter();
+          }
+        }
+      });
+    });
+
+    requestAnimationFrame(() => {
+      const actEl = document.getElementById('doc-thread-note-' + activeNote.id);
+      if (actEl && actEl.scrollIntoView) {
+        actEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    if (autoSpeak && pdfVoiceAutoPlay) {
+      speakDocStoryVoice(cleanTextForTTS(activeNote.reply), getVoiceConfig());
+    } else {
+      syncDocAudioUi('idle');
     }
   }
 
@@ -15937,6 +16885,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
         document.getElementById('pdf-page-input').value = 1;
         document.getElementById('pdf-page-total').textContent = '/ 1';
         renderLoadedImageCanvas();
+        loadNotesForCurrentDoc(rec.id);
         updateDocDeleteBtn();
         document.getElementById('pdf-tutor-status').textContent = `🖼️ ${rec.name} — Spotlight रखो या ⏭️ Next दबाओ`;
         resolve(true);
@@ -15964,6 +16913,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       document.getElementById('pdf-page-total').textContent = `/ ${pdfTotalPages}`;
       document.getElementById('pdf-page-input').max = pdfTotalPages;
       await renderPdfPage(pdfCurrentPage);
+      await loadNotesForCurrentDoc(id);
       updateDocDeleteBtn();
       document.getElementById('pdf-tutor-status').textContent = `📄 ${name} — Spotlight रखो या ⏭️ Next दबाओ`;
     } catch (err) {
@@ -16000,6 +16950,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       pdfPointerNorm = { x: pdfReadingBlocks[0].x, y: pdfReadingBlocks[0].y };
     }
     updatePointerBallCss();
+    renderCoveredTrailOverlay();
     try {
       const list = await getAllPdfsFromVault();
       const rec = list.find(x => x.id === pdfCurrentId);
@@ -16010,9 +16961,12 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   function updatePointerBallCss() {
     const ball = document.getElementById('pdf-pointer-ball');
     if (!ball) return;
-    ball.classList.toggle('visible', pdfPointerEnabled && (!!pdfDoc || !!pdfLoadedImg));
+    const hasDoc = !!(pdfDoc || pdfLoadedImg);
+    ball.classList.toggle('visible', pdfPointerEnabled && hasDoc);
     ball.style.left = `${(pdfPointerNorm.x * 100).toFixed(2)}%`;
     ball.style.top = `${(pdfPointerNorm.y * 100).toFixed(2)}%`;
+    const progFill = document.getElementById('doc-read-progress-fill');
+    if (progFill) progFill.style.width = hasDoc ? `${Math.round(pdfPointerNorm.y * 100)}%` : '0%';
   }
 
   function scrollSpotlightIntoCenter() {
@@ -16122,54 +17076,19 @@ ABSOLUTE NON-NEGOTIABLE RULES:
       pdfTutorHistory.push({ role: 'model', text: cleanReply });
       if (pdfTutorHistory.length > 10) pdfTutorHistory = pdfTutorHistory.slice(-10);
 
-      const ansBox = document.getElementById('pdf-answer-box');
-      const ansContent = document.getElementById('pdf-answer-content');
-      ansContent.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
-          <strong style="font-size:0.86rem; color:var(--ink);">📖 Ground-Zero Explanation</strong>
-          <div style="display:flex; gap:6px;">
-            <button type="button" class="ctrl-btn" id="btn-pdf-expand-ans">⤢ Full Screen</button>
-            <button type="button" class="ctrl-btn" id="btn-pdf-close-ans">✕ Close</button>
-          </div>
-        </div>
-        ${renderColorfulGuruCard(cleanReply)}
-        <div class="guru-card-actions">
-          <button type="button" class="ctrl-btn" id="btn-pdf-replay-voice">🔊 फिर से सुनो</button>
-          <button type="button" class="ctrl-btn" id="btn-pdf-copy-ans">📋 Copy</button>
-          <button type="button" class="ctrl-btn btn-primary" id="btn-pdf-drawer-next">⏭️ Next Point</button>
-        </div>`;
-      ansBox.classList.add('show');
-      document.getElementById('btn-pdf-close-ans').addEventListener('click', () => {
-        ansBox.classList.remove('show', 'is-expanded');
-      });
-      document.getElementById('btn-pdf-drawer-next').addEventListener('click', () => {
-        ansBox.classList.remove('show', 'is-expanded');
-        advanceDocSpotlightAndExplain();
-      });
-      document.getElementById('btn-pdf-replay-voice').addEventListener('click', () => {
-        unlockGuruAudioSync(); stopActiveTitanAudio();
-        btnStop.style.display = 'inline-flex';
-        speakWithStudioVoice(cleanTextForTTS(cleanReply), getVoiceConfig(), () => { btnStop.style.display = 'none'; });
-      });
-      document.getElementById('btn-pdf-copy-ans').addEventListener('click', () => {
-        navigator.clipboard.writeText(cleanReply).then(() => showToast('📋 Copied!')).catch(() => {});
-      });
-      document.getElementById('btn-pdf-expand-ans').addEventListener('click', (ev) => {
-        const exp = ansBox.classList.toggle('is-expanded');
-        ev.currentTarget.textContent = exp ? '✕ Back' : '⤢ Full Screen';
-      });
-
-      if (pdfVoiceAutoPlay) {
-        stopActiveTitanAudio();
-        statusEl.textContent = '🔊 Titan Guru समझा रहा है...';
-        btnStop.style.display = 'inline-flex';
-        await speakWithStudioVoice(cleanTextForTTS(cleanReply), getVoiceConfig(), () => {
-          btnStop.style.display = 'none';
-          statusEl.textContent = '✅ समझ आ गया? अब ⏭️ Next दबाओ';
-        });
-      } else {
-        statusEl.textContent = '✅ Explanation तैयार है — पढ़कर ⏭️ Next दबाओ';
-      }
+      const noteObj = {
+        id: 'n_' + Date.now(),
+        page: pdfCurrentPage,
+        x: pdfPointerNorm.x,
+        y: pdfPointerNorm.y,
+        title: extractNoteTitle(cleanReply),
+        reply: cleanReply,
+        ts: Date.now()
+      };
+      pdfCurrentDocNotes.push(noteObj);
+      await markCurrentSpotCovered(noteObj.title);
+      await persistCurrentDocNotes();
+      openDocExplanationDrawer(noteObj.id, true);
     } catch (err) {
       if (err && err.message === 'NO_API_KEY') {
         statusEl.textContent = '🔑 पहले Titan Guru Settings में अपनी Key डालो';
@@ -16223,46 +17142,57 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     unlockGuruAudioSync();
     const canvas = document.getElementById('pdf-render-canvas');
     window.__guruPendingDocSnaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
+    markCurrentSpotCovered('Live Genie');
     guruSessionMode = 'doc_live';
+    document.body.classList.add('doc-live-active');
     startTitanGuruLive(null, 'doc_live', null);
   };
 
+  window.__voiceAdvanceDocSpotlight = function() { advanceDocSpotlightAndExplain(); };
   async function advanceDocSpotlightAndExplain() {
     if (!pdfDoc && !pdfLoadedImg) { showToast('📂 पहले कोई PDF या Image load करो!'); return; }
+    await markCurrentSpotCovered();
     const blocks = pdfReadingBlocks && pdfReadingBlocks.length
       ? pdfReadingBlocks
-      : [0.14, 0.30, 0.46, 0.62, 0.78, 0.90].map(y => ({ x: 0.50, y }));
-    let nextIdx = blocks.findIndex(b => b.y > pdfPointerNorm.y + 0.045);
-    if (nextIdx === -1) {
+      : [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y }));
+    const nextUnread = findNextUnreadBlockOnPage(blocks, pdfPointerNorm.x, pdfPointerNorm.y);
+    if (!nextUnread) {
       if (pdfDoc && pdfCurrentPage < pdfTotalPages) {
         pdfCurrentBlockIdx = 0;
         await renderPdfPage(pdfCurrentPage + 1);
         const newBlocks = pdfReadingBlocks && pdfReadingBlocks.length ? pdfReadingBlocks : [{ x: 0.50, y: 0.14 }];
-        pdfPointerNorm = { x: newBlocks[0].x, y: newBlocks[0].y };
+        const nextPageSpot = findNextUnreadBlockOnPage(newBlocks, 0.25, -1) || { idx: 0, block: newBlocks[0] };
+        pdfCurrentBlockIdx = nextPageSpot.idx;
+        pdfPointerNorm = { x: nextPageSpot.block.x, y: nextPageSpot.block.y };
         updatePointerBallCss();
+        renderCoveredTrailOverlay();
         scrollSpotlightIntoCenter();
-        document.getElementById('pdf-tutor-status').textContent = `📄 Page ${pdfCurrentPage}/${pdfTotalPages} • Step 1/${newBlocks.length}`;
+        document.getElementById('pdf-tutor-status').textContent = `📄 Page ${pdfCurrentPage}/${pdfTotalPages}`;
       } else {
         pdfCurrentBlockIdx = 0;
         pdfPointerNorm = { x: blocks[0].x, y: blocks[0].y };
         updatePointerBallCss();
         scrollSpotlightIntoCenter();
-        showToast('🔄 पेज पूरा हुआ — वापस पहले point पर आ गए');
+        showToast('✨ पूरा पेज कवर हो गया!');
       }
     } else {
-      pdfCurrentBlockIdx = nextIdx;
-      pdfPointerNorm = { x: blocks[nextIdx].x, y: blocks[nextIdx].y };
+      pdfCurrentBlockIdx = nextUnread.idx;
+      pdfPointerNorm = { x: nextUnread.block.x, y: nextUnread.block.y };
       updatePointerBallCss();
       scrollSpotlightIntoCenter();
-      document.getElementById('pdf-tutor-status').textContent = `🎯 Step ${nextIdx + 1}/${blocks.length} पर Spotlight आ गया`;
+      document.getElementById('pdf-tutor-status').textContent = `🎯 Step ${nextUnread.idx + 1}/${blocks.length}`;
     }
+    const coveredOnPage = pdfCurrentDocNotes.filter(n => n.page === pdfCurrentPage).map(n => n.title).slice(-4);
+    const coveredCtx = coveredOnPage.length ? `अभी तक इस पेज पर ये हिस्से कवर हो चुके हैं: (${coveredOnPage.join(', ')})। इन्हें बिल्कुल मत दोहराना — ` : '';
+    const nextPrompt = `${coveredCtx}अब Spotlight ठीक नीचे इस अगले unread हिस्से पर आ गया है। सिर्फ इसी Red Target Ring वाले नए concept को बिल्कुल ज़ीरो से प्यार से समझाओ और फिर शांति से रुक जाना।`;
     if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
-      if (sendCurrentSpotToLiveGenie('आका ने Next दबाकर Spotlight को नीचे वाले इस अगले concept पर बढ़ाया है। अब सिर्फ इसी Red Target Ring वाले हिस्से को आराम से ज़ीरो से समझाओ और फिर रुकना!')) {
-        showToast('🧞 Live Genie अगले point पर पहुँच गया!');
+      markCurrentSpotCovered('Live Genie');
+      if (sendCurrentSpotToLiveGenie(nextPrompt)) {
+        showToast('🧞 अगला पड़ाव तैयार');
         return;
       }
     }
-    runPdfPointerExplain();
+    runPdfPointerExplain(nextPrompt);
   }
 
   const ballEl = document.getElementById('pdf-pointer-ball');
@@ -16289,10 +17219,6 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     draggingBall = false;
     ballEl.classList.remove('dragging');
     hideLoupePreview();
-    if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
-      sendCurrentSpotToLiveGenie();
-      showToast('🧞 नई जगह Live Genie को दिखा दी!');
-    }
   };
   ballEl.addEventListener('pointerup', endDrag);
   ballEl.addEventListener('pointercancel', endDrag);
@@ -16303,11 +17229,20 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     pdfPointerNorm.x = Math.max(0.04, Math.min(0.96, (e.clientX - rect.left) / rect.width));
     pdfPointerNorm.y = Math.max(0.04, Math.min(0.96, (e.clientY - rect.top) / rect.height));
     updatePointerBallCss();
-    if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
-      sendCurrentSpotToLiveGenie();
-      showToast('🧞 नई जगह Live Genie को दिखा दी!');
-    }
   });
+  const askChipEl = document.getElementById('pdf-spotlight-ask-chip');
+  if (askChipEl) {
+    askChipEl.addEventListener('pointerdown', (e) => { e.stopPropagation(); });
+    askChipEl.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
+        markCurrentSpotCovered('Live Genie');
+        if (sendCurrentSpotToLiveGenie('आका ने Spotlight के इस Red Target Ring वाले हिस्से को पूछा है। सिर्फ इसी एक concept को आराम से ज़ीरो से समझाओ और खत्म करके शांति से रुक जाना।')) {
+          showToast('🧞 Genie समझा रहा है...');
+        }
+      }
+    });
+  }
 
   const pdfFileInput = document.getElementById('pdf-file-input');
   document.getElementById('btn-pdf-upload').addEventListener('click', () => pdfFileInput.click());
@@ -16360,17 +17295,36 @@ ABSOLUTE NON-NEGOTIABLE RULES:
       else await loadPdfFromBuffer(found.id, found.name, found.data, found.lastPage || 1);
     }
   });
-  document.getElementById('btn-pdf-delete').addEventListener('click', async () => {
-    if (pdfCurrentId) await deletePdfFromVault(pdfCurrentId);
-    pdfDoc = null; pdfLoadedImg = null; pdfCurrentId = ''; pdfReadingBlocks = []; pdfCurrentBlockIdx = -1;
-    document.getElementById('pdf-canvas-wrap').style.display = 'none';
-    document.getElementById('pdf-empty-state').style.display = 'block';
-    document.getElementById('pdf-answer-box').classList.remove('show', 'is-expanded');
-    document.getElementById('pdf-page-total').textContent = '/ 0';
-    updateDocDeleteBtn();
-    await initPdfVaultList();
-    showToast('🗑️ Document हटाया गया');
-  });
+  let __docDelArmTimer = null;
+  const docDelBtnEl = document.getElementById('btn-pdf-delete');
+  const docDelOrigSvg = docDelBtnEl ? docDelBtnEl.innerHTML : '';
+  if (docDelBtnEl) {
+    docDelBtnEl.addEventListener('click', async () => {
+      if (!docDelBtnEl.classList.contains('is-armed-delete')) {
+        docDelBtnEl.classList.add('is-armed-delete');
+        docDelBtnEl.textContent = 'Confirm?';
+        if (__docDelArmTimer) clearTimeout(__docDelArmTimer);
+        __docDelArmTimer = setTimeout(() => {
+          docDelBtnEl.classList.remove('is-armed-delete');
+          docDelBtnEl.innerHTML = docDelOrigSvg;
+        }, 3500);
+        return;
+      }
+      if (__docDelArmTimer) { clearTimeout(__docDelArmTimer); __docDelArmTimer = null; }
+      docDelBtnEl.classList.remove('is-armed-delete');
+      docDelBtnEl.innerHTML = docDelOrigSvg;
+      if (pdfCurrentId) await deletePdfFromVault(pdfCurrentId);
+      pdfDoc = null; pdfLoadedImg = null; pdfCurrentId = ''; pdfReadingBlocks = []; pdfCurrentBlockIdx = -1; pdfCurrentDocNotes = []; pdfCoveredSpots = []; pdfTutorHistory = []; updateDocHistoryBadge(); renderCoveredTrailOverlay(); document.getElementById('pdf-history-drawer').classList.remove('open');
+      document.getElementById('pdf-canvas-wrap').style.display = 'none';
+      document.getElementById('pdf-empty-state').style.display = 'block';
+      document.getElementById('pdf-answer-box').classList.remove('show', 'is-expanded');
+      document.getElementById('pdf-page-total').textContent = '/ 0';
+      updatePointerBallCss();
+      updateDocDeleteBtn();
+      await initPdfVaultList();
+      showToast('🗑️ Document removed');
+    });
+  }
   document.getElementById('btn-pdf-prev').addEventListener('click', () => pdfDoc && renderPdfPage(pdfCurrentPage - 1));
   document.getElementById('btn-pdf-next').addEventListener('click', () => pdfDoc && renderPdfPage(pdfCurrentPage + 1));
   document.getElementById('pdf-page-input').addEventListener('change', (e) => {
@@ -16398,11 +17352,85 @@ ABSOLUTE NON-NEGOTIABLE RULES:
   });
   document.getElementById('btn-pdf-explain-here').addEventListener('click', () => runPdfPointerExplain());
   document.getElementById('btn-pdf-next-explain').addEventListener('click', () => advanceDocSpotlightAndExplain());
+  document.getElementById('btn-pdf-pause-audio').addEventListener('click', () => toggleDocAudioPause());
   document.getElementById('btn-pdf-stop-audio').addEventListener('click', () => {
     stopActiveTitanAudio();
-    document.getElementById('btn-pdf-stop-audio').style.display = 'none';
-    document.getElementById('pdf-tutor-status').textContent = '⏹️ Voice रुकी हुई है';
+    syncDocAudioUi('idle');
   });
+  document.getElementById('btn-pdf-history').addEventListener('click', () => {
+    renderDocHistoryDrawer();
+    document.getElementById('pdf-history-drawer').classList.toggle('open');
+  });
+  document.getElementById('btn-pdf-hist-close').addEventListener('click', () => {
+    document.getElementById('pdf-history-drawer').classList.remove('open');
+  });
+  let __histClearArmTimer = null;
+  const histClearBtn = document.getElementById('btn-pdf-hist-clear');
+  if (histClearBtn) {
+    histClearBtn.addEventListener('click', async () => {
+      if (!pdfCurrentDocNotes.length) return;
+      if (!histClearBtn.classList.contains('is-armed-delete')) {
+        histClearBtn.classList.add('is-armed-delete');
+        histClearBtn.textContent = 'Sure?';
+        if (__histClearArmTimer) clearTimeout(__histClearArmTimer);
+        __histClearArmTimer = setTimeout(() => {
+          histClearBtn.classList.remove('is-armed-delete');
+          histClearBtn.textContent = 'Clear';
+        }, 3500);
+        return;
+      }
+      if (__histClearArmTimer) { clearTimeout(__histClearArmTimer); __histClearArmTimer = null; }
+      histClearBtn.classList.remove('is-armed-delete');
+      histClearBtn.textContent = 'Clear';
+      pdfCurrentDocNotes = [];
+      pdfCoveredSpots = [];
+      pdfTutorHistory = [];
+      stopActiveTitanAudio();
+      syncDocAudioUi('idle');
+      document.getElementById('pdf-answer-box').classList.remove('show', 'is-expanded');
+      renderCoveredTrailOverlay();
+      await persistCurrentDocNotes();
+      renderDocHistoryDrawer();
+      showToast('🗑️ History cleared');
+    });
+  }
+
+  // Smooth GPU-Accelerated Draggable Floating Genie Dock inside Doc Studio
+  (function initDraggableDocGenieDock() {
+    const dock = document.getElementById('guru-live-dock');
+    if (!dock) return;
+    let dragging = false, startX = 0, startY = 0, curDx = 0, curDy = 0, baseDx = 0, baseDy = 0;
+    window.__resetDocGenieDockPos = function() {
+      curDx = 0; curDy = 0; baseDx = 0; baseDy = 0;
+      dock.style.setProperty('--dock-dx', '0px');
+      dock.style.setProperty('--dock-dy', '0px');
+    };
+    dock.addEventListener('pointerdown', (e) => {
+      if ((document.body.getAttribute('data-universe') || '') !== 'pdf') return;
+      if (e.target.closest('button, input, textarea, select, a')) return;
+      dragging = true;
+      startX = e.clientX; startY = e.clientY;
+      baseDx = curDx; baseDy = curDy;
+      dock.classList.add('is-dragging-dock');
+      if (dock.setPointerCapture) { try { dock.setPointerCapture(e.pointerId); } catch (err) {} }
+    });
+    dock.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      e.preventDefault();
+      const maxUp = -(window.innerHeight - 170);
+      curDx = Math.max(-40, Math.min(40, baseDx + (e.clientX - startX)));
+      curDy = Math.max(maxUp, Math.min(54, baseDy + (e.clientY - startY)));
+      dock.style.setProperty('--dock-dx', curDx + 'px');
+      dock.style.setProperty('--dock-dy', curDy + 'px');
+    });
+    const endDockDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      dock.classList.remove('is-dragging-dock');
+    };
+    dock.addEventListener('pointerup', endDockDrag);
+    dock.addEventListener('pointercancel', endDockDrag);
+  })();
   window.addEventListener('resize', () => {
     if ((document.body.getAttribute('data-universe') || '') !== 'pdf') return;
     if (pdfDoc) renderPdfPage(pdfCurrentPage);
