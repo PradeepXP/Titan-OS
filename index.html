@@ -5753,43 +5753,49 @@ body[data-universe="pdf"] #pdf-answer-content .guru-rich-h2 {
   padding: 7px 12px !important;
 }
 
-/* Ultra-Glossy Liquid-Glass Transparent Play Orb Above Spotlight (ZERO text!) */
+/* Cute Glossy Liquid-Glass Play Orb INSIDE the Spotlight Circle (Appears ONLY when Live Genie is ON & Armed; vanishes on tap!) */
 #pdf-spotlight-ask-chip {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 10px);
-  transform: translateX(-50%);
-  width: 34px;
-  height: 34px;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  width: 26px;
+  height: 26px;
   padding: 0;
-  display: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.72);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.18));
-  backdrop-filter: blur(14px) saturate(180%);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1.4px solid rgba(255, 255, 255, 0.85);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.24));
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
   color: var(--accent);
   cursor: pointer;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.85), 0 8px 22px rgba(15, 23, 42, 0.20), 0 0 0 3px var(--accent-soft);
-  z-index: 30;
-  transition: transform 0.16s cubic-bezier(0.22, 1.3, 0.36, 1), opacity 0.16s ease, box-shadow 0.18s ease;
-  animation: docChipFloat 2.6s ease-in-out infinite;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 4px 12px rgba(15, 23, 42, 0.22);
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.22s cubic-bezier(0.22, 1.3, 0.36, 1), opacity 0.20s ease;
 }
 body.theme-night #pdf-spotlight-ask-chip {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: linear-gradient(145deg, rgba(30, 41, 59, 0.68), rgba(15, 23, 42, 0.42));
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.28), 0 8px 22px rgba(0, 0, 0, 0.42), 0 0 0 3px var(--accent-soft);
+  border-color: rgba(255, 255, 255, 0.42);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.76), rgba(15, 23, 42, 0.46));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.28), 0 4px 14px rgba(0, 0, 0, 0.45);
 }
-#pdf-spotlight-ask-chip svg { width: 14px; height: 14px; margin-left: 1.5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.16)); }
-#pdf-spotlight-ask-chip:active { transform: translateX(-50%) scale(0.88) !important; }
-body[data-universe="pdf"].doc-live-active #pdf-spotlight-ask-chip {
-  display: inline-flex;
+#pdf-spotlight-ask-chip svg { width: 11px; height: 11px; margin-left: 1.5px; }
+body[data-universe="pdf"].doc-live-active #pdf-pointer-ball.is-spot-armed #pdf-spotlight-ask-chip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+body[data-universe="pdf"].doc-live-active #pdf-pointer-ball.is-spot-armed .spotlight-dot {
+  opacity: 0;
 }
 #pdf-pointer-ball.dragging #pdf-spotlight-ask-chip {
   opacity: 0 !important;
   pointer-events: none !important;
+  transform: translate(-50%, -50%) scale(0.5) !important;
 }
 
 /* Whisper-quiet 2px Reading Progress Hairline at Top of Document Stage */
@@ -5849,27 +5855,6 @@ body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock {
 }
 .doc-hist-del-btn:hover { color: var(--bad-ink); border-color: var(--bad-bd); }
 
-/* Magical Study Trail Layer (Sits cleanly over canvas with pointer-events:none — never mutates canvas pixels!) */
-#pdf-covered-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 16;
-  overflow: hidden;
-  border-radius: inherit;
-}
-#pdf-covered-veil {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 0%;
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.045) 0%, rgba(16, 185, 129, 0.085) 100%);
-  border-bottom: 1.5px dashed rgba(16, 185, 129, 0.42);
-  transition: height 0.36s cubic-bezier(0.22, 1, 0.36, 1);
-  display: none;
-}
-#pdf-covered-veil.has-trail { display: block; }
 /* Continuous Connected Study Thread inside Reading Sheet */
 .doc-thread-list {
   display: flex;
@@ -5922,23 +5907,7 @@ body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock {
   cursor: pointer;
 }
 .doc-mini-btn:hover { border-color: var(--accent); color: var(--accent); }
-.doc-covered-bead {
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  margin-left: -7.5px;
-  margin-top: -7.5px;
-  border-radius: 50%;
-  background: rgba(16, 185, 129, 0.88);
-  color: #FFFFFF;
-  font-size: 9px;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.82);
-  opacity: 0.78;
-}
+
 @keyframes docChipFloat {
   0%, 100% { transform: translateX(-50%) translateY(0px); }
   50% { transform: translateX(-50%) translateY(-3px); }
@@ -6552,7 +6521,6 @@ body[data-universe="pdf"].genie-speaker-open .guru-live-dock.is-dragging-dock {
 
         <div class="pdf-canvas-wrap" id="pdf-canvas-wrap" style="display:none;">
           <canvas id="pdf-render-canvas"></canvas>
-          <div id="pdf-covered-layer"><div id="pdf-covered-veil"></div></div>
           <div id="pdf-pointer-ball" class="visible" style="left:50%; top:18%;" title="Drag Spotlight">
             <button type="button" id="pdf-spotlight-ask-chip" aria-label="Ask Genie" title="Ask Genie">
               <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
@@ -11375,6 +11343,7 @@ function stopActiveVoicePlayback() {
   releaseGuruWakeLock();
   guruSessionMode = 'tutor';
   document.body.classList.remove('doc-live-active');
+  const _spb = document.getElementById('pdf-pointer-ball'); if (_spb) _spb.classList.remove('is-spot-armed');
   if (typeof window.__resetDocGenieDockPos === 'function') window.__resetDocGenieDockPos();
   const qzBtn = document.getElementById('btn-start-voice-quiz');
   if (qzBtn) { qzBtn.classList.remove('quiz-live-on'); qzBtn.textContent = '🎯 Voice Quiz'; }
@@ -11693,30 +11662,16 @@ function tryStartInstantLiveWebSocket(q, qidTag, btnEl, cfg) {
               : (guruSessionMode === 'quiz'
                 ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
                 : 'हुकुम आका! इस सवाल को आराम से, तसल्ली से, एक बढ़िया रोज़मर्रा के देसी उदाहरण के साथ समझाओ कि असल में क्या पूछा गया है, इसका सही कॉन्सेप्ट और एग्जाम ट्रैप क्या है, और फिर प्यार से पूछो कि कोई डाउट है क्या।');
-            if (guruSessionMode === 'doc_live' && window.__guruPendingDocSnaps) {
-              const snaps = window.__guruPendingDocSnaps;
+            if (guruSessionMode === 'doc_live') {
+              // Stay completely SILENT on launch! Wait until student taps the cute ▶ inside Spotlight or speaks!
               window.__guruPendingDocSnaps = null;
-              guruLiveAwaitingStart = false;
+              guruLiveAwaitingStart = true;
               guruPendingKickoff = null;
-              if (IS_IOS_WEBKIT) {
-                if (__iosMicReopenTimer) { clearTimeout(__iosMicReopenTimer); __iosMicReopenTimer = null; }
-                stopGuruMicOnly();
-                setTitanAudioSession('playback');
-                __iosRouteSwitchAt = performance.now();
-              }
-              guruLiveWs.send(JSON.stringify({
-                clientContent: {
-                  turns: [{
-                    role: 'user',
-                    parts: [
-                      { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
-                      { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } },
-                      { text: 'आका ने अपने डॉक्यूमेंट में Red Target Ring वाली जगह पर Magic Pen रखा है। इस exact concept, formula या diagram को एकदम आराम से, प्यार से, ज़ीरो लेवल से एक मज़ेदार देसी उदाहरण के साथ समझाओ ताकि पहली बार पढ़ने वाले के दिमाग में भी हमेशा के लिए छप जाए!' }
-                    ]
-                  }],
-                  turnComplete: true
-                }
-              }));
+              if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('listening');
+              updateGuruDockState('Ready', true);
+              updateGuruMicBtn();
+              const spBall = document.getElementById('pdf-pointer-ball');
+              if (spBall) spBall.classList.add('is-spot-armed');
             } else if (qidTag === 'test') {
               guruLiveAwaitingStart = false;
               guruPendingKickoff = null;
@@ -12449,16 +12404,15 @@ async function startTitanGuruLive(q, qidTag, btnEl) {
     : (guruSessionMode === 'quiz'
       ? 'Hands-free quiz शुरू करो! पहले यह सवाल साफ-साफ पढ़ो, फिर चारों options (A, B, C, D) आराम से पढ़ो और विनम्रता से पूछो कि किस option पर ताला लगाया जाए।'
       : 'इस सवाल को एकदम तसल्ली से, आराम-आराम से, बिल्कुल आसान देसी हिंदी और असली ज़िंदगी के उदाहरण से पूरा समझाओ कि सवाल क्या पूछ रहा है, इसके पीछे का असली concept क्या है, और फिर प्यार से पूछो कि कोई और doubt या cross-question हो तो खुलकर पूछो।');
-  if (guruSessionMode === 'doc_live' && window.__guruPendingDocSnaps) {
-    const snaps = window.__guruPendingDocSnaps;
+  if (guruSessionMode === 'doc_live') {
     window.__guruPendingDocSnaps = null;
-    guruLiveAwaitingStart = false;
+    guruLiveAwaitingStart = true;
     guruPendingKickoff = null;
-    await sendGuruTurn([
-      { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
-      { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } },
-      { text: 'आका ने अपने डॉक्यूमेंट में Red Target Ring वाली जगह पर Magic Pen रखा है। इसे एकदम आराम से, प्यार से, ज़ीरो लेवल से एक मज़ेदार देसी उदाहरण के साथ समझाओ!' }
-    ]);
+    if (typeof window.setLiveLampGenieMode === 'function') window.setLiveLampGenieMode('listening');
+    updateGuruDockState('Ready', true);
+    updateGuruMicBtn();
+    const spBall = document.getElementById('pdf-pointer-ball');
+    if (spBall) spBall.classList.add('is-spot-armed');
   } else if (qidTag === 'test') {
     guruLiveAwaitingStart = false;
     guruPendingKickoff = null;
@@ -16082,7 +16036,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   let pdfPointerNorm = { x: 0.50, y: 0.16 };
   let pdfReadingBlocks = [], pdfCurrentBlockIdx = -1, pdfIsTwoCol = false;
   let pdfVoiceAutoPlay = true, pdfBusy = false, pdfTutorHistory = [];
-  let pdfCurrentDocNotes = [], pdfCoveredSpots = [], docAudioState = 'idle', docLastReplyText = '';
+  let pdfCurrentDocNotes = [], docAudioState = 'idle', docLastReplyText = '';
   let __pdfMemVault = [];
 
   function openPdfDB() {
@@ -16393,110 +16347,38 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     badge.style.display = n > 0 ? 'inline-flex' : 'none';
   }
 
-  function renderCoveredTrailOverlay() {
-    const layer = document.getElementById('pdf-covered-layer');
-    const veil = document.getElementById('pdf-covered-veil');
-    if (!layer || !veil) return;
-    layer.querySelectorAll('.doc-covered-bead').forEach(el => el.remove());
-    const pageSpots = pdfCoveredSpots.filter(s => (s.page || 1) === pdfCurrentPage);
-    if (!pageSpots.length) {
-      veil.classList.remove('has-trail');
-      veil.style.height = '0%';
-      return;
-    }
-    let maxY = 0;
-    for (const s of pageSpots) {
-      if (s.y > maxY) maxY = s.y;
-      const bead = document.createElement('span');
-      bead.className = 'doc-covered-bead';
-      bead.textContent = '✓';
-      bead.style.left = `${(s.x * 100).toFixed(2)}%`;
-      bead.style.top = `${(s.y * 100).toFixed(2)}%`;
-      layer.appendChild(bead);
-    }
-    if (pdfIsTwoCol) {
-      veil.classList.remove('has-trail');
-      veil.style.height = '0%';
-    } else {
-      veil.style.height = `${Math.min(96, Math.max(4, (maxY + 0.03) * 100)).toFixed(1)}%`;
-      veil.classList.add('has-trail');
-    }
-  }
-
-  function isSpotAlreadyCovered(pageNum, xNorm, yNorm) {
-    return pdfCoveredSpots.some(s =>
-      (s.page || 1) === pageNum &&
-      Math.abs(s.y - yNorm) < 0.055 &&
-      (!pdfIsTwoCol || Math.abs(s.x - xNorm) < 0.22)
-    );
-  }
-
-  function findNextUnreadBlockOnPage(blocks, curX, curY) {
+  function findNextBlockOnPage(blocks, curX, curY) {
     const list = (blocks && blocks.length) ? blocks : [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y, col: 0 }));
-    if (typeof curY !== 'number' || curY < 0) {
-      const firstIdx = list.findIndex(b => !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
-      return firstIdx >= 0 ? { idx: firstIdx, block: list[firstIdx] } : null;
-    }
+    if (typeof curY !== 'number' || curY < 0) return { idx: 0, block: list[0] };
     if (pdfIsTwoCol) {
-      // Find nearest block in reading order (Left Col top->bottom, then Right Col top->bottom)
       let curIdx = 0, bestDist = Infinity;
       list.forEach((b, i) => {
         const d = Math.hypot((b.x - curX) * 1.6, b.y - curY);
         if (d < bestDist) { bestDist = d; curIdx = i; }
       });
-      for (let i = curIdx + 1; i < list.length; i++) {
-        if (!isSpotAlreadyCovered(pdfCurrentPage, list[i].x, list[i].y)) {
-          return { idx: i, block: list[i] };
-        }
+      if (curIdx + 1 < list.length) return { idx: curIdx + 1, block: list[curIdx + 1] };
+      return null;
+    }
+    const belowIdx = list.findIndex(b => b.y > (curY + 0.045));
+    return belowIdx >= 0 ? { idx: belowIdx, block: list[belowIdx] } : null;
+  }
+
+  async function saveLastBookmarkSpot() {
+    if (!pdfCurrentId || (!pdfDoc && !pdfLoadedImg)) return;
+    try {
+      const list = await getAllPdfsFromVault();
+      const rec = list.find(x => x.id === pdfCurrentId);
+      if (rec) {
+        rec.lastSpot = { page: pdfCurrentPage, x: +pdfPointerNorm.x.toFixed(3), y: +pdfPointerNorm.y.toFixed(3) };
+        await savePdfToVault(rec);
       }
-      const anyIdx = list.findIndex(b => !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
-      return anyIdx >= 0 ? { idx: anyIdx, block: list[anyIdx] } : null;
-    }
-    const belowIdx = list.findIndex(b => b.y > (curY + 0.045) && !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
-    if (belowIdx >= 0) return { idx: belowIdx, block: list[belowIdx] };
-    const anyUnreadIdx = list.findIndex(b => !isSpotAlreadyCovered(pdfCurrentPage, b.x, b.y));
-    return anyUnreadIdx >= 0 ? { idx: anyUnreadIdx, block: list[anyUnreadIdx] } : null;
-  }
-
-  async function markCurrentSpotCovered(label) {
-    if (!pdfDoc && !pdfLoadedImg) return;
-    const exists = pdfCoveredSpots.some(s =>
-      (s.page || 1) === pdfCurrentPage &&
-      Math.abs(s.y - pdfPointerNorm.y) < 0.045 &&
-      (!pdfIsTwoCol || Math.abs(s.x - pdfPointerNorm.x) < 0.20)
-    );
-    if (!exists) {
-      pdfCoveredSpots.push({
-        page: pdfCurrentPage,
-        x: +pdfPointerNorm.x.toFixed(3),
-        y: +pdfPointerNorm.y.toFixed(3),
-        label: label || '',
-        ts: Date.now()
-      });
-      renderCoveredTrailOverlay();
-      await persistCurrentDocNotes();
-    }
-  }
-
-  function autoResumeSpotlightToNextUnread() {
-    const pageSpots = pdfCoveredSpots.filter(s => (s.page || 1) === pdfCurrentPage);
-    if (!pageSpots.length) return;
-    const farthestY = Math.max(...pageSpots.map(s => s.y));
-    const lastSpot = pageSpots[pageSpots.length - 1];
-    const nextUnread = findNextUnreadBlockOnPage(pdfReadingBlocks, lastSpot.x, lastSpot.y);
-    if (nextUnread) {
-      pdfCurrentBlockIdx = nextUnread.idx;
-      pdfPointerNorm = { x: nextUnread.block.x, y: nextUnread.block.y };
-      updatePointerBallCss();
-      scrollSpotlightIntoCenter();
-    }
+    } catch (e) {}
   }
 
   async function loadNotesForCurrentDoc(docId) {
     pdfCurrentDocNotes = [];
-    pdfCoveredSpots = [];
     pdfTutorHistory = [];
-    if (!docId) { updateDocHistoryBadge(); renderCoveredTrailOverlay(); return; }
+    if (!docId) { updateDocHistoryBadge(); return; }
     try {
       const list = await getAllPdfsFromVault();
       const rec = list.find(x => x.id === docId);
@@ -16508,14 +16390,14 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
             { role: 'model', text: n.reply }
           ]);
         }
-        if (Array.isArray(rec.coveredSpots)) {
-          pdfCoveredSpots = rec.coveredSpots.slice();
+        if (rec.lastSpot && (rec.lastSpot.page || 1) === pdfCurrentPage) {
+          pdfPointerNorm = { x: rec.lastSpot.x, y: rec.lastSpot.y };
+          updatePointerBallCss();
+          scrollSpotlightIntoCenter();
         }
       }
     } catch (e) {}
     updateDocHistoryBadge();
-    renderCoveredTrailOverlay();
-    autoResumeSpotlightToNextUnread();
   }
 
   async function persistCurrentDocNotes() {
@@ -16526,7 +16408,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
       const rec = list.find(x => x.id === pdfCurrentId);
       if (rec) {
         rec.notes = pdfCurrentDocNotes.slice(-60);
-        rec.coveredSpots = pdfCoveredSpots.slice(-180);
+        rec.lastSpot = { page: pdfCurrentPage, x: +pdfPointerNorm.x.toFixed(3), y: +pdfPointerNorm.y.toFixed(3) };
         await savePdfToVault(rec);
       }
     } catch (e) {}
@@ -16950,7 +16832,6 @@ ${text}` };
       pdfPointerNorm = { x: pdfReadingBlocks[0].x, y: pdfReadingBlocks[0].y };
     }
     updatePointerBallCss();
-    renderCoveredTrailOverlay();
     try {
       const list = await getAllPdfsFromVault();
       const rec = list.find(x => x.id === pdfCurrentId);
@@ -17086,7 +16967,6 @@ ABSOLUTE NON-NEGOTIABLE RULES:
         ts: Date.now()
       };
       pdfCurrentDocNotes.push(noteObj);
-      await markCurrentSpotCovered(noteObj.title);
       await persistCurrentDocNotes();
       openDocExplanationDrawer(noteObj.id, true);
     } catch (err) {
@@ -17142,7 +17022,7 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     unlockGuruAudioSync();
     const canvas = document.getElementById('pdf-render-canvas');
     window.__guruPendingDocSnaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
-    markCurrentSpotCovered('Live Genie');
+    saveLastBookmarkSpot();
     guruSessionMode = 'doc_live';
     document.body.classList.add('doc-live-active');
     startTitanGuruLive(null, 'doc_live', null);
@@ -17151,22 +17031,20 @@ ABSOLUTE NON-NEGOTIABLE RULES:
   window.__voiceAdvanceDocSpotlight = function() { advanceDocSpotlightAndExplain(); };
   async function advanceDocSpotlightAndExplain() {
     if (!pdfDoc && !pdfLoadedImg) { showToast('📂 पहले कोई PDF या Image load करो!'); return; }
-    await markCurrentSpotCovered();
     const blocks = pdfReadingBlocks && pdfReadingBlocks.length
       ? pdfReadingBlocks
       : [0.14, 0.28, 0.42, 0.56, 0.70, 0.84].map(y => ({ x: 0.50, y }));
-    const nextUnread = findNextUnreadBlockOnPage(blocks, pdfPointerNorm.x, pdfPointerNorm.y);
+    const nextUnread = findNextBlockOnPage(blocks, pdfPointerNorm.x, pdfPointerNorm.y);
     if (!nextUnread) {
       if (pdfDoc && pdfCurrentPage < pdfTotalPages) {
         pdfCurrentBlockIdx = 0;
         await renderPdfPage(pdfCurrentPage + 1);
         const newBlocks = pdfReadingBlocks && pdfReadingBlocks.length ? pdfReadingBlocks : [{ x: 0.50, y: 0.14 }];
-        const nextPageSpot = findNextUnreadBlockOnPage(newBlocks, 0.25, -1) || { idx: 0, block: newBlocks[0] };
+        const nextPageSpot = findNextBlockOnPage(newBlocks, 0.25, -1) || { idx: 0, block: newBlocks[0] };
         pdfCurrentBlockIdx = nextPageSpot.idx;
         pdfPointerNorm = { x: nextPageSpot.block.x, y: nextPageSpot.block.y };
         updatePointerBallCss();
-        renderCoveredTrailOverlay();
-        scrollSpotlightIntoCenter();
+            scrollSpotlightIntoCenter();
         document.getElementById('pdf-tutor-status').textContent = `📄 Page ${pdfCurrentPage}/${pdfTotalPages}`;
       } else {
         pdfCurrentBlockIdx = 0;
@@ -17186,7 +17064,8 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     const coveredCtx = coveredOnPage.length ? `अभी तक इस पेज पर ये हिस्से कवर हो चुके हैं: (${coveredOnPage.join(', ')})। इन्हें बिल्कुल मत दोहराना — ` : '';
     const nextPrompt = `${coveredCtx}अब Spotlight ठीक नीचे इस अगले unread हिस्से पर आ गया है। सिर्फ इसी Red Target Ring वाले नए concept को बिल्कुल ज़ीरो से प्यार से समझाओ और फिर शांति से रुक जाना।`;
     if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
-      markCurrentSpotCovered('Live Genie');
+      saveLastBookmarkSpot();
+      ballEl.classList.remove('is-spot-armed');
       if (sendCurrentSpotToLiveGenie(nextPrompt)) {
         showToast('🧞 अगला पड़ाव तैयार');
         return;
@@ -17197,7 +17076,27 @@ ABSOLUTE NON-NEGOTIABLE RULES:
 
   const ballEl = document.getElementById('pdf-pointer-ball');
   const wrapEl = document.getElementById('pdf-canvas-wrap');
-  let draggingBall = false;
+  let draggingBall = false, ptrDownX = 0, ptrDownY = 0, ptrMoved = false;
+
+  function triggerLiveGenieOnCurrentSpot() {
+    if (guruSessionMode !== 'doc_live' || activeSpeakingQid !== 'doc_live') return;
+    ballEl.classList.remove('is-spot-armed'); // Immediately becomes invisible inside the circle!
+    saveLastBookmarkSpot();
+    const promptTxt = 'आका ने Spotlight के इस Red Target Ring वाले हिस्से को पूछा है। सिर्फ इसी एक concept को आराम से ज़ीरो से समझाओ और खत्म करके शांति से रुक जाना।';
+    if (sendCurrentSpotToLiveGenie(promptTxt)) {
+      return;
+    }
+    const canvas = document.getElementById('pdf-render-canvas');
+    if (canvas && typeof sendGuruTurn === 'function') {
+      const snaps = capturePdfPointerSnapshots(canvas, pdfPointerNorm.x, pdfPointerNorm.y);
+      sendGuruTurn([
+        { inlineData: { mimeType: 'image/jpeg', data: snaps.fullB64 } },
+        { inlineData: { mimeType: 'image/jpeg', data: snaps.cropB64 } },
+        { text: promptTxt }
+      ]);
+    }
+  }
+
   function moveBallToClientXY(cx, cy) {
     const rect = document.getElementById('pdf-render-canvas').getBoundingClientRect();
     if (!rect.width || !rect.height) return;
@@ -17207,18 +17106,34 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     updateLoupePreview(cx, cy);
   }
   ballEl.addEventListener('pointerdown', (e) => {
-    e.preventDefault(); e.stopPropagation(); draggingBall = true; ballEl.classList.add('dragging');
-    if (ballEl.setPointerCapture) ballEl.setPointerCapture(e.pointerId);
-    updateLoupePreview(e.clientX, e.clientY);
+    e.preventDefault(); e.stopPropagation();
+    draggingBall = true; ptrMoved = false;
+    ptrDownX = e.clientX; ptrDownY = e.clientY;
+    if (ballEl.setPointerCapture) { try { ballEl.setPointerCapture(e.pointerId); } catch (err) {} }
   });
   ballEl.addEventListener('pointermove', (e) => {
-    if (draggingBall) { e.preventDefault(); moveBallToClientXY(e.clientX, e.clientY); }
+    if (!draggingBall) return;
+    e.preventDefault();
+    if (!ptrMoved && Math.hypot(e.clientX - ptrDownX, e.clientY - ptrDownY) >= 6) {
+      ptrMoved = true;
+      ballEl.classList.add('dragging');
+    }
+    if (ptrMoved) moveBallToClientXY(e.clientX, e.clientY);
   });
   const endDrag = () => {
     if (!draggingBall) return;
+    const wasTap = !ptrMoved;
     draggingBall = false;
+    ptrMoved = false;
     ballEl.classList.remove('dragging');
     hideLoupePreview();
+    if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
+      if (wasTap && ballEl.classList.contains('is-spot-armed')) {
+        triggerLiveGenieOnCurrentSpot();
+      } else if (!wasTap) {
+        ballEl.classList.add('is-spot-armed'); // Re-arm cute ▶ inside circle at new spot!
+      }
+    }
   };
   ballEl.addEventListener('pointerup', endDrag);
   ballEl.addEventListener('pointercancel', endDrag);
@@ -17229,18 +17144,15 @@ ABSOLUTE NON-NEGOTIABLE RULES:
     pdfPointerNorm.x = Math.max(0.04, Math.min(0.96, (e.clientX - rect.left) / rect.width));
     pdfPointerNorm.y = Math.max(0.04, Math.min(0.96, (e.clientY - rect.top) / rect.height));
     updatePointerBallCss();
+    if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
+      ballEl.classList.add('is-spot-armed'); // Show cute ▶ inside circle at newly tapped spot!
+    }
   });
   const askChipEl = document.getElementById('pdf-spotlight-ask-chip');
   if (askChipEl) {
-    askChipEl.addEventListener('pointerdown', (e) => { e.stopPropagation(); });
     askChipEl.addEventListener('click', (e) => {
       e.preventDefault(); e.stopPropagation();
-      if (guruSessionMode === 'doc_live' && activeSpeakingQid === 'doc_live') {
-        markCurrentSpotCovered('Live Genie');
-        if (sendCurrentSpotToLiveGenie('आका ने Spotlight के इस Red Target Ring वाले हिस्से को पूछा है। सिर्फ इसी एक concept को आराम से ज़ीरो से समझाओ और खत्म करके शांति से रुक जाना।')) {
-          showToast('🧞 Genie समझा रहा है...');
-        }
-      }
+      if (ballEl.classList.contains('is-spot-armed')) triggerLiveGenieOnCurrentSpot();
     });
   }
 
@@ -17314,7 +17226,7 @@ ABSOLUTE NON-NEGOTIABLE RULES:
       docDelBtnEl.classList.remove('is-armed-delete');
       docDelBtnEl.innerHTML = docDelOrigSvg;
       if (pdfCurrentId) await deletePdfFromVault(pdfCurrentId);
-      pdfDoc = null; pdfLoadedImg = null; pdfCurrentId = ''; pdfReadingBlocks = []; pdfCurrentBlockIdx = -1; pdfCurrentDocNotes = []; pdfCoveredSpots = []; pdfTutorHistory = []; updateDocHistoryBadge(); renderCoveredTrailOverlay(); document.getElementById('pdf-history-drawer').classList.remove('open');
+      pdfDoc = null; pdfLoadedImg = null; pdfCurrentId = ''; pdfReadingBlocks = []; pdfCurrentBlockIdx = -1; pdfCurrentDocNotes = []; pdfTutorHistory = []; updateDocHistoryBadge(); document.getElementById('pdf-history-drawer').classList.remove('open');
       document.getElementById('pdf-canvas-wrap').style.display = 'none';
       document.getElementById('pdf-empty-state').style.display = 'block';
       document.getElementById('pdf-answer-box').classList.remove('show', 'is-expanded');
@@ -17383,13 +17295,11 @@ ABSOLUTE NON-NEGOTIABLE RULES:
       histClearBtn.classList.remove('is-armed-delete');
       histClearBtn.textContent = 'Clear';
       pdfCurrentDocNotes = [];
-      pdfCoveredSpots = [];
       pdfTutorHistory = [];
       stopActiveTitanAudio();
       syncDocAudioUi('idle');
       document.getElementById('pdf-answer-box').classList.remove('show', 'is-expanded');
-      renderCoveredTrailOverlay();
-      await persistCurrentDocNotes();
+        await persistCurrentDocNotes();
       renderDocHistoryDrawer();
       showToast('🗑️ History cleared');
     });
